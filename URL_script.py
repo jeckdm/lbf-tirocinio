@@ -7,7 +7,7 @@ n  = 100
 # Legit o phishing, 'L' o 'P'
 s = 'L'
 # Path della directory principale del dataset
-path = 'C:/Users/Giacomo/Downloads/Legitimate1/'
+path ='pathdesiderato'
 
 # Genero nomi delle directory del tipo 'L00001', 'L00002',...
 num = ['%d' % i for i in range(n)]
