@@ -3,7 +3,7 @@
 ## conversione da archivio a dataset .npy:<br>
 utilizzare URL_script.py -> inserire il path dell'archivio al posto di 'pathdesiderato'
 
-## impostare enviroments esecuzione
+## impostare enviroment esecuzione
 per eseguire il notebook utilizzeremo un virtual enviroment. Per creare il virtual env. assicurarsi di aver installato anaconda (https://www.anaconda.com/products/individual) ed eseguire il seguente script nella home directory del git:
 ```bash
 conda env create -f env_settings/environment.yml 
