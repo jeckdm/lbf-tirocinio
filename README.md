@@ -6,7 +6,7 @@ utilizzare URL_script.py -> inserire il path dell'archivio al posto di 'pathdesi
 ## impostare enviroment esecuzione
 per eseguire il notebook utilizzeremo un virtual enviroment. Per creare il virtual env. assicurarsi di aver installato anaconda (https://www.anaconda.com/products/individual) ed eseguire il seguente script nella home directory del git:
 ```bash
-conda env create -f env_settings/environment.yml 
+conda env create -f env_settings/enviroment.yml 
 ```
 prima di eseguire il codice assicurarsi di aver attivato l'env  
 ```bash 
