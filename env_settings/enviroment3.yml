@@ -1,0 +1,17 @@
+name: tirocinio
+channels:
+  - defaults
+  - pytorch
+
+dependencies:
+  - seaborn
+  - cudatoolkit=10.2
+  - matplotlib
+  - pytorch
+  - python=3.8.5
+  - torchaudio
+  - pandas
+  - numpy
+  - torchvision
+  - bitarray
+  - ipykernel
