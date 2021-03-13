@@ -1,0 +1,14 @@
+name: tirocinio
+channels:
+  - defaults
+dependencies:
+  - python=3.8.5
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - cudatoolkit=11.1
+  - torchaudio
+  - torchvision
+  - pytorch
+  - bitarray
