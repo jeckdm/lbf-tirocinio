@@ -23,14 +23,14 @@ class RNN(nn.Module):
         x = self.linear(x)
         return x, h
 
-def val(model, X_t, y_t):
+def val(model, X_t, y_t,device,criterion):
     model.eval()
     with torch.no_grad():
         total = 0
         total_right = 0
         total_loss = 0
         for batch in range(50):
-            x, y = make_batch_test(X_t, y_t, 256)
+            x, y = make_batch_test(X_t, y_t, 256,device)
             y_hat, _ = model(x)
             #optimizer.zero_grad()
             preds = y_hat.max(dim=2)[1][:,149]
@@ -41,11 +41,11 @@ def val(model, X_t, y_t):
             total_loss += loss
     return total_right / total, total_loss / 50
 
-def train(model):
+def train(model,X_train,y_train,device,optimizer,criterion):
     model.train()
     total_loss = 0
     for batch in range(50):
-        x, y = make_batch_train(X_train, y_train, 256)
+        x, y = make_batch_train(X_train, y_train, 256,device)
         y_hat, _ = model(x)
         optimizer.zero_grad()
         y_hat = y_hat.view(-1,2)
@@ -55,3 +55,20 @@ def train(model):
         optimizer.step()
     total_loss += loss.item()
     return total_loss / 50
+
+
+def make_batch_train(X_t, y_t, B,device):
+  sample = torch.randint(0, X_t.shape[0], [B]).long()
+  batch_X0 = torch.stack([X_t[s] for s in sample])
+  batch_X = batch_X0.to(device)
+  batch_y0 = torch.stack([y_t[s]*torch.ones(len(X_t[s])).long() for s in sample]).to(device)     #
+  batch_y = batch_y0.to(device)
+  return batch_X, batch_y
+  
+def make_batch_test(X_t, y_t, B,device):
+  sample = torch.randint(0, X_t.shape[0], [B]).long()
+  batch_X0 = torch.stack([X_t[s] for s in sample])
+  batch_X = batch_X0.to(device)
+  batch_y0 = torch.stack([y_t[s] for s in sample]).to(device)
+  batch_y = batch_y0.to(device)
+  return batch_X, batch_y
