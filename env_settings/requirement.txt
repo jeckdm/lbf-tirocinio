@@ -1,5 +1,3 @@
 wheel==0.34.1
-torch 
-torchvision 
-torchaudio
-torchtext
+mmh3
+bitarray
