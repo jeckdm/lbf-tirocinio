@@ -1,0 +1,5 @@
+#elementi non rilevanti quindi da non sincronizzare
+__pycache__
+.ipynb_checkpoints
+trained_NN
+*.pyc
