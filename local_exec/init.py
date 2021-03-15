@@ -55,7 +55,7 @@ def training_set(d,phishing_URLs,legitimate_URLs):
                             for url in testing_list])
     y_test = torch.tensor([0]*(len(testing_list)))
 
-    return X_train,y_train,X_test,y_test
+    return X_train,y_train,X_test,y_test,training_list,testing_list
 
 def get_train_set(legitimate_URLs,phishing_URLs):
     return training_set(map_to_number(legitimate_URLs,phishing_URLs),legitimate_URLs,phishing_URLs)  # interfaccia utente, applica le fasi di pre-processing e ritorna i traing set
