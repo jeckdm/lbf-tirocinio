@@ -36,7 +36,7 @@ def map_to_number(legitimate_URLs,phishing_URLs):
         d[l] = i + 1 # Dizionario ordinato per numero di occorrenze ( associa ad ogni lettera il suo rank)
     return d
 
-def training_set(d,phishing_URLs,legitimate_URLs):
+def training_set(d,legitimate_URLs,phishing_URLs):
     # training set: all keys plus non-keys
     # testing set: remaining non-keys 
     training_list = legitimate_URLs[:int(len(legitimate_URLs)/2)]+phishing_URLs
