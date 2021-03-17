@@ -33,30 +33,31 @@ def build_LBF_backup(false_negs, FPR, FPR_tau):
     LBF_backup.add(url)
   return LBF_backup
 
-def test_LBF(model, LBF_backup, tau):
+def test_LBF(model, LBF_backup, tau,X_test,y_test,testing_list,device):
   # test on testing data
   fps = 0
   total = 0
   total_time = 0
   for i in range(int(len(y_test)/100)+1):
-    x0 = torch.stack([X_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
-    x = x0.to(device)
-    y0 = torch.stack([y_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
-    y = y0.to(device)  
-    total += len(y)
-    
-    start = time.time()
-    y_hat, _ = model(x)
-    ps = torch.sigmoid(y_hat[:,:,1])[:,149].squeeze().detach().cpu().numpy()
-    for ix, p in enumerate(ps):
-      if(p > tau):
-        result = True        
-      else:
-        result = LBF_backup.check(testing_list[100*i+ix])
-      if(result):
-        fps += 1
-    end = time.time()
-    total_time += (end-start)
+    if( len([X_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])>0):
+      x0 = torch.stack([X_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
+      x = x0.to(device)
+      y0 = torch.stack([y_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
+      y = y0.to(device)  
+      total += len(y)
+      
+      start = time.time()
+      y_hat, _ = model(x)
+      ps = torch.sigmoid(y_hat[:,:,1])[:,149].squeeze().detach().cpu().numpy()
+      for ix, p in enumerate(ps):
+        if(p > tau):
+          result = True        
+        else:
+          result = LBF_backup.check(testing_list[100*i+ix])
+        if(result):
+          fps += 1
+      end = time.time()
+      total_time += (end-start)
 
   avg_fp = fps/total
   

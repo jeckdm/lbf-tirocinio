@@ -111,18 +111,3 @@ def run_BF(FPR,phishing_URLs,testing_list):
 
   # returns empirical FPR, BF size in bytes, and access time per element
   return avg_fp, BF.size/8, (total_time)/len(testing_list)
-
-def test_size(phishing_URLs,testing_list,loc):    #analizza la size di alcuni bloom filter dato un FPR in una lista
-  FPR, BF_size, t = run_BF(0.02,phishing_URLs,testing_list)
-  print("FPR", FPR, "size", BF_size, "time", t)
-  BF = {"FPR": FPR, "size": BF_size, "time": t}
-  np.save(loc+"BF", BF)
-  BF_sizes = {}
-# Aggiungo alcuni fpr
-  fprs = [0.001,0.005,0.01,0.02]
-# Stampa grandezza del filtro in relazione al target fpr
-  for fpr in fprs:
-    BF = BloomFilter(len(phishing_URLs), fpr)
-    BF_sizes[fpr] = BF.size / 8
-  
-  print(BF_sizes)

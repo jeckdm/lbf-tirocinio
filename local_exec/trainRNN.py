@@ -57,7 +57,7 @@ def load(X_test,y_test,loc,device):
     avg_time /= 100
     print("time to evaluate", avg_time)
     print("="*30)
-    return models
+  return models
 
 def get_classifier_probs(model,X_train,y_train,device):
   probs1 = []
@@ -68,8 +68,15 @@ def get_classifier_probs(model,X_train,y_train,device):
     x = x0.to(device)
     y0 = torch.stack([y_train[s] for s in range(100*i, min(100*(i+1), len(y_train)))])
     y = y0.to(device)  
-    y_hat, _ = model(x)
+    y_hat, _ = model(x) 
     ps = torch.sigmoid(y_hat[:,:,1])[:,149]
-    probs1 += list(ps[y==1].squeeze().detach().cpu().numpy())
-    probs0 += list(ps[y==0].squeeze().detach().cpu().numpy())
+    if(len(ps[y==1]) != 1):
+      probs1 += list(ps[y==1].squeeze().detach().cpu().numpy()) 
+    else:
+      probs1 += list(ps[y==1].detach().cpu().numpy()) 
+    if(len(ps[y==0]) != 1):
+      probs0 += list(ps[y==0].squeeze().detach().cpu().numpy())
+    else:
+      probs0 += list(ps[y==0].detach().cpu().numpy())
+
   return probs1, probs0

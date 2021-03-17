@@ -17,6 +17,8 @@ def take_input():
     # Download data
     legitimate_URLs = np.load("small_data/legitimate_URLs.npy")
     phishing_URLs = np.load("small_data/phishing_URLs.npy")
+    phishing_URLs = np.concatenate((legitimate_URLs,np.load("small_data/phishing_URLs2.npy")))
+
     # randomly permute URLs
     np.random.seed(0)
     legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
