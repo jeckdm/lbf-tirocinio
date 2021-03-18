@@ -8,6 +8,12 @@ per eseguire il notebook utilizzeremo un virtual enviroment. Per creare il virtu
 ```bash
 conda env create -f env_settings/enviroment.yml 
 ```
+nel caso di utenti linux, oppure:
+```bash
+conda env create -f env_settings/enviroment_win.yml 
+```
+nel caso di utenti windows
+
 prima di eseguire il codice assicurarsi di aver attivato l'env  
 ```bash 
 conda activate LBF-env
