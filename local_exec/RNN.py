@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 class RNN(nn.Module):
     def __init__(self, input_size=150, output_size=2, emb_size=128, h_size=128, layers=1, dropout=0.3):
         super(RNN, self).__init__()
@@ -61,7 +62,7 @@ def make_batch_train(X_t, y_t, B,device):
   sample = torch.randint(0, X_t.shape[0], [B]).long()
   batch_X0 = torch.stack([X_t[s] for s in sample])
   batch_X = batch_X0.to(device)
-  batch_y0 = torch.stack([y_t[s]*torch.ones(len(X_t[s])).long() for s in sample]).to(device)     #
+  batch_y0 = torch.stack([y_t[s]*torch.ones(len(X_t[s])).long() for s in sample]).to(device) # Moltiplicazione utile per calcolare funzione di errore
   batch_y = batch_y0.to(device)
   return batch_X, batch_y
   
