@@ -8,22 +8,28 @@ per eseguire il notebook utilizzeremo un virtual enviroment. Per creare il virtu
 ```bash
 conda env create -f env_settings/enviroment.yml 
 ```
+in seguito attivare l'env ed eseguire il seguente comando:
+
+```bash
+ldconfig -p|grep cudart.so|sed -e 's/.*\.\([0-9]*\)\.\([0-9]*\)$/cu\1\2/'
+```
 nel caso di utenti linux, oppure:
 ```bash
 conda env create -f env_settings/enviroment_win.yml 
 ```
-nel caso di utenti windows
+nel caso di utenti windows.
 
 prima di eseguire il codice assicurarsi di aver attivato l'env  
 ```bash 
 conda activate LBF-env
 ``` 
+
 dopo l'esecuzione si consiglia di disattivare l'env 
 ```bash 
 conda deactivate
 ```
 
 ## esecuzione notebook: 
-per eseguire il notebook vanno cambiate le path da cui vengono caricati i file, al momento i due dataset utilizzati sono in 'small-data'
+per eseguire il notebook assicurarsi le path da cui vengono caricati i file coincidano con quelle in cui avete scaricato il dataset. Al momento i due dataset utilizzati sono in 'small-data' e le path del notebook cercano il file lì.
 
 
