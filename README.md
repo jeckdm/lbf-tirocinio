@@ -30,6 +30,6 @@ conda deactivate
 ```
 
 ## esecuzione notebook: 
-per eseguire il notebook assicurarsi le path da cui vengono caricati i file coincidano con quelle in cui avete scaricato il dataset. Al momento i due dataset utilizzati sono in 'small-data' e le path del notebook cercano il file lì.
+per eseguire il notebook assicurarsi le path da cui vengono caricati i file coincidano con quelle in cui avete scaricato il dataset. Al momento i due dataset utilizzati sono in 'small-data' e le path del notebook cercano i file lì.
 
 
