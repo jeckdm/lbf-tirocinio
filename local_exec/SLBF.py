@@ -5,9 +5,8 @@ import torch
 from BF import BloomFilter
 import sys
 import math
-from helpers import *
 
-def build_SLBF_initial(false_negs, FPR, FPR_tau):
+def build_SLBF_initial(false_negs, FPR, FPR_tau,phishing_URLs):
   num_false_negs = len(false_negs)
   FPR_B0 = FPR/FPR_tau*(1.-num_false_negs/len(phishing_URLs))
   if(FPR_B0 <= 0 or FPR_B0 >= 1):
@@ -17,7 +16,7 @@ def build_SLBF_initial(false_negs, FPR, FPR_tau):
     SLBF_initial.add(url)
   return SLBF_initial
 
-def build_SLBF_backup(false_negs, FPR_tau):
+def build_SLBF_backup(false_negs, FPR_tau,phishing_URLs):
   num_false_negs = len(false_negs)
   FPR_B = FPR_tau/((1-FPR_tau)*(len(phishing_URLs)/num_false_negs - 1))
   if(FPR_B <= 0):
@@ -28,7 +27,7 @@ def build_SLBF_backup(false_negs, FPR_tau):
   return SLBF_backup
 
 
-def test_SLBF(SLBF_initial, model, SLBF_backup, tau):
+def test_SLBF(SLBF_initial, model, SLBF_backup, tau,X_test,y_test):
   # test on testing data
   fps = 0
   total = 0

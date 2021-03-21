@@ -4,7 +4,7 @@ from wheel.pep425tags import get_abbr_impl, get_impl_ver, get_abi_tag
 # cuda_output = !ldconfig -p|grep cudart.so|sed -e 's/.*\.\([0-9]*\)\.\([0-9]*\)$/cu\1\2/' must run in env
 import torch
 import numpy as np
-def GPU_init():                           #if NVIDIA then accelerator else none
+def GPU_init():                           #if NVIDIA then accelerator else none, da rivedere, mette sempre cpu
     if exists('/dev/nvidia0'):
         device = torch.device('CUDA') 
         accelerator = cuda_output[0]
@@ -17,7 +17,8 @@ def take_input():
     # Download data
     legitimate_URLs = np.load("small_data/legitimate_URLs.npy")
     phishing_URLs = np.load("small_data/phishing_URLs.npy")
-    phishing_URLs = np.concatenate((legitimate_URLs,np.load("small_data/phishing_URLs2.npy")))
+    #phishing_URLs = np.concatenate((phishing_URLs,np.load("small_data/phishing_URLs2.npy",allow_pickle=True)))
+    #legitimate_URLs=np.concatenate((legitimate_URLs,np.load("small_data/legitimate_URLs2.npy",allow_pickle=True)))
 
     # randomly permute URLs
     np.random.seed(0)
@@ -34,7 +35,10 @@ def map_to_number(legitimate_URLs,phishing_URLs):
     from collections import Counter
     c = Counter(letters) # Counter con occorrenze delle lettere
     d = {}
+    print(len(c))
     for i, (l, _) in enumerate(c.most_common(128)):
+        if(i>128):
+            break
         d[l] = i + 1 # Dizionario ordinato per numero di occorrenze ( associa ad ogni lettera il suo rank)
     return d
 
