@@ -69,7 +69,7 @@ def SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,d
     #    false_negs = np.load(loc+"false_negs2")
     #    taus = np.load(loc+"taus2")
     #except: sesso tentativo fatto in in SLBF_Bloom_filter
-    false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,False,X_train,y_train,device)
+    false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,False)
     SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
     for i in range(3):
         fnrs2[i] = pd.DataFrame(index=fpr_ratios+fpr_ratios2, columns=fprs)
@@ -117,30 +117,34 @@ def graph(params,title,path):
     f.savefig(plot_loc+path)
     # FPR_tau/FPR forced to stay between 0 and 1, 
 
-def FPR_ratio(true_fpr_SLBF):
-    f,ax=plt.subplots(1,3,figsize=(12,3))
-    for i in range(3):
-        true_fpr_SLBF[i].plot(ax=ax[i])
-        ax[i].legend(fontsize='xx-small')
-        ax[i].set_xlabel("Classifier FPR ratio")
-        ax[i].set_ylabel("Overall FPR")
-        ax[i].set_title("SLBF with "+str(h_sizes[i])+" dimensional GRU")
-        plt.tight_layout()
+#def FPR_ratio(true_fpr_SLBF):   generalizzata la funzione graph. chiedo se una buona idea, altrimenti ripristino queste
+#   f,ax=plt.subplots(1,3,figsize=(12,3))
+#    for i in range(3):
+#        true_fpr_SLBF[i].plot(ax=ax[i])
+#        ax[i].legend(fontsize='xx-small')
+#        ax[i].set_xlabel("Classifier FPR ratio")
+#        ax[i].set_ylabel("Overall FPR")
+#        ax[i].set_title("SLBF with "+str(h_sizes[i])+" dimensional GRU")
+#        plt.tight_layout()
     #plt.show()
-    f.savefig(plot_loc+"SLBF_fpr.png")
+#    f.savefig(plot_loc+"SLBF_fpr.png")
 
 
-def size_ratio(sizes_SLBF):
-    f, ax = plt.subplots(1,3,figsize=(12,3))
-    for i in range(3):
-        sizes_SLBF[i].plot(ax=ax[i])
-        ax[i].legend(fontsize='xx-small')
-        ax[i].set_xlabel("Classifier FPR ratio")
-        ax[i].set_ylabel("Total Size of SLBF")
-        ax[i].set_title("SLBF with "+str(h_sizes[i])+" dimensional GRU")
-    plt.tight_layout()
-    plt.show()
-    f.savefig(plot_loc+"SLBF_size.png")
+#def size_ratio(sizes_SLBF):
+#    f, ax = plt.subplots(1,3,figsize=(12,3))
+#    for i in range(3):
+#        sizes_SLBF[i].plot(ax=ax[i])
+#        ax[i].legend(fontsize='xx-small')
+#        ax[i].set_xlabel("Classifier FPR ratio")
+#        ax[i].set_ylabel("Total Size of SLBF")
+#        ax[i].set_title("SLBF with "+str(h_sizes[i])+" dimensional GRU")
+#    plt.tight_layout()
+#    plt.show()
+#    f.savefig(plot_loc+"SLBF_size.png")
 
 
 #size is best when ratio = 1
+
+def SLBF_total_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose):
+    SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
+    SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose=verbose)

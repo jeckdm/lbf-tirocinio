@@ -31,7 +31,7 @@ def LBF_tau_analysis(models,phishing_URLs,verbose,X_train,y_train,device):#calco
     np.save(loc+"taus", taus)
     return false_negs,taus
 
-def save_Backup(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device):   #salva filtri bloom di backup in trained_NN/anlisys; se verbose = true stampa fpr emirico, size e tempo
+def save_Backup(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose=True):   #salva filtri bloom di backup in trained_NN/anlisys; se verbose = true stampa fpr emirico, size e tempo
                                                                             #dei filtri di backup creati
     LBF_backups = {}
     false_negs,taus = LBF_tau_analysis(models,phishing_URLs,False,X_train,y_train,device)
@@ -130,6 +130,6 @@ def size_ratio_graph(sizes_LBF):
   f.savefig(plot_loc+"LBF_size.png")
   # seems most optimal at 0.5
 
-def total_LBF_analisys(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device):
-  save_Backup(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device)
-  LBF_graph(models,phishing_URLs,X_train,y_train,device,falseN,FPR,Size,True,True,True)
+def total_LBF_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose):
+  save_Backup(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
+  LBF_graph(models,phishing_URLs,X_train,y_train,device,True,True,True,verbose)
