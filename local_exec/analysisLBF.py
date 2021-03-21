@@ -54,7 +54,7 @@ def save_Backup(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testi
                # print("Numero falsi negativi = 0")
 
   #def plots_LBF(models,phishing_URLs,loc,verbose,X_train,y_train,device,LBF_back,FalseNeg,FPR,TotSize) # stampa grafici su LBF, i parametri false neg, FPR e totsize determinano  quali grafici stampare
-def LBF_graph(models,phishing_URLs,X_train,y_train,device,falseN,FPR,Size,verbose):
+def LBF_graph(models,phishing_URLs,X_train,y_train,device,falseN=True,FPR=True,Size=True,verbose=True):
   false_negs,_=LBF_tau_analysis(models,phishing_URLs,False,X_train,y_train,device)
   fnrs = {}
   # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
@@ -128,7 +128,7 @@ def size_ratio_graph(sizes_LBF):
   plt.tight_layout()
   #plt.show()
   f.savefig(plot_loc+"LBF_size.png")
-# seems most optimal at 0.5
+  # seems most optimal at 0.5
 
 def total_LBF_analisys(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device):
   save_Backup(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device)

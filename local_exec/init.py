@@ -5,7 +5,7 @@ from wheel.pep425tags import get_abbr_impl, get_impl_ver, get_abi_tag
 import torch
 import numpy as np
 def GPU_init():                           #if NVIDIA then accelerator else none, da rivedere, mette sempre cpu
-    if exists('/dev/nvidia0'):
+    if exists('/dev/nvidia0'):   #da cambiare
         device = torch.device('CUDA') 
         accelerator = cuda_output[0]
     else:

@@ -5,7 +5,8 @@ import torch
 from BF import BloomFilter
 import sys
 import math
-
+import init
+device,_ = init.GPU_init()
 def build_SLBF_initial(false_negs, FPR, FPR_tau,phishing_URLs):
   num_false_negs = len(false_negs)
   FPR_B0 = FPR/FPR_tau*(1.-num_false_negs/len(phishing_URLs))

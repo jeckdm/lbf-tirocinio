@@ -10,6 +10,7 @@ import trainRNN
 from trainRNN  import emb_size,h_sizes #parametri per training della RNN -> per info train.py
 import analysisBF
 import analysisLBF
+import analysisSLBF
 #interfaces
 def load_RNN():
     return trainRNN.load(X_train,y_train,loc,device)
@@ -17,14 +18,16 @@ def BF_test_size():
     analysis.BF_test_size(phishing_URLs,testing_list)
 def LBF_tau_analysis(verbose=False):#calcola la tau basandosi su predefiniti fpr e fprs-rate e se verbose=true stampa a video i risultati dell'analisi.
     analysisLBF.LBF_tau_analysis(models,phishing_URLs,verbose,X_train,y_train,device)
-def save_Backup(verbose=False):
+def save_Backup(verbose=False): #salva filtri bloom di backup in trained_NN/analisys; se verbose = true stampa fpr emirico, size e tempo
     analysisLBF.save_Backup(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device)
-                     #salva filtri bloom di backup in trained_NN/anlisys; se verbose = true stampa fpr emirico, size e tempo
-                                                                            #dei filtri di backup creati
-def LBF_graph(falseN,FPR,Size,verbose=False):
+
+def LBF_graph(falseN=True,FPR=True,Size=True,verbose=False): #stampa grafici, specifico quali grafici (default tutti) e se stampare msg (default true)
     analysisLBF.LBF_graph(models,phishing_URLs,X_train,y_train,device,falseN,FPR,Size,verbose)
-def SLBF_Bloom_filters_analysis(verbose):
-    analysisSLBF.SLBF_Bloom_filters_analysis(models,phishing_URLs,verbose,X_train,y_train,X_test,y_test,testing_list,device)
+
+def SLBF_tau_analysis(verbose = True):
+    models,phishing_URLs,verbose,X_train,y_train,device
+def SLBF_Bloom_filters_analysis(verbose=True): #crea Bloom filters necessari per SLBF e li salva in TrainNN/analysis
+    analysisSLBF.SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
 
 
 
