@@ -39,7 +39,5 @@ plot_loc = "trained_NN/plots/"
 #trainRNN.train(X_train,y_train,loc,device) #eseguire solo la prima volta
 
 models = load_RNN()
-#analysis.save_Backup(models,phishing_URLs,True,X_train,y_train,X_test,y_test,training_list,device)
-LBF_graph(True,True,True)
-#LBF_tau_analysis(True)
-#def SLBF_tau_analysis(models,phishing_URLs,verbose,X_train,y_train,device):# Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla
+#LBF_graph(True,True,True)
+SLBF_Bloom_filters_analysis(True)
