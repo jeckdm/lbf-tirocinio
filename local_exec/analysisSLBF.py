@@ -14,7 +14,7 @@ fpr_ratios2 = [1.*i for i in range(1,11)]
 
 
 
-def SLBF_tau_analysis(models,phishing_URLs,verbose,X_train,y_train,device):# Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla
+def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True):# Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla
     # base del fprs e fpr_ratio target.
     false_negs = {}
     taus = {}
@@ -27,8 +27,8 @@ def SLBF_tau_analysis(models,phishing_URLs,verbose,X_train,y_train,device):# Per
                 if (verbose):
                     print("Modello %d: fpr: %.3f, fpr ratio: %.2f, FNR: %.20f, tau: %.10f" % (i, fpr, fpr_ratio, len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)]))
                 # print(len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)])
-    np.save(loc+"false_negs2", false_negs)
-    np.save(loc+"taus2", taus)
+    #np.save(loc+"false_negs2", false_negs) provato per salvare i risultati ( e ri-usarli con SLBF bloom filter ma da' problemi)
+    #np.save(loc+"taus2", taus)
     return false_negs,taus
 
 
@@ -36,15 +36,16 @@ def SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testin
     SLBF_initials = {}
     SLBF_backups = {}
     # Per ognuno dei modelli salvo il filtro di backup e quello iniziale costruito sulla base del fpr e fpr_ratio target
-    try:
-        false_negs = np.load(loc+"false_negs2")
-        taus = np.load(loc+"taus2")
-    except:
-        false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,False,X_train,y_train,device)
+   # try:
+    #    false_negs = np.load(loc+"false_negs2.npy",allow_pickle=True)
+    #    taus = np.load(loc+"taus2.npy",allow_pickle=True)
+    #except:  l'idea era di guardare se era già presente un false_negs2 ( prodotto  da tau analysis) ese si caricare quello senza richiamare tau analysis
+    #purtroppo l'elemento viene caricato male (problemi con le dimensioni).
+    false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,False)
     for i in range(3):
         SLBF_initials[i] = {}
         SLBF_backups[i] = {}
-        for fpr, fpr_ratio in false_negs[i].keys():
+        for fpr,fpr_ratio in false_negs[i].keys():
             c=(1.-len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs))
             # Se la tau non rispetta i bound
             if(fpr_ratio < c or fpr*fpr_ratio > c):
@@ -55,7 +56,7 @@ def SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testin
             SLBF_backups[i][(fpr,fpr_ratio)] = SLBF.build_SLBF_backup(false_negs[i][(fpr,fpr_ratio)], fpr*fpr_ratio,phishing_URLs)
             if(SLBF_backups[i][(fpr,fpr_ratio)] =='error' or SLBF_initials[i][(fpr,fpr_ratio)]=='error'):
                 continue
-            fpr0, BF_size, t = SLBF.test_SLBF(SLBF_initials[i][(fpr,fpr_ratio)], models[i], SLBF_backups[i][(fpr,fpr_ratio)], taus[i][(fpr,fpr_ratio)],X_test,y_test)
+            fpr0, BF_size, t = SLBF.test_SLBF(SLBF_initials[i][(fpr,fpr_ratio)], models[i], SLBF_backups[i][(fpr,fpr_ratio)],taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
             if(verbose):
                 print(f"teoric fpr: {fpr}, empirc fpr: {fpr0}, size of backup BF: {BF_size}, time : {t}")
             SLBF0 = {"FPR": fpr0, "size": BF_size+model_sizes[i], "time": t}
@@ -64,12 +65,12 @@ def SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testin
 def SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,falseN=True,FPR=True,Size=True,verbose=True):    #require SLBF_Bloom_filters
     fnrs2 = {}
     # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
-    try:
-        false_negs = np.load(loc+"false_negs2")
-        taus = np.load(loc+"taus2")
-    except:
-        false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,False,X_train,y_train,device)
-        SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
+    #try:
+    #    false_negs = np.load(loc+"false_negs2")
+    #    taus = np.load(loc+"taus2")
+    #except: sesso tentativo fatto in in SLBF_Bloom_filter
+    false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,False,X_train,y_train,device)
+    SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
     for i in range(3):
         fnrs2[i] = pd.DataFrame(index=fpr_ratios+fpr_ratios2, columns=fprs)
         for fpr,fpr_ratio in false_negs[i].keys():
@@ -90,7 +91,7 @@ def SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,d
                 true_fpr_SLBF[i].loc[fpr_ratio,fpr] = SLBF['FPR']
                 sizes_SLBF[i].loc[fpr_ratio,fpr] = SLBF['size']
                 times_SLBF[i].loc[fpr_ratio,fpr] = SLBF['time']
-                print(SLBF['FPR'], SLBF['size'], SLBF['time'])
+                print(f"""{SLBF['FPR']}, {SLBF['size']}, {SLBF['time']}""")
             except:
                 print("error", fpr_ratio, fpr) # Bad tau + false negs = 0
                 continue
