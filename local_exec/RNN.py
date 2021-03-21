@@ -54,7 +54,7 @@ def train(model,X_train,y_train,device,optimizer,criterion):
         loss = criterion(y_hat, y)
         loss.backward()
         optimizer.step()
-    total_loss += loss.item()
+        total_loss += loss.item()
     return total_loss / 50
 
 

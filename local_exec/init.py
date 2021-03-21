@@ -4,10 +4,17 @@ from wheel.pep425tags import get_abbr_impl, get_impl_ver, get_abi_tag
 # cuda_output = !ldconfig -p|grep cudart.so|sed -e 's/.*\.\([0-9]*\)\.\([0-9]*\)$/cu\1\2/' must run in env
 import torch
 import numpy as np
+<<<<<<< HEAD
 def GPU_init():                           #if NVIDIA then accelerator else none
     if torch.cuda.is_available():
         device = torch.device('cuda') 
         # accelerator = cuda_output[0]
+=======
+def GPU_init():                           #if NVIDIA then accelerator else none, da rivedere, mette sempre cpu
+    if exists('/dev/nvidia0'):   #da cambiare
+        device = torch.device('CUDA') 
+        accelerator = cuda_output[0]
+>>>>>>> 76347bc6e5200a18fe57f050a0839ab0a26df65b
     else:
         device = torch.device('cpu') 
         accelerator= 'cpu' 
@@ -17,7 +24,8 @@ def take_input():
     # Download data
     legitimate_URLs = np.load("small_data/legitimate_URLs.npy")
     phishing_URLs = np.load("small_data/phishing_URLs.npy")
-    phishing_URLs = np.concatenate((legitimate_URLs,np.load("small_data/phishing_URLs2.npy")))
+    phishing_URLs = np.concatenate((phishing_URLs,np.load("small_data/phishing_URLs2.npy",allow_pickle=True)))
+    legitimate_URLs=np.concatenate((legitimate_URLs,np.load("small_data/legitimate_URLs2.npy",allow_pickle=True)))
 
     # randomly permute URLs
     np.random.seed(0)

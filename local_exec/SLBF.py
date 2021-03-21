@@ -5,9 +5,10 @@ import torch
 from BF import BloomFilter
 import sys
 import math
-from helpers import *
+import init
+device,_ = init.GPU_init()
 
-def build_SLBF_initial(false_negs, FPR, FPR_tau):
+def build_SLBF_initial(false_negs, FPR, FPR_tau,phishing_URLs):
   num_false_negs = len(false_negs)
   FPR_B0 = FPR/FPR_tau*(1.-num_false_negs/len(phishing_URLs))
   if(FPR_B0 <= 0 or FPR_B0 >= 1):
@@ -17,7 +18,7 @@ def build_SLBF_initial(false_negs, FPR, FPR_tau):
     SLBF_initial.add(url)
   return SLBF_initial
 
-def build_SLBF_backup(false_negs, FPR_tau):
+def build_SLBF_backup(false_negs, FPR_tau,phishing_URLs):
   num_false_negs = len(false_negs)
   FPR_B = FPR_tau/((1-FPR_tau)*(len(phishing_URLs)/num_false_negs - 1))
   if(FPR_B <= 0):
@@ -28,32 +29,33 @@ def build_SLBF_backup(false_negs, FPR_tau):
   return SLBF_backup
 
 
-def test_SLBF(SLBF_initial, model, SLBF_backup, tau):
+def test_SLBF(SLBF_initial, model, SLBF_backup, tau, X_test,y_test,testing_list):
   # test on testing data
   fps = 0
   total = 0
   total_time = 0
   for i in range(int(len(y_test)/100)+1):
-    x0 = torch.stack([X_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
-    x = x0.to(device)
-    y0 = torch.stack([y_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
-    y = y0.to(device)  
-    total += len(y)
-    
-    start = time.time()
-    y_hat, _ = model(x)
-    ps = torch.sigmoid(y_hat[:,:,1])[:,149].squeeze().detach().cpu().numpy()
-    for ix, p in enumerate(ps):
-      result = SLBF_initial.check(testing_list[100*i+ix])
-      if(result):
-        if(p>tau):
-          result = True
-        else:
-          result = SLBF_backup.check(testing_list[100*i+ix])
-      if(result):
-        fps += 1
-    end = time.time()
-    total_time += (end-start)
+    if(len([X_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))]) > 0):
+      x0 = torch.stack([X_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
+      x = x0.to(device)
+      y0 = torch.stack([y_test[s] for s in range(100*i, min(100*(i+1), len(y_test)))])
+      y = y0.to(device)  
+      total += len(y)
+      
+      start = time.time()
+      y_hat, _ = model(x)
+      ps = torch.sigmoid(y_hat[:,:,1])[:,149].squeeze().detach().cpu().numpy()
+      for ix, p in enumerate(ps):
+        result = SLBF_initial.check(testing_list[100*i+ix])
+        if(result):
+          if(p>tau):
+            result = True
+          else:
+            result = SLBF_backup.check(testing_list[100*i+ix])
+        if(result):
+          fps += 1
+      end = time.time()
+      total_time += (end-start)
 
   avg_fp = fps/total
   
