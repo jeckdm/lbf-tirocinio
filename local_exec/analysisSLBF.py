@@ -4,18 +4,22 @@ import LBF
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from trainRNN import h_sizes
-fprs = [0.001,0.005,0.01,0.02]
-fpr_ratios = [0.1*i for i in range(1,11)]
-model_sizes = [4,8,16]
-loc = "trained_NN/simulations/"      #set location
-plot_loc = "trained_NN/plots/"
-fpr_ratios2 = [1.*i for i in range(1,11)]
+# Parametri globali
+import config
+
+# Rinomino parametri config per comoditá
+fprs = config.fprs 
+fpr_ratios = config.fpr_ratios2
+h_sizes = config.h_sizes 
+loc = config.loc_nn 
+plot_loc = config.loc_plots
+device = config.device
 
 
-
-def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True):# Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla
-    # base del fprs e fpr_ratio target.
+def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True): 
+    '''
+    Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla base del fprs e fpr_ratio target.
+    '''
     false_negs = {}
     taus = {}
     for i in range(3):
@@ -33,9 +37,13 @@ def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True):
 
 
 def SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose=True):
+    '''
+    Per ognuno dei modelli salvo il filtro di backup e quello iniziale costruito sulla base del fpr e fpr_ratio target
+    '''
+    
     SLBF_initials = {}
     SLBF_backups = {}
-    # Per ognuno dei modelli salvo il filtro di backup e quello iniziale costruito sulla base del fpr e fpr_ratio target
+    
    # try:
     #    false_negs = np.load(loc+"false_negs2.npy",allow_pickle=True)
     #    taus = np.load(loc+"taus2.npy",allow_pickle=True)

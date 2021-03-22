@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 # helper functions to do the math 
 
@@ -21,6 +22,9 @@ def solve_FPR_LBF(b, F_p, F_n, alpha=0.6185):
 def solve_FPR_SBF(b1, b2, F_p, F_n, alpha=0.6185):
 	return  (alpha ** b1)* (F_p + (1-F_p)* (alpha  ** (b2 / F_n)))
 
+def determine_tau(FPR_tau, prob_list):
+  return np.percentile(np.array(prob_list),100*(1.-FPR_tau))
+  
 # print(solve_LBF_size(0.005, 0.01, 0.5))
 # print(solve_SBF_size(0.005, 0.01, 0.5))
 

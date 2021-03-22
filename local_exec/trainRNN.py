@@ -1,55 +1,57 @@
-import numpy as np
 import torch
 import torch.nn as nn
 import os
 import time
-import torch.nn.functional as F
 import RNN as R
-from RNN import val,train,RNN,make_batch_train,make_batch_test
-#paramaters RNN
-emb_size=5
-h_sizes = [16,8,4]
-layers = 1
-criterion = nn.CrossEntropyLoss()
+# Parametri globali
+import config
 
+# Rinomino parametri globali per comoditá
+emb_size= config.emb_size
+h_sizes = config.h_sizes
+layers = config.layers
+device = config.device
 
 def give_params():
   return emb_size,h_sizes
 
-def train(X_train,y_train,loc,device):
-  models = {}
-  for i in range(3):
-    h_size = h_sizes[i]
-    # Create model, loss function, optimizer
-    models[i] = RNN(emb_size=emb_size, h_size=h_size, layers=layers).to(device)
-    optimizer = torch.optim.Adamax(models[i].parameters())
+def train(model, X_train, y_train, optimizer, criterion):
+  '''
+  Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.
+  '''
 
-    # Train and validate
-    start = time.time()
-    for epoch in range(30):
-        train_loss = R.train(models[i],X_train,y_train,device,optimizer,criterion)
-        val_acc, val_loss = val(models[i],X_train,y_train,device,criterion)
-        if(epoch%10 == 0):
-          print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
-    end = time.time()
-    print(end-start)
-    torch.save(models[i].state_dict(), loc+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))  
+   # Train and validate
+  start = time.time()
+  for epoch in range(30):
+      train_loss = R.train(model,X_train,y_train,optimizer,criterion)
+      val_acc, val_loss = R.val(model,X_train,y_train,criterion)
+      if(epoch%10 == 0):
+        print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
+  end = time.time()
+  print(end-start)  
 
-def load(X_test,y_test,loc,device):
+def load_eval(X_test, y_test, criterion):
+  '''
+  Carica i parametri delle RNN giá addestrate presenti in loc e ritorna una lista di RNN definite con gli  iperparametri contenuti in (h_sizes, emb_sizes, layers).
+
+  Stampa inoltre i risultati di RNN.eval(models[i], X_test,y_test,criterion) su ognuna di queste RNN.
+  '''
+
   models = {}
   model_sizes = {}
+
   for i,h_size in enumerate(h_sizes):
     print("hidden size", h_size)
-    model_sizes[i] = os.path.getsize(loc+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))
+    model_sizes[i] = os.path.getsize(config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))
     print("model size (bytes)", model_sizes[i])
-    models[i] = RNN(emb_size=emb_size, h_size=h_size, layers=layers).to(device)
-    models[i].load_state_dict(torch.load(loc+"RNN_emb"+str(emb_size)+"_hid"+str(h_size)))
+    models[i] = R.RNN(emb_size=emb_size, h_size=h_size, layers=layers).to(device)
+    models[i].load_state_dict(torch.load(config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size)))
     models[i].eval()
-    print(val(models[i], X_test,y_test,device,criterion))
+    print(R.val(models[i], X_test,y_test,criterion))
     
     avg_time = 0
     for t in range(100):
-      x,y = make_batch_test(X_test, y_test,1,device)
+      x,y = R.make_batch_test(X_test, y_test,1)
       start = time.time()
       models[i](x)
       total = time.time()-start
@@ -57,9 +59,17 @@ def load(X_test,y_test,loc,device):
     avg_time /= 100
     print("time to evaluate", avg_time)
     print("="*30)
+
   return models
 
-def get_classifier_probs(model,X_train,y_train,device):
+def get_classifier_probs(model,X_train,y_train):
+  '''
+  Ritorna le previsioni di model sul dataset (X_train, y_train).
+  Le previsioni vengono ritornate come:
+    probs1 = previsioni su URL phishing
+    probs0 = previsioni su URL legit
+  '''
+
   probs1 = []
   probs0 = []
   # Divisione in batch da 100
@@ -80,3 +90,11 @@ def get_classifier_probs(model,X_train,y_train,device):
       probs0 += list(ps[y==0].detach().cpu().numpy())
 
   return probs1, probs0
+
+
+'''
+- aggiunti parametri globali
+- spostato for loop al di fuori di train
+- spostati emb_size, h_sizes, layers e criterion in config.py (Piú comodo per testare altri iperparametri?)
+- rimossi alcuni import
+'''

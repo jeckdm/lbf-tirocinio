@@ -1,11 +1,5 @@
-import numpy as np
-import torch
-import sys
-import math
-
 import mmh3
 import math
-import torch
 import time
 from bitarray import bitarray 
 
@@ -89,25 +83,36 @@ class BloomFilter(object):
         return int(k)
 
 
-def run_BF(FPR,phishing_URLs,testing_list):
-  BF = BloomFilter(len(phishing_URLs), FPR)
-  for url in phishing_URLs:
-    BF.add(url)
-  
-  fps = 0
-  total = 0
-  total_time = 0
-  for urlt in testing_list:
-    total += 1
-    start = time.time()
-    result = BF.check(urlt)
-    end = time.time()
-    total_time += (end-start)
-    if result == True:
-      fps += 1
-  avg_fp = fps/total
-  pino = "ciaopino"
-  print(f"avg fp : {fps/total} , fps :{fps}, total: {total}, {BF.check(testing_list[2])}")
+def run_BF(FPR, key_set, testing_list):
+    '''
+    Crea un BF con key-set = key_set e target fpr = FPR
+    e ritorna FPR empirico, dimensione del BF e tempo di accesso medio per elemento calcolati testando la struttura su testing_list.
+    '''
 
-  # returns empirical FPR, BF size in bytes, and access time per element
-  return avg_fp, BF.size/8, (total_time)/len(testing_list)
+    BF = BloomFilter(len(key_set), FPR)
+    for url in key_set:
+        BF.add(url)
+    
+    fps = 0
+    total = 0
+    total_time = 0
+
+    for urlt in testing_list:
+        total += 1
+        start = time.time()
+        result = BF.check(urlt)
+        end = time.time()
+        total_time += (end-start)
+        if result == True:
+            fps += 1
+
+    avg_fp = fps/total
+    # print(f"avg fp : {fps/total} , fps :{fps}, total: {total}, {BF.check(testing_list[2])}")
+
+    # returns empirical FPR, BF size in bytes, and access time per element
+    return avg_fp, BF.size/8, (total_time)/len(testing_list)
+
+'''
+- cambiati nomi di alcuni parametri
+- cancellato alcuni refusi
+'''

@@ -1,14 +1,20 @@
 import time
-from torch.autograd import Variable
-import numpy as np
 import torch
-from BF import BloomFilter
 import sys
-import math
 import init
-device,_ = init.GPU_init()
+from BF import BloomFilter
+from helpers import determine_tau
+# Parametri globali
+import config
+
+device = config.device
 
 def build_SLBF_initial(false_negs, FPR, FPR_tau,phishing_URLs):
+  '''
+  Ritorna un BloomFilter definito sull'insieme dei phishing_URLs ed avente un target FPR calcolato tramite la formula:
+    FPR_B0 = FPR/FPR_tau*(1.-num_false_negs/len(phishing_URLs))
+  '''
+
   num_false_negs = len(false_negs)
   FPR_B0 = FPR/FPR_tau*(1.-num_false_negs/len(phishing_URLs))
   if(FPR_B0 <= 0 or FPR_B0 >= 1):
@@ -19,6 +25,11 @@ def build_SLBF_initial(false_negs, FPR, FPR_tau,phishing_URLs):
   return SLBF_initial
 
 def build_SLBF_backup(false_negs, FPR_tau,phishing_URLs):
+  '''
+  Ritorna un BloomFilter definito sull'insieme dei falsi negativi ed avente un target FPR calcolato tramite la formula:
+    FPR_B = FPR_tau/((1-FPR_tau)*(len(phishing_URLs)/num_false_negs - 1))
+  '''
+
   num_false_negs = len(false_negs)
   FPR_B = FPR_tau/((1-FPR_tau)*(len(phishing_URLs)/num_false_negs - 1))
   if(FPR_B <= 0):
@@ -28,8 +39,12 @@ def build_SLBF_backup(false_negs, FPR_tau,phishing_URLs):
     SLBF_backup.add(url)
   return SLBF_backup
 
-
 def test_SLBF(SLBF_initial, model, SLBF_backup, tau, X_test,y_test,testing_list):
+  '''
+  Dato un LBF avente SLBF_initial come BF iniziale, model come classificatore con soglia tau e come BF di backup SLBF_backup ritorna
+  FPR empirico, dimensione di (BF di backup + BF iniziale) e tempo di accesso medio per elemento calcolati testando la struttura su (X_test, y_test)
+  '''
+
   # test on testing data
   fps = 0
   total = 0
@@ -61,3 +76,8 @@ def test_SLBF(SLBF_initial, model, SLBF_backup, tau, X_test,y_test,testing_list)
   
   # returns empirical FPR, BF size, and avg access time
   return avg_fp, (SLBF_initial.size+SLBF_backup.size) / 8, (total_time)/len(y_test)
+
+'''
+- aggiunti commenti
+- rimossi alcuni import
+'''
