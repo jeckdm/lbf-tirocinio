@@ -12,11 +12,6 @@ import helpers
 import config
 
 # Rinomino parametri config per comoditá
-fprs = config.fprs 
-fpr_ratios = config.fpr_ratios2
-h_sizes = config.h_sizes 
-loc = config.loc_nn 
-plot_loc = config.loc_plots
 device = config.device
 
 def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, taus = False, verbose=True):
@@ -33,11 +28,11 @@ def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, 
     SLBF_backups = {}
 
     # Evito di rifare analisi di tau se non serve
-    if (path.exists(loc + name[0] + ".npy") and path.exists(loc + name[1] + ".npy")  and taus == False):
-        false_negs = np.load(loc + name[0] + ".npy", allow_pickle=True)  
+    if (path.exists(config.loc_nn + name[0] + ".npy") and path.exists(config.loc_nn + name[1] + ".npy")  and taus == False):
+        false_negs = np.load(config.loc_nn + name[0] + ".npy", allow_pickle=True)  
         false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
 
-        taus = np.load(loc + name[1] + ".npy", allow_pickle=True)  
+        taus = np.load(config.loc_nn + name[1] + ".npy", allow_pickle=True)  
         taus = taus.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
     else:
         false_negs, taus = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
@@ -62,10 +57,10 @@ def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, 
                 if(verbose):
                     print(f"teoric fpr: {fpr}, empirc fpr: {fpr0}, size of backup BF: {BF_size}, time : {t}")
 
-                model_size =  os.path.getsize(loc+"RNN_emb"+str(config.emb_size)+"_hid"+str(h_sizes[i])) # Calcolo size classificatore
+                model_size =  os.path.getsize(config.loc_nn+"RNN_emb"+str(config.emb_size)+"_hid"+str(config.h_sizes[i])) # Calcolo size classificatore
                 print("SIZE MODELLO: ",  model_size)
                 SLBF0 = {"FPR": fpr0, "size": BF_size+model_size, "time": t}
-                np.save(loc+"SLBF_hid"+str(h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), SLBF0)
+                np.save(config.loc_nn+"SLBF_hid"+str(config.h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), SLBF0)
             except ZeroDivisionError:
                 print("Numero falsi negativi = 0")
 
@@ -85,8 +80,8 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, name, falseN=True, FPR=T
     '''
 
     # Evito di rifare analisi di tau se non serve
-    if (path.exists(loc + name[0] + ".npy") and taus == False):
-        false_negs = np.load(loc + name[0] + ".npy", allow_pickle=True)  
+    if (path.exists(config.loc_nn + name[0] + ".npy") and taus == False):
+        false_negs = np.load(config.loc_nn + name[0] + ".npy", allow_pickle=True)  
         false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
     else:
         false_negs, _ = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
@@ -95,7 +90,7 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, name, falseN=True, FPR=T
     fnrs = {}
 
     for i in range(len(models)):
-        fnrs[i] = pd.DataFrame(index=fpr_ratios, columns=fprs)
+        fnrs[i] = pd.DataFrame(index=config.fpr_ratios, columns=config.fprs)
         for fpr,fpr_ratio in false_negs[i].keys():
             fnrs[i].loc[fpr_ratio,fpr] = len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs)
 
@@ -106,12 +101,12 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, name, falseN=True, FPR=T
     times_SLBF = {}
 
     for i in range(len(models)):
-        true_fpr_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
-        sizes_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
-        times_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
+        true_fpr_SLBF[i] = pd.DataFrame(index = config.fpr_ratios, columns = config.fprs)
+        sizes_SLBF[i] = pd.DataFrame(index = config.fpr_ratios, columns = config.fprs)
+        times_SLBF[i] = pd.DataFrame(index = config.fpr_ratios, columns = config.fprs)
         for fpr,fpr_ratio in false_negs[i].keys():
             try:
-                SLBF = np.load(loc+"SLBF_hid"+str(h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio)+".npy", allow_pickle=True).item()
+                SLBF = np.load(config.loc_nn+"SLBF_hid"+str(config.h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio)+".npy", allow_pickle=True).item()
                 true_fpr_SLBF[i].loc[fpr_ratio,fpr] = SLBF['FPR']
                 sizes_SLBF[i].loc[fpr_ratio,fpr] = SLBF['size']
                 times_SLBF[i].loc[fpr_ratio,fpr] = SLBF['time']
@@ -130,16 +125,16 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, name, falseN=True, FPR=T
     
 
 def graph(params,title,path):
-    f,ax = plt.subplots(1,len(h_sizes),figsize=(12,3))
-    for i in range(len(h_sizes)):
+    f,ax = plt.subplots(1,len(config.h_sizes),figsize=(12,3))
+    for i in range(len(config.h_sizes)):
         params[i].plot(ax=ax[i])
         ax[i].legend(fontsize='xx-small')
         ax[i].set_xlabel("Classifier FPR ratio")
         ax[i].set_ylabel(title)
-        ax[i].set_title("SLBF with "+str(h_sizes[i])+" dimensional GRU")
+        ax[i].set_title("SLBF with "+str(config.h_sizes[i])+" dimensional GRU")
     plt.tight_layout()
     #plt.show()
-    f.savefig(plot_loc+path)
+    f.savefig(config.loc_plots+path)
     # FPR_tau/FPR forced to stay between 0 and 1, 
 
 #def FPR_ratio(true_fpr_SLBF):   generalizzata la funzione graph. chiedo se una buona idea, altrimenti ripristino queste
