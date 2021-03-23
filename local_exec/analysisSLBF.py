@@ -4,6 +4,9 @@ import LBF
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os.path
+from os import path
+
 # Parametri globali
 import config
 
@@ -18,8 +21,9 @@ device = config.device
 
 def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True): 
     '''
-    Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla base del fprs e fpr_ratio target.
+    Per ognuno dei modelli salvo la lista di URL classificati come falsi negativi dal classificatore e tau ottimale nelle relative strutture sulla base del fprs e fpr_ratio target.
     '''
+
     false_negs = {}
     taus = {}
     for i in range(3):
@@ -31,68 +35,96 @@ def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True):
                 if (verbose):
                     print("Modello %d: fpr: %.3f, fpr ratio: %.2f, FNR: %.20f, tau: %.10f" % (i, fpr, fpr_ratio, len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)]))
                 # print(len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)])
-    #np.save(loc+"false_negs2", false_negs) provato per salvare i risultati ( e ri-usarli con SLBF bloom filter ma da' problemi)
-    #np.save(loc+"taus2", taus)
+
+    np.save(loc+"false_negs2", false_negs) # provato per salvare i risultati ( e ri-usarli con SLBF bloom filter ma da' problemi)
+    np.save(loc+"taus2", taus)
+
     return false_negs,taus
 
 
-def SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose=True):
+def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, taus = False, verbose=True):
     '''
     Per ognuno dei modelli salvo il filtro di backup e quello iniziale costruito sulla base del fpr e fpr_ratio target
     '''
-    
+
     SLBF_initials = {}
     SLBF_backups = {}
-    
-   # try:
-    #    false_negs = np.load(loc+"false_negs2.npy",allow_pickle=True)
-    #    taus = np.load(loc+"taus2.npy",allow_pickle=True)
-    #except:  l'idea era di guardare se era già presente un false_negs2 ( prodotto  da tau analysis) ese si caricare quello senza richiamare tau analysis
-    #purtroppo l'elemento viene caricato male (problemi con le dimensioni).
-    false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,False)
-    for i in range(3):
+
+    # Evito di rifare analisi di tau se non serve
+    if (path.exists(loc + 'false_negs.npy') and taus == False):
+        false_negs = np.load(loc + "false_negs.npy", allow_pickle=True)  
+        false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
+
+        taus = np.load(loc + "taus.npy", allow_pickle=True)  
+        taus = taus.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
+    else:
+        false_negs, taus = LBF.LBF_tau_analysis(models,phishing_URLs,X_train,y_train, verbose=True)
+
+    for i in range(len(models)):
         SLBF_initials[i] = {}
         SLBF_backups[i] = {}
+
         for fpr,fpr_ratio in false_negs[i].keys():
             c=(1.-len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs))
             # Se la tau non rispetta i bound
             if(fpr_ratio < c or fpr*fpr_ratio > c):
                 print(fpr_ratio, fpr, "bad fpr_tau")
                 continue
-            # try:
-            SLBF_initials[i][(fpr,fpr_ratio)] = SLBF.build_SLBF_initial(false_negs[i][(fpr,fpr_ratio)], fpr, fpr*fpr_ratio,phishing_URLs)
-            SLBF_backups[i][(fpr,fpr_ratio)] = SLBF.build_SLBF_backup(false_negs[i][(fpr,fpr_ratio)], fpr*fpr_ratio,phishing_URLs)
-            if(SLBF_backups[i][(fpr,fpr_ratio)] =='error' or SLBF_initials[i][(fpr,fpr_ratio)]=='error'):
-                continue
-            fpr0, BF_size, t = SLBF.test_SLBF(SLBF_initials[i][(fpr,fpr_ratio)], models[i], SLBF_backups[i][(fpr,fpr_ratio)],taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
-            if(verbose):
-                print(f"teoric fpr: {fpr}, empirc fpr: {fpr0}, size of backup BF: {BF_size}, time : {t}")
-            SLBF0 = {"FPR": fpr0, "size": BF_size+model_sizes[i], "time": t}
-            np.save(loc+"SLBF_hid"+str(h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), SLBF0)
 
-def SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,falseN=True,FPR=True,Size=True,verbose=True):    #require SLBF_Bloom_filters
-    fnrs2 = {}
+            try:
+                SLBF_initials[i][(fpr,fpr_ratio)] = SLBF.build_SLBF_initial(false_negs[i][(fpr,fpr_ratio)], fpr, fpr*fpr_ratio,phishing_URLs)
+                SLBF_backups[i][(fpr,fpr_ratio)] = SLBF.build_SLBF_backup(false_negs[i][(fpr,fpr_ratio)], fpr*fpr_ratio,phishing_URLs)
+                if(SLBF_backups[i][(fpr,fpr_ratio)] =='error' or SLBF_initials[i][(fpr,fpr_ratio)]=='error'):
+                    continue
+                fpr0, BF_size, t = SLBF.test_SLBF(SLBF_initials[i][(fpr,fpr_ratio)], models[i], SLBF_backups[i][(fpr,fpr_ratio)],taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
+                if(verbose):
+                    print(f"teoric fpr: {fpr}, empirc fpr: {fpr0}, size of backup BF: {BF_size}, time : {t}")
+
+                model_size =  os.path.getsize(loc+"RNN_emb"+str(config.emb_size)+"_hid"+str(h_sizes[i])) # Calcolo size classificatore
+                print("SIZE MODELLO: ",  model_size)
+                SLBF0 = {"FPR": fpr0, "size": BF_size+model_size, "time": t}
+                np.save(loc+"SLBF_hid"+str(h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), SLBF0)
+            except ZeroDivisionError:
+                print("Numero falsi negativi = 0")
+
+def SLBF_graph(models, phishing_URLs, X_train, y_train, falseN=True, FPR=True, Size=True, taus = False, verbose=True):    #require SLBF_Bloom_filters
+    '''
+    Genera grafici su SLBF per ognuno dei (fpr, fprs_ratio)
+    Nello specifico genera i seguenti grafici:
+    - Andamento FN rate al variare del FPR ratio per ognuno degli FPR target
+    - Overall FPR empirico al variare del FPR ratio per ognuno degli FPR target
+    - Dimensione totale del SLBF al variare del FPR ratio per ognuno degli FPR target
+    I grafici vengono salvati in plot_loc
+
+    Il parametro taus forza l'esecuzione dell'analisi di tau: se é a true i false_negs e taus vengono calcolati invocando LBF_tau_analysis altrimenti vengono caricati 
+    dai file taus e false_negs presenti in loc.
+    '''
+
+    # Evito di rifare analisi di tau se non serve
+    if (path.exists(loc + 'false_negs.npy') and taus == False):
+        false_negs = np.load(loc + "false_negs.npy", allow_pickle=True)  
+        false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
+    else:
+        false_negs, _ = LBF.LBF_tau_analysis(models,phishing_URLs,X_train,y_train, verbose=True)
+
     # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
-    #try:
-    #    false_negs = np.load(loc+"false_negs2")
-    #    taus = np.load(loc+"taus2")
-    #except: sesso tentativo fatto in in SLBF_Bloom_filter
-    false_negs,taus = SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,False)
-    SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
-    for i in range(3):
-        fnrs2[i] = pd.DataFrame(index=fpr_ratios+fpr_ratios2, columns=fprs)
+    fnrs = {}
+
+    for i in range(len(models)):
+        fnrs[i] = pd.DataFrame(index=fpr_ratios, columns=fprs)
         for fpr,fpr_ratio in false_negs[i].keys():
-            fnrs2[i].loc[fpr_ratio,fpr] = len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs)
+            fnrs[i].loc[fpr_ratio,fpr] = len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs)
+
+    # Per ogni modello salvo in base a fpr, fpr_ratio target l'frp empirico, la grandezza ed il tempo di accesso per elemento del SLBF relativo
+    # Utile per i grafici successivi
     true_fpr_SLBF = {}
     sizes_SLBF = {}
     times_SLBF = {}
-    # Per ogni modello salvo in base a fpr, fpr_ratio target l'frp empirico, la grandezza ed il tempo di accesso per elemento
-    # del SLBF relativo
-    # Utile per i grafici successivi
-    for i in range(3):
-        true_fpr_SLBF[i] = pd.DataFrame(index = fpr_ratios+fpr_ratios2, columns = fprs)
-        sizes_SLBF[i] = pd.DataFrame(index = fpr_ratios+fpr_ratios2, columns = fprs)
-        times_SLBF[i] = pd.DataFrame(index = fpr_ratios+fpr_ratios2, columns = fprs)
+
+    for i in range(len(models)):
+        true_fpr_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
+        sizes_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
+        times_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
         for fpr,fpr_ratio in false_negs[i].keys():
             try:
                 SLBF = np.load(loc+"SLBF_hid"+str(h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio)+".npy", allow_pickle=True).item()
@@ -103,8 +135,9 @@ def SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,d
             except:
                 print("error", fpr_ratio, fpr) # Bad tau + false negs = 0
                 continue
+
     if(falseN):
-        graph(fnrs2,"Classifier False Negative Rate","SLBF_classifier_FNR.png")
+        graph(fnrs,"Classifier False Negative Rate","SLBF_classifier_FNR.png")
     if(FPR):
         graph(true_fpr_SLBF,"Overall FPR","SLBF_fpr.png")
     if(FPR):

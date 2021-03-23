@@ -14,7 +14,7 @@ import config
 device = config.device
 
 # Setting location
-# config.loc_data = ...
+config.loc_data = 'C:/Users/Giacomo/Desktop/Università/Tesi/Codice/lbf-tirocinio/small_data/'
 # config.loc_nn = ...
 # config.loc_plots = ...
 
@@ -34,6 +34,7 @@ criterion = nn.CrossEntropyLoss()
 
 # Volendo setto i parametri config.h_sizes = [...] ... oppure uso quelli di default di config.py
 
+
 # Addestramento del modello (Questa sarebbe la parte da cambiare nel caso volessimo cambiare classificatore)
 for i in range(4):
     models = {}
@@ -48,6 +49,25 @@ for i in range(4):
 # Test loading dei modelli
 models = trainRNN.load_eval(X_test, y_test, criterion)
 
+
+# Eventuale setting dei parametri per analisi dei grafici config.fpr, config.fprs_raio... 
+
+
+
 # Analisi e grafici
-analysisLBF.save_Backup(models,phishing,X_train,y_train,X_test,y_test,testing_list,verbose=True)
-analysisLBF.LBF_graph(models,phishing,X_train,y_train)
+
+# L'idea per una analisi completa (file + grafici) é di fare LBF_tau_analysis, save_Backup per i file, LBF_graph per generare i grafi 
+# (Forse posso togliere chiamata e relativo controllo a LBF_tau_analysis in LBF_graph assumendo che i file debbano giá essere presenti come accade per LBF_saveBackup?)
+
+config.fpr_ratios = [0.1*i for i in range(1,11)]
+
+analysisLBF.LBF_tau_analysis(models, phishing, X_train, y_train) # Analisi tau e salvataggio false_negs e taus per ogni (fpr, fprs_ratio)
+analysisLBF.save_Backup(models,phishing,X_train,y_train,X_test,y_test,testing_list,verbose=True) # Salvataggio BF backup  per ogni (fpr_ fprs_ratio)
+analysisLBF.LBF_graph(models,phishing,X_train,y_train) # Generazioni grafici
+
+# Stesso ragionamento per SLBF
+config.fpr_ratios = config.fpr_ratios + [1.*i for i in range(1,11)]
+
+analysisLBF.LBF_tau_analysis(models, phishing, X_train, y_train) # Ripeto analisi di tau aumentando peró il numero di fpr_ratio (Potrei aggiungere un parametro per settare il nome del file per non sovrascriverlo?)
+analysisSLBF.SLBF_Bloom_filters(models,phishing,X_train,y_train,X_test,y_test,testing_list,verbose=True)
+analysisSLBF.SLBF_graph(models,phishing,X_train,y_train)

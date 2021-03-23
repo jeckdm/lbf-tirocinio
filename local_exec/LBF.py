@@ -10,7 +10,7 @@ device = config.device
 
 def build_LBF_classifier(model, FPR_tau, X_train, y_train, phishing_URLs):
   '''
-  Dato in ingresso un modello addestrato restituisce il numero di falsi negativi generati dal classificatore sull'insieme di phishing URLs
+  Dato in ingresso un modello addestrato restituisce la lista di URL falsi negativi generati dal classificatore sull'insieme di phishing URLs
   e la soglia tau utilizzata per classificare.
   '''
 
