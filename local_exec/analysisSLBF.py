@@ -171,5 +171,6 @@ def graph(params,title,path):
 #size is best when ratio = 1
 
 def SLBF_total_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose):
-    SLBF_Bloom_filters(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
-    SLBF_graph(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose=verbose)
+    SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, taus = True, verbose=False)
+    SLBF_graph(models, phishing_URLs, X_train, y_train, name, verbose=False)    #require SLBF_Bloom_filters
+    

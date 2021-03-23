@@ -23,5 +23,5 @@ def BF_test_size(phishing_URLs,testing_list):  #applica il filtro di bloom ad al
   print(BF_sizes)
 
 '''
-- aggiunti parametri globali
+
 '''

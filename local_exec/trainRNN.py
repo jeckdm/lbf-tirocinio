@@ -9,16 +9,27 @@ import config
 # Rinomino parametri globali per comoditá
 emb_size= config.emb_size
 h_sizes = config.h_sizes
+n_models = len(h_sizes)
 layers = config.layers
 device = config.device
 
 def give_params():
   return emb_size,h_sizes
 
-def train(model, X_train, y_train, optimizer, criterion):
+def train(model, X_train, y_train, criterion):
   '''
   Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.
   '''
+  for i in range(n_models):
+    models = {}
+
+    # Create model, loss function, optimizer
+    models[i] = RNN.RNN(emb_size=config.emb_size, h_size=config.h_sizes[i], layers=config.layers).to(device)
+    optimizer = torch.optim.Adamax(models[i].parameters())
+
+    trainRNN.train(models[i], X_train, y_train, optimizer, criterion)
+    torch.save(models[i].state_dict(), config.loc_nn+"RNN_emb"+str(config.emb_size)+"_hid"+str(config.h_sizes[i]))  
+
 
    # Train and validate
   start = time.time()

@@ -75,14 +75,15 @@ def training_set(legitimate_URLs,phishing_URLs):
     y_test = torch.tensor([0]*(len(testing_list)))
 
     return X_train,y_train,X_test,y_test,training_list,testing_list
-
+'''
 def get_train_set(legitimate_URLs,phishing_URLs):
-    '''
+
     Codifica i dataset in input e li ritorna suddivisi in training e testing. 
-    '''
+    
     return training_set(legitimate_URLs, phishing_URLs)  # interfaccia utente, applica le fasi di pre-processing e ritorna i traing set
-
-
+    
+    lo toglierei dato che va sempliemente a chiamare training set
+''' 
 '''
 - sistemato (?) cuda device
 - map_to_number ritorna i dataset codificati, non il dizionario,

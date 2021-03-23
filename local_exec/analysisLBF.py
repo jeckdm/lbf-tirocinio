@@ -162,9 +162,9 @@ def size_ratio_graph(sizes_LBF):
   # seems most optimal at 0.5
 '''
 
-def total_LBF_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose):
-  save_Backup(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose)
-  LBF_graph(models,phishing_URLs,X_train,y_train,device,True,True,True,verbose)
+def total_LBF_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list):
+  save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, True, False)  
+  LBF_graph(models, phishing_URLs, X_train, y_train, name,verbose=False)
 
 '''
 - rimossi alcuni import
