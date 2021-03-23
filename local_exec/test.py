@@ -7,6 +7,7 @@ import init
 import analysisBF
 import analysisLBF
 import analysisSLBF
+import helpers
 
 # Parametri globali
 import config
@@ -53,7 +54,6 @@ models = trainRNN.load_eval(X_test, y_test, criterion)
 # Eventuale setting dei parametri per analisi dei grafici config.fpr, config.fprs_raio... 
 
 
-
 # Analisi e grafici
 
 # L'idea per una analisi completa (file + grafici) é di fare LBF_tau_analysis, save_Backup per i file, LBF_graph per generare i grafi 
@@ -61,13 +61,13 @@ models = trainRNN.load_eval(X_test, y_test, criterion)
 
 config.fpr_ratios = [0.1*i for i in range(1,11)]
 
-analysisLBF.LBF_tau_analysis(models, phishing, X_train, y_train) # Analisi tau e salvataggio false_negs e taus per ogni (fpr, fprs_ratio)
-analysisLBF.save_Backup(models,phishing,X_train,y_train,X_test,y_test,testing_list,verbose=True) # Salvataggio BF backup  per ogni (fpr_ fprs_ratio)
-analysisLBF.LBF_graph(models,phishing,X_train,y_train) # Generazioni grafici
+helpers.tau_analysis(models, phishing, X_train, y_train, ("false_negs",  "taus")) # Analisi tau e salvataggio false_negs e taus per ogni (fpr, fprs_ratio)
+analysisLBF.save_Backup(models,phishing,X_train,y_train,X_test,y_test,testing_list, ("false_negs",  "taus"),verbose=True) # Salvataggio BF backup  per ogni (fpr_ fprs_ratio)
+analysisLBF.LBF_graph(models,phishing,X_train,y_train, ("false_negs",  "taus")) # Generazioni grafici
 
 # Stesso ragionamento per SLBF
 config.fpr_ratios = config.fpr_ratios + [1.*i for i in range(1,11)]
 
-analysisLBF.LBF_tau_analysis(models, phishing, X_train, y_train) # Ripeto analisi di tau aumentando peró il numero di fpr_ratio (Potrei aggiungere un parametro per settare il nome del file per non sovrascriverlo?)
-analysisSLBF.SLBF_Bloom_filters(models,phishing,X_train,y_train,X_test,y_test,testing_list,verbose=True)
-analysisSLBF.SLBF_graph(models,phishing,X_train,y_train)
+helpers.tau_analysis(models, phishing, X_train, y_train, ("false_negs2",  "taus2")) # Ripeto analisi di tau aumentando peró il numero di fpr_ratio (Potrei aggiungere un parametro per settare il nome del file per non sovrascriverlo?)
+analysisSLBF.SLBF_Bloom_filters(models,phishing,X_train,y_train,X_test,y_test,testing_list, ("false_negs2",  "taus2"), verbose=True)
+analysisSLBF.SLBF_graph(models,phishing,X_train,y_train, ("false_negs2",  "taus2"))

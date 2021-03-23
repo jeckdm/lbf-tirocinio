@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os.path
 from os import path
+import helpers
 
 # Parametri globali
 import config
@@ -18,47 +19,28 @@ loc = config.loc_nn
 plot_loc = config.loc_plots
 device = config.device
 
-
-def SLBF_tau_analysis(models,phishing_URLs,X_train,y_train,device,verbose=True): 
-    '''
-    Per ognuno dei modelli salvo la lista di URL classificati come falsi negativi dal classificatore e tau ottimale nelle relative strutture sulla base del fprs e fpr_ratio target.
-    '''
-
-    false_negs = {}
-    taus = {}
-    for i in range(3):
-        false_negs[i]={}
-        taus[i]= {}
-        for fpr in fprs:
-            for fpr_ratio in fpr_ratios2:
-                false_negs[i][(fpr,fpr_ratio)], taus[i][(fpr,fpr_ratio)] = LBF.build_LBF_classifier(models[i], fpr*fpr_ratio,X_train,y_train,device,phishing_URLs)
-                if (verbose):
-                    print("Modello %d: fpr: %.3f, fpr ratio: %.2f, FNR: %.20f, tau: %.10f" % (i, fpr, fpr_ratio, len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)]))
-                # print(len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)])
-
-    np.save(loc+"false_negs2", false_negs) # provato per salvare i risultati ( e ri-usarli con SLBF bloom filter ma da' problemi)
-    np.save(loc+"taus2", taus)
-
-    return false_negs,taus
-
-
-def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, taus = False, verbose=True):
+def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, taus = False, verbose=True):
     '''
     Per ognuno dei modelli salvo il filtro di backup e quello iniziale costruito sulla base del fpr e fpr_ratio target
+
+    Il parametro taus forza l'esecuzione dell'analisi di tau: se é a true i false_negs e taus vengono calcolati invocando LBF_tau_analysis altrimenti vengono caricati 
+    dai file taus e false_negs presenti in loc.
+    Il parametro name contiene la coppia che raprresenta i nomi dei file da cui vengono caricati il il dizionario (fpr, fpr_ratio): falsi negativi e (fpr, fpr_ratio): tau
+    se tali file non esistono vengono creati con il nome indicato in name tramite una chiamata a helpers.tau_analysis
     '''
 
     SLBF_initials = {}
     SLBF_backups = {}
 
     # Evito di rifare analisi di tau se non serve
-    if (path.exists(loc + 'false_negs.npy') and taus == False):
-        false_negs = np.load(loc + "false_negs.npy", allow_pickle=True)  
+    if (path.exists(loc + name[0] + ".npy") and path.exists(loc + name[1] + ".npy")  and taus == False):
+        false_negs = np.load(loc + name[0] + ".npy", allow_pickle=True)  
         false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
 
-        taus = np.load(loc + "taus.npy", allow_pickle=True)  
+        taus = np.load(loc + name[1] + ".npy", allow_pickle=True)  
         taus = taus.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
     else:
-        false_negs, taus = LBF.LBF_tau_analysis(models,phishing_URLs,X_train,y_train, verbose=True)
+        false_negs, taus = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
 
     for i in range(len(models)):
         SLBF_initials[i] = {}
@@ -87,7 +69,7 @@ def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, 
             except ZeroDivisionError:
                 print("Numero falsi negativi = 0")
 
-def SLBF_graph(models, phishing_URLs, X_train, y_train, falseN=True, FPR=True, Size=True, taus = False, verbose=True):    #require SLBF_Bloom_filters
+def SLBF_graph(models, phishing_URLs, X_train, y_train, name, falseN=True, FPR=True, Size=True, taus = False, verbose=True):    #require SLBF_Bloom_filters
     '''
     Genera grafici su SLBF per ognuno dei (fpr, fprs_ratio)
     Nello specifico genera i seguenti grafici:
@@ -98,14 +80,16 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, falseN=True, FPR=True, S
 
     Il parametro taus forza l'esecuzione dell'analisi di tau: se é a true i false_negs e taus vengono calcolati invocando LBF_tau_analysis altrimenti vengono caricati 
     dai file taus e false_negs presenti in loc.
+    Il parametro name contiene la coppia che raprresenta i nomi dei file da cui vengono caricati il il dizionario (fpr, fpr_ratio): falsi negativi e (fpr, fpr_ratio): tau
+    se tali file non esistono vengono creati con il nome indicato in name tramite una chiamata a helpers.tau_analysis
     '''
 
     # Evito di rifare analisi di tau se non serve
-    if (path.exists(loc + 'false_negs.npy') and taus == False):
-        false_negs = np.load(loc + "false_negs.npy", allow_pickle=True)  
+    if (path.exists(loc + name[0] + ".npy") and taus == False):
+        false_negs = np.load(loc + name[0] + ".npy", allow_pickle=True)  
         false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
     else:
-        false_negs, _ = LBF.LBF_tau_analysis(models,phishing_URLs,X_train,y_train, verbose=True)
+        false_negs, _ = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
 
     # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
     fnrs = {}
@@ -146,8 +130,8 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, falseN=True, FPR=True, S
     
 
 def graph(params,title,path):
-    f,ax = plt.subplots(1,3,figsize=(12,3))
-    for i in range(3):
+    f,ax = plt.subplots(1,len(h_sizes),figsize=(12,3))
+    for i in range(len(h_sizes)):
         params[i].plot(ax=ax[i])
         ax[i].legend(fontsize='xx-small')
         ax[i].set_xlabel("Classifier FPR ratio")

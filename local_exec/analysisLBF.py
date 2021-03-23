@@ -3,6 +3,7 @@ import LBF
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import helpers
 import os.path
 from os import path
 
@@ -17,47 +18,25 @@ loc = config.loc_nn
 plot_loc = config.loc_plots
 device = config.device
 
-def LBF_tau_analysis(models,phishing_URLs,X_train,y_train,verbose = True):
-  '''
-  calcola la tau basandosi su predefiniti fpr e fprs-rate e se verbose=true stampa a video i risultati dell'analisi.
-  i falsi negativi e le tau relativi ad ogni (fpr, fprs-rate) sono salvati come false_negs.npy e taus.npy in loc e vengono poi ritornati dalla funzione
-  '''
-  
-  false_negs = {}
-  taus = {}
-  # Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla
-  # base del fprs e fpr_ratio target.
-  for i in range(len(models)): # Cambiato range da 3 a models
-    false_negs[i] = {}
-    taus[i] = {}
-    for fpr in fprs:
-      for fpr_ratio in fpr_ratios:
-        false_negs[i][(fpr,fpr_ratio)], taus[i][(fpr,fpr_ratio)] = LBF.build_LBF_classifier(models[i], fpr*fpr_ratio,X_train,y_train,phishing_URLs)
-        if(verbose):
-          print("Modello %d: fpr: %.3f, fpr ratio: %.2f, FNR: %.20f, %.10f" % (i, fpr, fpr_ratio, len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr,fpr_ratio)]))
-
-  np.save(loc+"false_negs", false_negs)
-  np.save(loc+"taus", taus)
-
-  return false_negs,taus
-
-def save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, taus = False, verbose=True):   
+def save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, taus = False, verbose=True):   
   '''
   salva filtri bloom di backup in trained_NN/anlisys; se verbose = true stampa fpr empirico, size e tempo dei filtri di backup creati
 
   Il parametro taus forza l'esecuzione dell'analisi di tau: se é a true i false_negs e taus vengono calcolati invocando LBF_tau_analysis altrimenti vengono caricati 
   dai file taus e false_negs presenti in loc.
+  Il parametro name contiene la coppia che raprresenta i nomi dei file da cui vengono caricati il il dizionario (fpr, fpr_ratio): falsi negativi e (fpr, fpr_ratio): tau
+  se tali file non esistono vengono creati con il nome indicato in name tramite una chiamata a helpers.tau_analysis
   '''
 
   # Evito di rifare analisi di tau se non serve
-  if (path.exists(loc + 'false_negs.npy') and taus == False):
-    false_negs = np.load(loc + "false_negs.npy", allow_pickle=True)  
+  if ( path.exists(loc + name[0] + ".npy") and path.exists(loc + name[1] + ".npy") and taus == False):
+    false_negs = np.load(loc + name[0] + ".npy", allow_pickle=True)  
     false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
 
-    taus = np.load(loc + "taus.npy", allow_pickle=True)  
+    taus = np.load(loc + name[1] + ".npy", allow_pickle=True)  
     taus = taus.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
   else:
-    false_negs, taus = LBF_tau_analysis(models,phishing_URLs,X_train,y_train, verbose=True)
+    false_negs, taus = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
 
   LBF_backups = {}
 
@@ -82,7 +61,7 @@ def save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing
               # Non controllata inizialmente probabilmente perché é stata esclusa la possibilitá di avere fn = 0 con dataset grandi
               print("Numero falsi negativi = 0")
 
-def LBF_graph(models, phishing_URLs, X_train, y_train, taus=False, falseN=True, FPR=True, Size=True, verbose=True):
+def LBF_graph(models, phishing_URLs, X_train, y_train, name, taus=False, falseN=True, FPR=True, Size=True, verbose=True):
   '''
   Genera grafici su LBF per ognuno dei (fpr, fprs_ratio)
   Nello specifico genera i seguenti grafici:
@@ -93,14 +72,16 @@ def LBF_graph(models, phishing_URLs, X_train, y_train, taus=False, falseN=True, 
 
   Il parametro taus forza l'esecuzione dell'analisi di tau: se é a true i false_negs e taus vengono calcolati invocando LBF_tau_analysis altrimenti vengono caricati 
   dai file taus e false_negs presenti in loc.
+  Il parametro name contiene la coppia che raprresenta i nomi dei file da cui vengono caricati il il dizionario (fpr, fpr_ratio): falsi negativi e (fpr, fpr_ratio): tau
+  se tali file non esistono vengono creati con il nome indicato in name tramite una chiamata a helpers.tau_analysis
   '''
   
   # Evito di rifare analisi di tau se non serve
-  if (path.exists(loc + 'false_negs.npy') and taus == False):
-    false_negs = np.load(loc + "false_negs.npy", allow_pickle=True)  
+  if (path.exists(loc + name[0] + ".npy") and taus == False):
+    false_negs = np.load(loc + name[0] + ".npy", allow_pickle=True)  
     false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
   else:
-    false_negs, _ = LBF_tau_analysis(models,phishing_URLs,X_train,y_train, verbose=True)
+    false_negs, _ = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
 
   # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
   fnrs = {}
@@ -109,7 +90,6 @@ def LBF_graph(models, phishing_URLs, X_train, y_train, taus=False, falseN=True, 
     for fpr in fprs:
       for fpr_ratio in fpr_ratios:
         fnrs[i].loc[fpr_ratio,fpr] = len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs)
-
 
   # Per ogni modello salvo in base a fpr, fpr_ratio target l'frp empirico, la grandezza ed il tempo di accesso per elemento del LBF relativa
   # Utile per i grafici successivi
