@@ -5,10 +5,6 @@ import LBF
 # Parametri globali
 import config 
 
-fprs = config.fprs
-fpr_ratios = config.fpr_ratios
-loc = config.loc_nn
-
 # helper functions to do the math 
 
 # given over-all FPR and  F_p, F_n of f, compute bits per element for BF
@@ -46,13 +42,13 @@ def tau_analysis(models, phishing_URLs,X_train,y_train, name, verbose = True):
 	for i in range(len(models)): # Cambiato range da 3 a models
 		false_negs[i] = {}
 		taus[i] = {}
-		for fpr in fprs:
-			for fpr_ratio in fpr_ratios:
+		for fpr in config.fprs:
+			for fpr_ratio in config.fpr_ratios:
 				false_negs[i][(fpr,fpr_ratio)], taus[i][(fpr,fpr_ratio)] = LBF.build_LBF_classifier(models[i], fpr*fpr_ratio,X_train,y_train,phishing_URLs)
 				if(verbose):
 					print("Modello %d: fpr: %.3f, fpr ratio: %.2f, FNR: %.20f, %.10f" % (i, fpr, fpr_ratio, len(false_negs[i][(fpr,fpr_ratio)])/len(phishing_URLs), taus[i][(fpr, fpr_ratio)]))
 
-	np.save(loc+name[0], false_negs)
-	np.save(loc+name[1], taus)
+	np.save(config.loc_nn+name[0], false_negs)
+	np.save(config.loc_nn+name[1], taus)
 
 	return false_negs,taus
