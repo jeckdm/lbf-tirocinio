@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import os.path
 from os import path
 import helpers
-
+import analysisTau
 # Parametri globali
 import config
 
@@ -35,7 +35,7 @@ def SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, 
         taus = np.load(config.loc_nn + name[1] + ".npy", allow_pickle=True)  
         taus = taus.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
     else:
-        false_negs, taus = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
+        false_negs, taus = analysisTau.tau_analysis(models,phishing_URLs,X_train,y_train, name,True, verbose=True)
 
     for i in range(len(models)):
         SLBF_initials[i] = {}
@@ -84,7 +84,7 @@ def SLBF_graph(models, phishing_URLs, X_train, y_train, name, falseN=True, FPR=T
         false_negs = np.load(config.loc_nn + name[0] + ".npy", allow_pickle=True)  
         false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
     else:
-        false_negs, _ = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
+        false_negs, _ = analysisTau.tau_analysis(models,phishing_URLs,X_train,y_train, name,True, verbose=True)
 
     # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
     fnrs = {}
@@ -165,7 +165,7 @@ def graph(params,title,path):
 
 #size is best when ratio = 1
 
-def SLBF_total_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose):
-    SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, taus = True, verbose=False)
-    SLBF_graph(models, phishing_URLs, X_train, y_train, name, verbose=False)    #require SLBF_Bloom_filters
+def SLBF_total_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,device,verbose=True):
+    SLBF_Bloom_filters(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, ("false_negs2",  "taus2"), taus = True, verbose=verbose)
+    SLBF_graph(models, phishing_URLs, X_train, y_train,("false_negs2",  "taus2"), verbose=verbose)    #require SLBF_Bloom_filters
     

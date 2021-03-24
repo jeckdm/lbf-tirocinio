@@ -1,13 +1,16 @@
 import LBF
 import config 
-
-loc = config.loc_data
-
-def tau_analysis(models, phishing_URLs,X_train,y_train, name, verbose = True):
+import numpy as np
+loc = config.loc_nn
+fprs = config.fprs
+def tau_analysis(models, phishing_URLs,X_train,y_train, name,slbf, verbose = True):
 	'''
 	calcola la tau basandosi su predefiniti fpr e fprs-rate e se verbose=true stampa a video i risultati dell'analisi.
 	i falsi negativi e le tau relativi ad ogni (fpr, fprs-rate) sono salvati come name[0].npy e name[1].npy in loc e vengono poi ritornati dalla funzione
 	'''
+	fpr_ratios=config.fpr_ratios
+	if slbf :
+		fpr_ratios = config.fpr_ratios2
 
 	false_negs = {}
 	taus = {}
@@ -26,3 +29,10 @@ def tau_analysis(models, phishing_URLs,X_train,y_train, name, verbose = True):
 	np.save(loc+name[1], taus)
 
 	return false_negs,taus
+
+
+'''
+    -aggiunta per probelmi reccurent import
+	-aggiunto argomento per indicare se uso fpr_ratios o fprs_ratios2
+
+'''

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import helpers
 import os.path
 from os import path
-
+import analysisTau
 # Parametri globali
 import config
 
@@ -30,7 +30,7 @@ def save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing
     taus = np.load(config.loc_nn + name[1] + ".npy", allow_pickle=True)  
     taus = taus.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
   else:
-    false_negs, taus = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
+    false_negs, taus = analysisTau.tau_analysis(models,phishing_URLs,X_train,y_train, name,False,verbose=verbose)
 
   LBF_backups = {}
 
@@ -75,7 +75,7 @@ def LBF_graph(models, phishing_URLs, X_train, y_train, name, taus=False, falseN=
     false_negs = np.load(config.loc_nn + name[0] + ".npy", allow_pickle=True)  
     false_negs = false_negs.item() # Ritorna l'item all'interno dell'array caricato, quindi il dizionario
   else:
-    false_negs, _ = helpers.tau_analysis(models,phishing_URLs,X_train,y_train, name, verbose=True)
+    false_negs, _ = analysisTau.tau_analysis(models,phishing_URLs,X_train,y_train, name,False,verbose=True)
 
   # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
   fnrs = {}
@@ -156,9 +156,9 @@ def size_ratio_graph(sizes_LBF):
   # seems most optimal at 0.5
 '''
 
-def total_LBF_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list):
-  save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, name, True, False)  
-  LBF_graph(models, phishing_URLs, X_train, y_train, name,verbose=False)
+def total_LBF_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,verbose=False):
+  save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing_list, ("false_negs","taus"), True, verbose)  
+  LBF_graph(models, phishing_URLs, X_train, y_train, ("false_negs","taus"),verbose=verbose)
 
 '''
 - rimossi alcuni import

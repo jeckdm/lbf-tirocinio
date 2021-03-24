@@ -16,10 +16,10 @@ def load_data():
     I file del dataset devono trovarsi all'interno della cartella indicata dal parametro glocale loc_data ed avere estensione .npy
     '''
     
-    legitimate_URLs = np.load(config.loc_data + "legitimate_URLs.npy")
-    phishing_URLs = np.load(config.loc_data + "phishing_URLs.npy")
-    phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data + "phishing_URLs2.npy",allow_pickle=True)))
-    legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data + "legitimate_URLs2.npy",allow_pickle=True)))
+    legitimate_URLs = np.load(config.loc_data1 + "legitimate_URLs.npy")
+    phishing_URLs = np.load(config.loc_data1 + "phishing_URLs.npy")
+    phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data2 + "phishing_URLs2.npy",allow_pickle=True)))
+    legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data2 + "legitimate_URLs2.npy",allow_pickle=True)))
 
     # randomly permute URLs
     np.random.seed(0)

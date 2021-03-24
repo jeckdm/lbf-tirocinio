@@ -17,7 +17,8 @@ def GPU_init():
 
 # Device e location
 device = GPU_init()
-loc_data = "small_data/"
+loc_data1 = "data/dataset1/"
+loc_data2 = "data/dataset2/"
 loc_nn = "test/simulations/"
 loc_plots = "test/plots/"
 

@@ -9,6 +9,7 @@ import init
 import config
 
 device = config.device
+criterion= config.criterion
 
 class RNN(nn.Module):
     def __init__(self, input_size=150, output_size=2, emb_size=128, h_size=128, layers=1, dropout=0.3):
@@ -24,7 +25,7 @@ class RNN(nn.Module):
         x = self.linear(x)
         return x, h
 
-def val(model, X_t, y_t,criterion):
+def val(model, X_t, y_t):
     '''
     Valuta model sul dataset (X_t, y_t).
     Ritorna rapporto tra previsioni corrette / totale e loss su ogni batch
@@ -99,4 +100,7 @@ def make_batch_test(X_t, y_t, B):
 '''
 - aggiunti commenti
 - messo device come globale
+
+Davide
+-messo criterion come globale
 '''

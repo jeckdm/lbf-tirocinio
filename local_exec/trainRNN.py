@@ -12,36 +12,31 @@ h_sizes = config.h_sizes
 n_models = len(h_sizes)
 layers = config.layers
 device = config.device
-
+criterion= config.criterion
 def give_params():
   return emb_size,h_sizes
 
-def train(model, X_train, y_train, criterion):
+def train(X_train, y_train):
   '''
   Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.
-  '''
+    '''
   for i in range(n_models):
     models = {}
-
     # Create model, loss function, optimizer
-    models[i] = RNN.RNN(emb_size=config.emb_size, h_size=config.h_sizes[i], layers=config.layers).to(device)
+    models[i] = R.RNN(emb_size=config.emb_size, h_size=config.h_sizes[i], layers=config.layers).to(device)
     optimizer = torch.optim.Adamax(models[i].parameters())
-
-    trainRNN.train(models[i], X_train, y_train, optimizer, criterion)
+    # Train and validate
+    start = time.time()
+    for epoch in range(30):
+        train_loss = R.train(models[i],X_train,y_train,optimizer,criterion)
+        val_acc, val_loss = R.val(models[i],X_train,y_train)
+        if(epoch%10 == 0):
+          print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
+    end = time.time()
     torch.save(models[i].state_dict(), config.loc_nn+"RNN_emb"+str(config.emb_size)+"_hid"+str(config.h_sizes[i]))  
+    print(end-start)  
 
-
-   # Train and validate
-  start = time.time()
-  for epoch in range(30):
-      train_loss = R.train(model,X_train,y_train,optimizer,criterion)
-      val_acc, val_loss = R.val(model,X_train,y_train,criterion)
-      if(epoch%10 == 0):
-        print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
-  end = time.time()
-  print(end-start)  
-
-def load_eval(X_test, y_test, criterion):
+def load_eval(X_test, y_test):
   '''
   Carica i parametri delle RNN giá addestrate presenti in loc e ritorna una lista di RNN definite con gli  iperparametri contenuti in (h_sizes, emb_sizes, layers).
 
@@ -58,7 +53,7 @@ def load_eval(X_test, y_test, criterion):
     models[i] = R.RNN(emb_size=emb_size, h_size=h_size, layers=layers).to(device)
     models[i].load_state_dict(torch.load(config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size)))
     models[i].eval()
-    print(R.val(models[i], X_test,y_test,criterion))
+    print(R.val(models[i], X_test,y_test))
     
     avg_time = 0
     for t in range(100):
@@ -108,4 +103,11 @@ def get_classifier_probs(model,X_train,y_train):
 - spostato for loop al di fuori di train
 - spostati emb_size, h_sizes, layers e criterion in config.py (Piú comodo per testare altri iperparametri?)
 - rimossi alcuni import
+
+Davide:
+
+-rimesso loop in train per snellire main
+-aggiunto criterion a config.py
+-tolto criterion come argomento
+-inserito n_models in modo da fare cicli in base a h_size
 '''

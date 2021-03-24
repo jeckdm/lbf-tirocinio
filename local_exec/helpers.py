@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import LBF
 
 # Parametri globali
 import config 
@@ -28,12 +27,12 @@ def solve_FPR_SBF(b1, b2, F_p, F_n, alpha=0.6185):
 
 def determine_tau(FPR_tau, prob_list):
   return np.percentile(np.array(prob_list),100*(1.-FPR_tau))
-
+'''
 def tau_analysis(models, phishing_URLs,X_train,y_train, name, verbose = True):
-	'''
+	
 	calcola la tau basandosi su predefiniti fpr e fprs-rate e se verbose=true stampa a video i risultati dell'analisi.
 	i falsi negativi e le tau relativi ad ogni (fpr, fprs-rate) sono salvati come name[0].npy e name[1].npy in loc e vengono poi ritornati dalla funzione
-	'''
+	
 
 	false_negs = {}
 	taus = {}
@@ -52,3 +51,8 @@ def tau_analysis(models, phishing_URLs,X_train,y_train, name, verbose = True):
 	np.save(config.loc_nn+name[1], taus)
 
 	return false_negs,taus
+'''
+
+'''
+tolto tau analysis causa import ricorsivo di LBF
+'''

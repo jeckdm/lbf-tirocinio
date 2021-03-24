@@ -79,4 +79,6 @@ def test_LBF(model, LBF_backup, tau, X_test, y_test, testing_list):
 - rimossi alcuni import
 - aggiunto device come variabile globale
 - spostato determine_tau in helpers.py
+Davide:
+-sistemato total analysis
 '''
