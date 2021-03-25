@@ -1,0 +1,6 @@
+il seguente dataset (contenuto in url_mixed.csv e successivamente suddiviso in legitimate_URLs2.npy e phishing_URLs2.npy) 
+è stato messo a disposizione dal laboratorio di Machine_Learing dell'univeristà degli studi di Trieste.
+
+alleghiamo l'url da cui è possibile scaricarlo:
+
+https://machinelearning.inginf.units.it/data-and-tools/hidden-fraudulent-urls-dataset
