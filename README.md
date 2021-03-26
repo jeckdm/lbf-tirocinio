@@ -32,4 +32,5 @@ conda deactivate
 ## esecuzione notebook: 
 per eseguire il notebook assicurarsi le path da cui vengono caricati i file coincidano con quelle in cui avete scaricato il dataset. Al momento i due dataset utilizzati sono in 'small-data' e le path del notebook cercano i file lì.
 
-
+##esecuzione codice:
+per eseguire direttamente il codice (senza utilizzare il notebook) eseguire main.py situato nella cartella local_excec. la maggior parte dei parametri possono essere direttamente impostati cambiando i valori inseriti nel file config.py (size embedding, dimensioni GRU, fpr/fpr ratio utilizzate per il plot dei grafici...)
