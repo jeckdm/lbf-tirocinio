@@ -11,6 +11,7 @@ def download_zip(dest_directory):
     filename = zf.namelist()
     filename=str(filename.pop())
     zf.extractall(dest_directory)
+    zf.close()
     os.remove(zip_name)
     return filename
 
@@ -24,7 +25,7 @@ def make_dataset(dest_directory,filename):
     legit_array = np.array(legit)
     phishing_array = np.array(phishing)
     np.save(dest_directory+"legitimate_URLs2.npy",legit_array)
-    np.save(dest_directory+"phishing_URL2s.npy",legit_array)
+    np.save(dest_directory+"phishing_URLs2.npy",phishing_array)
     print(phishing_array)
     os.remove(dest_directory+filename)
     
