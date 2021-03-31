@@ -9,7 +9,6 @@ import init
 import config
 
 device = config.device
-criterion= config.criterion
 
 class RNN(nn.Module):
     def __init__(self, input_size=150, output_size=2, emb_size=128, h_size=128, layers=1, dropout=0.3):
@@ -25,7 +24,7 @@ class RNN(nn.Module):
         x = self.linear(x)
         return x, h
 
-def val(model, X_t, y_t):
+def val(model, X_t, y_t,criterion,batch_size):
     '''
     Valuta model sul dataset (X_t, y_t).
     Ritorna rapporto tra previsioni corrette / totale e loss su ogni batch
@@ -37,7 +36,7 @@ def val(model, X_t, y_t):
         total_right = 0
         total_loss = 0
         for batch in range(50):
-            x, y = make_batch_test(X_t, y_t, 256)
+            x, y = make_batch_test(X_t, y_t, batch_size)
             y_hat, _ = model(x)
             #optimizer.zero_grad()
             preds = y_hat.max(dim=2)[1][:,149]
@@ -49,7 +48,7 @@ def val(model, X_t, y_t):
 
     return total_right / total, total_loss / 50
 
-def train(model,X_train,y_train,optimizer,criterion):
+def train(model,X_train,y_train,optimizer,criterion,batch_size):
     '''
     Addestra model sul dataset (X_train, y_train).
     '''
@@ -57,7 +56,7 @@ def train(model,X_train,y_train,optimizer,criterion):
     model.train()
     total_loss = 0
     for batch in range(50):
-        x, y = make_batch_train(X_train, y_train, 256)
+        x, y = make_batch_train(X_train, y_train, batch_size)
         y_hat, _ = model(x)
         optimizer.zero_grad()
         y_hat = y_hat.view(-1,2)

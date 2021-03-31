@@ -5,12 +5,25 @@ from wheel.pep425tags import get_abbr_impl, get_impl_ver, get_abi_tag
 import torch
 import numpy as np
 from collections import Counter
+import argparse
 # Parametri globali
 import config
 
 device = config.device
+def get_arguments():
+    parse = argparse.ArgumentParser(description="Argument for analysis")
+    parse.add_argument("--ratiolp","-r",help="specify the ratio legit/phishing",type=int,default=-1)
+    parse.add_argument("--embsize","-e",help="specify the size of the emb",type=int,default=5 )
+    parse.add_argument("--batchsize","-b",help="specify the batch size", type=int,default=256)
+    parse.add_argument("--hsizes","-s",help="specify the sizes of the GRU",type=int,nargs='*', default=[4,8,16])
+    args=parse.parse_args()
+    ratelp = args.ratiolp
+    h_sizes=args.hsizes
+    batch_size= args.batchsize
+    emb_size = args.embsize
+    return ratelp,h_sizes,emb_size,batch_size
 
-def load_data():
+def load_data(rate_lp):
     '''
     Carica ed effettua prepocessing del dataset di legitimate e phishing URL.
     I file del dataset devono trovarsi all'interno della cartella indicata dal parametro glocale loc_data ed avere estensione .npy
@@ -20,7 +33,8 @@ def load_data():
     phishing_URLs = np.load(config.loc_data1 + "phishing_URLs.npy")
     phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data2 + "phishing_URLs2.npy",allow_pickle=True)))
     legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data2 + "legitimate_URLs2.npy",allow_pickle=True)))
-    print(len(legitimate_URLs),len(phishing_URLs))
+    legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data3 + "legitimate_URLs3.npy",allow_pickle=True)))
+
     # randomly permute URLs
     np.random.seed(0)
     legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
@@ -30,9 +44,15 @@ def load_data():
     legitimate_URLs = [l.split('http://')[-1].split('www.')[-1].split('https://')[-1] for l in legitimate_URLs]
     phishing_URLs = [p.split('http://')[-1].split('www.')[-1].split('https://')[-1] for p in phishing_URLs]
     phishing_URLs = list(set(phishing_URLs) - set(legitimate_URLs))
-
-    return legitimate_URLs,phishing_URLs
-
+    legitimate_URLs = list(set(legitimate_URLs))
+    print(len(legitimate_URLs),len(phishing_URLs))
+    if(rate_lp == -1):   #nel caso il ratio non sia specificato (-1) torno i due dataset originari
+        return legitimate_URLs,phishing_URLs
+    if(rate_lp*len(phishing_URLs)<=len(legitimate_URLs)):#nel caso ratio*phishing <= legit diminuisco il numero di legit in maniera da rendere
+        return legitimate_URLs[:rate_lp*len(phishing_URLs)],phishing_URLs #vero il ratio e ritorno questo e il dataset phishing originario    
+    else:
+        diff = int(legitimate_URLs/ratio)  #trovo la lenght dei phish per rendere valido il ratio
+        return legitimate_URLs,phishing_URLs[:diff]
 def map_to_number(legitimate_URLs,phishing_URLs):
     '''
     Ritorna dataset codificati: assegna ad ogni carattere dell'URL un intero univoco in base al numero di

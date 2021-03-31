@@ -1,17 +1,17 @@
 # Libraries
-from config import emb_size,h_sizes,criterion
 import trainRNN #parametri per training della RNN -> per info train.py
 import analysisBF
+import torch.nn as nn
 import analysisLBF
 import analysisSLBF
 import init
 import analysisTau
-
 #interfaces
+
 def load_RNN():
-    return trainRNN.load_eval(X_train,y_train)
+    return trainRNN.load_eval(X_train,y_train,criterion,h_sizes,emb_size,batch_size)
 def train():
-    trainRNN.train(X_train,y_train)
+    trainRNN.train(X_train,y_train,criterion,h_sizes,emb_size,batch_size)
 #BF
 def BF_test_size():
     analysis.BF_test_size(phishing_URLs,testing_list)
@@ -35,10 +35,13 @@ def SLBF_total_analisys(verbose=True):
     analysisSLBF.SLBF_total_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,verbose)
 
 #esecuzione
- 
-legitimate_URLs,phishing_URLs = init.load_data() #first pre processing on input
+rate_lp,h_sizes,emb_size,batch_size = init.get_arguments()
+print(f"il ratio legit/phish è uguale a {rate_lp} , hsizes sono uguali a {h_sizes} mentre emb_size è uguale a {emb_size}")
+criterion = nn.CrossEntropyLoss()  #imposto criterion (utilizzato per la funzione di loss in fase di training e di valutazione)
+legitimate_URLs,phishing_URLs = init.load_data(rate_lp) #first pre processing on input
+print(len(legitimate_URLs),len(phishing_URLs))
 X_train,y_train,X_test,y_test,training_list,testing_list = init.training_set(legitimate_URLs,phishing_URLs)  #return training set; see init.py for details
-train() #eseguire solo la prima volta, parametri inseriti in config.
+#train() #eseguire solo la prima volta, parametri inseriti in config.
 models = load_RNN()
 #analysis function
 LBF_total_analisys(False)
