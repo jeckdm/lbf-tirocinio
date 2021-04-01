@@ -27,7 +27,6 @@ loc_plots = "test/plots/"
 emb_size= 5
 h_sizes = [4,8,16]
 layers = 1
-criterion = nn.CrossEntropyLoss()
 
 # Parametri per testing e analisi di tau
 
