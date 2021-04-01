@@ -47,13 +47,15 @@ def save_Backup(models, phishing_URLs, X_train, y_train, X_test, y_test, testing
             if(verbose):
               print(f"teoric fpr: {fpr}, empirc fpr: {fpr0}, size of backup BF: {BF_size}, time : {t}")
             model_size =  os.path.getsize(config.loc_nn+"RNN_emb"+str(config.emb_size)+"_hid"+str(config.h_sizes[i])) # Calcolo size classificatore
-            print("SIZE MODELLO: ",  model_size)
+            if(verbose):
+              print("SIZE MODELLO: ",  model_size)
             LBFo = {"FPR": fpr0, "size": BF_size+model_size, "time": t}
             np.save(config.loc_nn+"LBF_hid"+str(config.h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), LBFo)
           except ZeroDivisionError:
               # Se il numero di falsi negativi é 0 sollevo eccezione e non salvo
               # Non controllata inizialmente probabilmente perché é stata esclusa la possibilitá di avere fn = 0 con dataset grandi
-              print("Numero falsi negativi = 0")
+              if(verbose):
+                print("Numero falsi negativi = 0")
 
 def LBF_graph(models, phishing_URLs, X_train, y_train, name, taus=False, falseN=True, FPR=True, Size=True, verbose=True):
   '''

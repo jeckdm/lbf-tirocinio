@@ -15,7 +15,7 @@ def get_arguments():
     parse.add_argument("--ratiolp","-r",help="specify the ratio legit/phishing",type=int,default=-1)
     parse.add_argument("--embsize","-e",help="specify the size of the emb",type=int,default=5 )
     parse.add_argument("--batchsize","-b",help="specify the batch size", type=int,default=256)
-    parse.add_argument("--hsizes","-s",help="specify the sizes of the GRU",type=int,nargs='*', default=[4,8,16])
+    parse.add_argument("--hsizes","-s",help="specify the sizes of the GRU",type=int,nargs='*', default=[16,8,4])
     args=parse.parse_args()
     ratelp = args.ratiolp
     h_sizes=args.hsizes

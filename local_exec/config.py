@@ -25,7 +25,7 @@ loc_plots = "test/plots/"
 
 # Parametri RNN
 emb_size= 5
-h_sizes = [24,16,8,4]
+h_sizes = [16,8,4]
 layers = 1
 
 # Parametri per testing e analisi di tau
