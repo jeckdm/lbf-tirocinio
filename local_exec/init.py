@@ -62,6 +62,7 @@ def map_to_number(legitimate_URLs,phishing_URLs):
     letters = ''.join(legitimate_URLs+phishing_URLs) #String unica di URL senza spazi
     c = Counter(letters) # Counter con occorrenze delle lettere
     d = {}
+
     for i, (l, _) in enumerate(c.most_common(128)):
         d[l] = i + 1 # Dizionario ordinato per numero di occorrenze ( associa ad ogni lettera il suo rank)
     
@@ -94,7 +95,7 @@ def training_set(legitimate_URLs,phishing_URLs):
     X_test = torch.tensor([[l for l in url[:min([len(url),char_cutoff])]] + [0 for l in range(char_cutoff-len(url))] for url in test])
     y_test = torch.tensor([0]*(len(testing_list)))
 
-    return X_train,y_train,X_test,y_test,training_list,testing_list
+    return X_train, y_train, X_test, y_test, training_list, testing_list
 '''
 def get_train_set(legitimate_URLs,phishing_URLs):
 

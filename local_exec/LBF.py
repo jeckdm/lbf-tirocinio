@@ -12,12 +12,14 @@ def build_LBF_classifier(model, FPR_tau, X_train, y_train, phishing_URLs):
   '''
   Dato in ingresso un modello addestrato restituisce la lista di URL falsi negativi generati dal classificatore sull'insieme di phishing URLs
   e la soglia tau utilizzata per classificare.
+  phishing_URLs deve essere una lista contenente le stesse entry di X_train nello stesso ordine, ma sotto forma di stringa
   '''
 
   probs1, probs0 = get_classifier_probs(model,X_train,y_train)
   tau = determine_tau(FPR_tau,probs0)
   false_negs = []
-  for i,url in enumerate(phishing_URLs):
+
+  for i, url in enumerate(phishing_URLs):
     if(probs1[i] < tau):
       false_negs += [url]
   return false_negs, tau
