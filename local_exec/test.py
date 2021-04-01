@@ -21,7 +21,7 @@ config.loc_data = 'C:/Users/Giacomo/Desktop/Università/Tesi/Codice/lbf-tirocini
 
 # Loading dataset e suddivisione in training/testing
 legitimate, phishing = init.load_data()
-X_train,y_train,X_test,y_test,training_list,testing_list = init.get_train_set(legitimate, phishing)
+X_train, y_train, X_test, y_test, training_list, testing_list = init.get_train_set(legitimate, phishing)
 
 print(f"Training X: {X_train.shape}, Training y: {y_train.shape}")
 print(f"Testing X: {X_test.shape}, Testing y: {y_test.shape}")

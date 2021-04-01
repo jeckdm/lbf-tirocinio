@@ -19,19 +19,18 @@ def GPU_init():
 device = GPU_init()
 loc_data1 = "data/dataset1/"
 loc_data2 = "data/dataset2/"
+loc_data3 = "data/dataset3/"
 loc_nn = "test/simulations/"
 loc_plots = "test/plots/"
 
 # Parametri RNN
 emb_size= 5
-h_sizes = [24,16,8,4]
+h_sizes = [4,8,16]
 layers = 1
 criterion = nn.CrossEntropyLoss()
 
 # Parametri per testing e analisi di tau
-fprs = [0.001,0.005,0.01,0.02]
-fpr_ratios = [0.1*i for i in range(1,11)] # Ratio per LBF
-fpr_ratios2 = [1.*i for i in range(1,11)] # Ratio per SLBF
+
 
 
 ''' 

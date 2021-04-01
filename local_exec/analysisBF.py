@@ -22,6 +22,3 @@ def BF_test_size(phishing_URLs,testing_list):  #applica il filtro di bloom ad al
     BF_sizes[fpr] = BFo.size / 8
   print(BF_sizes)
 
-'''
-
-'''

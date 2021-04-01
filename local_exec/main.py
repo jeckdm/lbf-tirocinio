@@ -23,7 +23,7 @@ def save_Backup(verbose=True): #salva filtri bloom di backup in trained_NN/anali
 def LBF_graph(falseN=True,FPR=True,Size=True,verbose=False): #stampa grafici, specifico quali grafici (default tutti) e se stampare msg (default true). richiede esecuzione precedente di save Backup
     analysisLBF.LBF_graph(models,phishing,X_train,y_train, ("false_negs","taus"),False,falseN,FPR,Size,verbose) # Generazioni grafici
 def LBF_total_analisys(verbose = True): #fa analisi completa del lbf, va a eseguire internamente tau analisis, elabora e salva i backup filter e crea i grafici
-    analysisLBF.total_LBF_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,verbose)
+    analysisLBF.total_LBF_analisys(models, fprs, fpr_ratios, phishing_URLs, X_train, y_train, X_test, y_test, testing_list)
 #SLBF analysis
 def SLBF_tau_analysis(verbose = True):
     helpers.tau_analysis(models, phishing, X_train, y_train, ("false_negs2",  "taus2"))
@@ -32,7 +32,11 @@ def SLBF_Bloom_filters_analysis(verbose=True): #crea Bloom filters necessari per
 def SLBF_graph(falseN=True,FPR=True,Size=True,verbose=False): #vedi LBF_graph
     analysisSLBF.SLBF_graph(models,phishing,X_train,y_train, ("false_negs2",  "taus2"))
 def SLBF_total_analisys(verbose=True):
-    analysisSLBF.SLBF_total_analisys(models,phishing_URLs,X_train,y_train,X_test,y_test,testing_list,verbose)
+    analysisSLBF.SLBF_total_analisys(models, fprs, fpr_ratios, phishing_URLs, X_train, y_train, X_test, y_test, testing_list)
+
+fprs = [0.001,0.005,0.01,0.02]
+fpr_ratios = [0.1*i for i in range(1,11)] # Ratio per LBF
+fpr_ratios2 = [1.*i for i in range(1,11)] # Ratio per SLBF
 
 #esecuzione
  
@@ -40,6 +44,7 @@ legitimate_URLs,phishing_URLs = init.load_data() #first pre processing on input
 X_train,y_train,X_test,y_test,training_list,testing_list = init.training_set(legitimate_URLs,phishing_URLs)  #return training set; see init.py for details
 train() #eseguire solo la prima volta, parametri inseriti in config.
 models = load_RNN()
+print(models)
 #analysis function
 LBF_total_analisys(False)
 SLBF_total_analisys(False)

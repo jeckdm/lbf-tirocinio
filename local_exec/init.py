@@ -16,10 +16,12 @@ def load_data():
     I file del dataset devono trovarsi all'interno della cartella indicata dal parametro glocale loc_data ed avere estensione .npy
     '''
     
-    legitimate_URLs = np.load(config.loc_data1 + "legitimate_URLs.npy")
-    phishing_URLs = np.load(config.loc_data1 + "phishing_URLs.npy")
-    phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data2 + "phishing_URLs2.npy",allow_pickle=True)))
-    legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data2 + "legitimate_URLs2.npy",allow_pickle=True)))
+    legitimate_URLs = np.load(config.loc_data1 + "small_legit.npy")
+    phishing_URLs = np.load(config.loc_data1 + "small_phishing.npy")
+    # phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data2 + "phishing_URLs2.npy",allow_pickle=True)))
+    # legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data2 + "legitimate_URLs2.npy",allow_pickle=True)))
+    # legitimate_URLs=np.concatenate((legitimate_URLs,np.load(config.loc_data3 + "legitimate_URLs3.npy",allow_pickle=True)))
+
     print(len(legitimate_URLs),len(phishing_URLs))
     # randomly permute URLs
     np.random.seed(0)
@@ -42,6 +44,7 @@ def map_to_number(legitimate_URLs,phishing_URLs):
     letters = ''.join(legitimate_URLs+phishing_URLs) #String unica di URL senza spazi
     c = Counter(letters) # Counter con occorrenze delle lettere
     d = {}
+
     for i, (l, _) in enumerate(c.most_common(128)):
         d[l] = i + 1 # Dizionario ordinato per numero di occorrenze ( associa ad ogni lettera il suo rank)
     
@@ -74,7 +77,7 @@ def training_set(legitimate_URLs,phishing_URLs):
     X_test = torch.tensor([[l for l in url[:min([len(url),char_cutoff])]] + [0 for l in range(char_cutoff-len(url))] for url in test])
     y_test = torch.tensor([0]*(len(testing_list)))
 
-    return X_train,y_train,X_test,y_test,training_list,testing_list
+    return X_train, y_train, X_test, y_test, training_list, testing_list
 '''
 def get_train_set(legitimate_URLs,phishing_URLs):
 
