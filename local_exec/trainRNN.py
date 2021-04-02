@@ -28,7 +28,7 @@ def train(X_train, y_train,criterion,h_sizes,emb_size,batch_size):
         if(epoch%10 == 0):
           print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
     end = time.time()
-    torch.save(models[i].state_dict(), config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(config.h_sizes[i]))  
+    torch.save(models[i].state_dict(), config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))  
     print(end-start)  
 
 def load_eval(X_test, y_test,criterion,h_sizes,emb_size,batch_size):

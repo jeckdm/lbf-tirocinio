@@ -26,28 +26,6 @@ def create_BFsbackup(models, fprs, fpr_ratios, false_negs):
   # Per ognuno dei modelli salvo il filtro di backup costruito sulla base del fpr e fpr_ratio target
   for i in range(len(models)): 
     LBF_backups[i] = {}
-<<<<<<< HEAD
-    for fpr in config.fprs:
-        for fpr_ratio in config.fpr_ratios:
-          try:
-            LBF_backups[i][(fpr,fpr_ratio)] = LBF.build_LBF_backup(false_negs[i][(fpr,fpr_ratio)], fpr, fpr*fpr_ratio)
-            if(LBF_backups[i][(fpr,fpr_ratio)] =='error'):
-                continue
-            fpr0, BF_size, t = LBF.test_LBF(models[i], LBF_backups[i][(fpr,fpr_ratio)], taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
-            if(verbose):
-              print(f"teoric fpr: {fpr}, empirc fpr: {fpr0}, size of backup BF: {BF_size}, time : {t}")
-            model_size =  os.path.getsize(config.loc_nn+"RNN_emb"+str(config.emb_size)+"_hid"+str(config.h_sizes[i])) # Calcolo size classificatore
-            if(verbose):
-              print("SIZE MODELLO: ",  model_size)
-            LBFo = {"FPR": fpr0, "size": BF_size+model_size, "time": t}
-            np.save(config.loc_nn+"LBF_hid"+str(config.h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), LBFo)
-          except ZeroDivisionError:
-              # Se il numero di falsi negativi é 0 sollevo eccezione e non salvo
-              # Non controllata inizialmente probabilmente perché é stata esclusa la possibilitá di avere fn = 0 con dataset grandi
-              if(verbose):
-                print("Numero falsi negativi = 0")
-=======
->>>>>>> 4295ea0245d41b912e2acf2260354db11e0b0c7c
 
     for fpr in fprs:
       for fpr_ratio in fpr_ratios:
@@ -69,7 +47,9 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
   true_fpr_LBF = {}
   sizes_LBF = {}
   times_LBF = {}
-
+  size_struct_LBF = {}
+  structs = ["backup_BF","model"]
+  Fpr_Const = 0.02
   # Grandezze dei modelli addestrati (Dei soli parametri (?))
   models_size = analysisTau.get_models_size()
 
@@ -77,7 +57,8 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
     true_fpr_LBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
     sizes_LBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
     times_LBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
-
+    size_struct_LBF[i] = pd.DataFrame(index = fpr_ratios, columns = structs)
+    model_size = models_size[i]
     for fpr in fprs:
       for fpr_ratio in fpr_ratios:
         try:
@@ -86,7 +67,6 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
           # Calcolo parametri empirici
           fpr0, BF_size, t = LBF.test_LBF(models[i], BF_backup, taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
           # Calcolo la size del modello
-          model_size = models_size[i]
           # Salvo i risultati
           true_fpr_LBF[i].loc[fpr_ratio,fpr] = fpr0
           sizes_LBF[i].loc[fpr_ratio,fpr] = BF_size + model_size
@@ -101,15 +81,22 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
           # Aggiunta except utile nel caso in cui il file non fosse stato salvato perché fn = 0
           print("error / numero falsi negativi 0")
           continue
+    for fpr_ratio in fpr_ratios:
+        BF_backup = LBFs[i][(Fpr_Const,fpr_ratio)]
+        try:
+          size_struct_LBF[i].loc[fpr_ratio,"backup_BF"] = BF_backup.size /8
+          size_struct_LBF[i].loc[fpr_ratio,"model"] = model_size / 8
+        except:
+          continue
 
-  return true_fpr_LBF, sizes_LBF, times_LBF
+  return true_fpr_LBF, sizes_LBF, times_LBF , size_struct_LBF
 
 def total_LBF_analisys(models, fprs, fpr_ratios, training_list, X_train, y_train, X_test, y_test, testing_list, verbose=False):
   # Faccio analisi di tau e salvo relativi file
   print("ANALISI TAU")
-  false_negs, taus = analysisTau.tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name=("false_negs", "taus"))
-  # false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
-  # taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
+  #false_negs, taus = analysisTau.tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name=("false_negs", "taus"))
+  false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
+  taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
   # Creo i filtri di backup sulla base di fprs, fpr_ratios
   print("CREAZIONI BF BACKUP")
   LBF_backups = create_BFsbackup(models, fprs, fpr_ratios, false_negs)
@@ -118,9 +105,9 @@ def total_LBF_analisys(models, fprs, fpr_ratios, training_list, X_train, y_train
   fnrs = analysisTau.fnrs_analysis(models, fprs, fpr_ratios, false_negs, training_list)
   # Analisi empirica delle strutture create
   print("ANALISI EMPIRICA")
-  true_fpr_LBF, sizes_LBF, times_LBF = empirical_analysis(models, fprs, fpr_ratios, LBF_backups, X_test, y_test, testing_list, taus)
+  true_fpr_LBF, sizes_LBF, times_LBF,sizes_struct_LBF = empirical_analysis(models, fprs, fpr_ratios, LBF_backups, X_test, y_test, testing_list, taus)
   # Genero grafici
-  graph.LBF_graph(fnrs, true_fpr_LBF, sizes_LBF, "LBF")
+  graph.LBF_graph(fnrs, true_fpr_LBF, sizes_LBF,sizes_struct_LBF, "LBF")
 
 '''
 - rimossi alcuni import

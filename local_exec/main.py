@@ -45,7 +45,7 @@ criterion = nn.CrossEntropyLoss()  #imposto criterion (utilizzato per la funzion
 legitimate_URLs,phishing_URLs = init.load_data(rate_lp) #first pre processing on input
 print(len(legitimate_URLs),len(phishing_URLs))
 X_train,y_train,X_test,y_test,training_list,testing_list = init.training_set(legitimate_URLs,phishing_URLs)  #return training set; see init.py for details
-train() #eseguire solo la prima volta, parametri inseriti in config.
+#train() #eseguire solo la prima volta, parametri inseriti in config.
 models = load_RNN()
 print(models)
 #analysis function

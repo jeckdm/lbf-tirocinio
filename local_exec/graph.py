@@ -14,13 +14,15 @@ dai file taus e false_negs presenti in loc.
 Il parametro name contiene la coppia che raprresenta i nomi dei file da cui vengono caricati il il dizionario (fpr, fpr_ratio): falsi negativi e (fpr, fpr_ratio): tau
 se tali file non esistono vengono creati con il nome indicato in name tramite una chiamata a helpers.tau_analysis
 '''
-def LBF_graph(fnrs, true_fpr_LBF, sizes_LBF, name, falseN=True, FPR=True, Size=True):
+def LBF_graph(fnrs, true_fpr_LBF, sizes_LBF,sizes_struct_LBF, name, falseN=True, FPR=True, Size=True,size_struct=True):
   if(falseN):
     graph(fnrs, "Classifier False Negative Rate", name + "_classifier_FNR.png", )
   if(FPR):
     graph(true_fpr_LBF, "Overall FPR", name + "_fpr.png", )
   if(Size):
     graph(sizes_LBF, "Total Size of LBF",  name + "_size.png")
+  if(size_struct):
+    graph(sizes_struct_LBF, "Sizes elements LBF", name + "_size_struct.png")
 
 def graph(params, title, path):
   f,ax = plt.subplots(1, len(config.h_sizes),figsize=(12,3))

@@ -55,23 +55,28 @@ def empirical_analysis(models, fprs, fpr_ratios, SLBFs, X_test, y_test, testing_
     true_fpr_SLBF = {}
     sizes_SLBF = {}
     times_SLBF = {}
-
+    size_struct_SLBF = {}
+    structs = ["intial_BF","model","backup_BF"]
+    Fpr_Const = 0.02   #Fpr per il quale vado a testare le size del classificatore e di BF filter; possibile parametro
     # Grandezze dei modelli addestrati (Dei soli parametri (?))
     models_size = analysisTau.get_models_size()
-
+    SLBFs_initial,SLBFs_backup = SLBFs
     for i in range(len(models)):
         true_fpr_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
         sizes_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
         times_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
+        size_struct_SLBF[i] = pd.DataFrame(index = fpr_ratios, columns = structs)
+        model_size = models_size[i]
         for fpr in fprs:
             for fpr_ratio in fpr_ratios:
                 try:
                     # Carico il relativo SLBF/LBF
-                    SLBF_filters = SLBFs[i][(fpr,fpr_ratio)]
+                    #SLBF_filters = SLBFs[i][(fpr,fpr_ratio)] tupla,non credo possa funzionare
+                    BF_initial = SLBFs_initial[i][(fpr,fpr_ratio)]
+                    BF_backup = SLBFs_backup[i][(fpr,fpr_ratio)]
                     # Calcolo parametri empirici
-                    fpr0, SLBF_size, t = SLBF.test_LBF(models[i], BF_backup, taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
+                    fpr0, SLBF_size, t = SLBF.test_SLBF(BF_initial, models[i], BF_backup, taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
                     # Calcolo la size del modello
-                    model_size = models_size[i]
                     # Salvo i risultati
                     true_fpr_SLBF[i].loc[fpr_ratio,fpr] = fpr0
                     sizes_SLBF[i].loc[fpr_ratio,fpr] = SLBF_size + model_size
@@ -84,8 +89,17 @@ def empirical_analysis(models, fprs, fpr_ratios, SLBFs, X_test, y_test, testing_
                 except:
                     print("error", fpr_ratio, fpr) # Bad tau + false negs = 0
                     continue
+        for fpr_ratio in fpr_ratios:
+            try:
+                BF_backup = SLBFs_backup[i][(Fpr_Const,fpr_ratio)]
+                BF_initial = SLBFs_backup[i][(Fpr_Const,fpr_ratio)]
+                size_struct_SLBF[i].loc[fpr_ratio,"backup_BF"] = BF_backup.size/8
+                size_struct_SLBF[i].loc[fpr_ratio,"initial_BF"] = BF_initial.size/8
+                size_struct_SLBF[i].loc[fpr_ratio,"model"] = model_size[i]
+            except:
+                continue
 
-    return true_fpr_SLBF, sizes_SLBF, times_SLBF
+    return true_fpr_SLBF, sizes_SLBF, times_SLBF,size_struct_SLBF
 
 def SLBF_total_analisys(models, fprs, fpr_ratios, training_list, X_train, y_train, X_test, y_test, testing_list, verbose=False):
     # Faccio analisi di tau e salvo relativi file
@@ -101,7 +115,7 @@ def SLBF_total_analisys(models, fprs, fpr_ratios, training_list, X_train, y_trai
     fnrs = analysisTau.fnrs_analysis(models, fprs, fpr_ratios, false_negs, training_list)
     # Analisi empirica delle strutture create
     print("ANALISI EMPIRICA")
-    true_fpr_LBF, sizes_LBF, times_LBF = empirical_analysis(models, fprs, fpr_ratios, SLBF_filters, X_test, y_test, testing_list, taus)
+    true_fpr_SLBF, sizes_SLBF, times_SLBF, sizes_struct_SLBF = empirical_analysis(models, fprs, fpr_ratios, SLBF_filters, X_test, y_test, testing_list, taus)
     # Genero grafici
-    graph.LBF_graph(fnrs, true_fpr_LBF, sizes_LBF, "SLBF")
+    graph.LBF_graph(fnrs, true_fpr_SLBF, sizes_SLBF,size_struct_SLBF, "SLBF")
     
