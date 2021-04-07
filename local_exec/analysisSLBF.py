@@ -95,7 +95,7 @@ def empirical_analysis(models, fprs, fpr_ratios, SLBFs, X_test, y_test, testing_
                 BF_initial = SLBFs_backup[i][(Fpr_Const,fpr_ratio)]
                 size_struct_SLBF[i].loc[fpr_ratio,"backup_BF"] = BF_backup.size/8
                 size_struct_SLBF[i].loc[fpr_ratio,"initial_BF"] = BF_initial.size/8
-                size_struct_SLBF[i].loc[fpr_ratio,"model"] = model_size[i]
+                size_struct_SLBF[i].loc[fpr_ratio,"model"] = model_size
             except:
                 continue
 
@@ -115,7 +115,7 @@ def SLBF_total_analisys(models, fprs, fpr_ratios, training_list, X_train, y_trai
     fnrs = analysisTau.fnrs_analysis(models, fprs, fpr_ratios, false_negs, training_list)
     # Analisi empirica delle strutture create
     print("ANALISI EMPIRICA")
-    true_fpr_SLBF, sizes_SLBF, times_SLBF, sizes_struct_SLBF = empirical_analysis(models, fprs, fpr_ratios, SLBF_filters, X_test, y_test, testing_list, taus)
+    true_fpr_SLBF, sizes_SLBF, times_SLBF, size_struct_SLBF = empirical_analysis(models, fprs, fpr_ratios, SLBF_filters, X_test, y_test, testing_list, taus)
     # Genero grafici
     graph.LBF_graph(fnrs, true_fpr_SLBF, sizes_SLBF,size_struct_SLBF, "SLBF")
     

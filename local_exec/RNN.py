@@ -56,12 +56,13 @@ def train(model,X_train,y_train,optimizer,criterion,batch_size):
     model.train()
     total_loss = 0
     for batch in range(50):
-        x, y = make_batch_train(X_train, y_train, batch_size)
+        #x, y = make_batch_train(X_train, y_train, batch_size)
+        x,y = make_batch_test(X_train,y_train,batch_size)
         y_hat, _ = model(x)
         optimizer.zero_grad()
-        y_hat = y_hat.view(-1,2)
+        #y_hat = y_hat.view(-1,2)
         y = y.view(-1).long()
-        loss = criterion(y_hat, y)
+        loss = criterion(y_hat[:,149].view(-1,2), y)
         loss.backward()
         optimizer.step()
         total_loss += loss.item()

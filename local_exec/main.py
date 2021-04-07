@@ -6,6 +6,7 @@ import analysisLBF
 import analysisSLBF
 import init
 import analysisTau
+import config
 #interfaces
 
 def load_RNN():
@@ -32,7 +33,7 @@ def SLBF_Bloom_filters_analysis(verbose=True): #crea Bloom filters necessari per
 def SLBF_graph(falseN=True,FPR=True,Size=True,verbose=False): #vedi LBF_graph
     analysisSLBF.SLBF_graph(models,phishing,X_train,y_train, ("false_negs2",  "taus2"))
 def SLBF_total_analisys(verbose=True):
-    analysisSLBF.SLBF_total_analisys(models, fprs, fpr_ratios, phishing_URLs, X_train, y_train, X_test, y_test, testing_list)
+    analysisSLBF.SLBF_total_analisys(models, fprs, fpr_ratios2, phishing_URLs, X_train, y_train, X_test, y_test, testing_list)
 
 fprs = [0.001,0.005,0.01,0.02]
 fpr_ratios = [0.1*i for i in range(1,11)] # Ratio per LBF
@@ -40,12 +41,13 @@ fpr_ratios2 = [1.*i for i in range(1,11)] # Ratio per SLBF
 
 #esecuzione
 rate_lp,h_sizes,emb_size,batch_size = init.get_arguments()
+config.h_sizes =  h_sizes
 print(f"il ratio legit/phish è uguale a {rate_lp} , hsizes sono uguali a {h_sizes} mentre emb_size è uguale a {emb_size}")
 criterion = nn.CrossEntropyLoss()  #imposto criterion (utilizzato per la funzione di loss in fase di training e di valutazione)
 legitimate_URLs,phishing_URLs = init.load_data(rate_lp) #first pre processing on input
 print(len(legitimate_URLs),len(phishing_URLs))
 X_train,y_train,X_test,y_test,training_list,testing_list = init.training_set(legitimate_URLs,phishing_URLs)  #return training set; see init.py for details
-#train() #eseguire solo la prima volta, parametri inseriti in config.
+train() #eseguire solo la prima volta, parametri inseriti in config.
 models = load_RNN()
 print(models)
 #analysis function

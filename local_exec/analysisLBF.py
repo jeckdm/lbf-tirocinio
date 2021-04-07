@@ -82,10 +82,10 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
           print("error / numero falsi negativi 0")
           continue
     for fpr_ratio in fpr_ratios:
-        BF_backup = LBFs[i][(Fpr_Const,fpr_ratio)]
-        try:
+        try:        
+          BF_backup = LBFs[i][(Fpr_Const,fpr_ratio)]
           size_struct_LBF[i].loc[fpr_ratio,"backup_BF"] = BF_backup.size /8
-          size_struct_LBF[i].loc[fpr_ratio,"model"] = model_size / 8
+          size_struct_LBF[i].loc[fpr_ratio,"model"] = model_size 
         except:
           continue
 
@@ -94,9 +94,9 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
 def total_LBF_analisys(models, fprs, fpr_ratios, training_list, X_train, y_train, X_test, y_test, testing_list, verbose=False):
   # Faccio analisi di tau e salvo relativi file
   print("ANALISI TAU")
-  #false_negs, taus = analysisTau.tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name=("false_negs", "taus"))
-  false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
-  taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
+  false_negs, taus = analysisTau.tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name=("false_negs", "taus"))
+  #false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
+  #taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
   # Creo i filtri di backup sulla base di fprs, fpr_ratios
   print("CREAZIONI BF BACKUP")
   LBF_backups = create_BFsbackup(models, fprs, fpr_ratios, false_negs)
