@@ -38,7 +38,6 @@ def val(model, X_t, y_t,criterion,batch_size):
         for batch in range(50):
             x, y = make_batch_test(X_t, y_t, batch_size)
             y_hat, _ = model(x)
-            #optimizer.zero_grad()
             preds = y_hat.max(dim=2)[1][:,149]
             preds_eq = preds.eq(y)
             total_right += preds_eq.sum().item()
@@ -47,6 +46,19 @@ def val(model, X_t, y_t,criterion,batch_size):
             total_loss += loss
 
     return total_right / total, total_loss / 50
+
+def get_predictions(model, X_test, y_test, batch_size):
+    model.eval()
+    with torch.no_grad():
+        # Calcolo gli output del modello sul sample
+        y_hat, _ = model(X_test.to(device)) 
+        # Predizione pari allo score piú altro tra i 2 output
+        preds = y_hat.max(dim=2)[1][:,149]  
+        # Aggiungo il risultato a predictions e targets
+        predictions = preds.detach().cpu().numpy() # Riporto in memoria CPU e trasformo in array numpy
+        targets = y_test.detach().cpu().numpy()
+
+    return predictions, targets
 
 def train(model,X_train,y_train,optimizer,criterion,batch_size):
     '''
@@ -95,12 +107,3 @@ def make_batch_test(X_t, y_t, B):
     batch_y = batch_y0.to(device)
 
     return batch_X, batch_y
-
-
-'''
-- aggiunti commenti
-- messo device come globale
-
-Davide
--messo criterion come globale
-'''

@@ -1,0 +1,59 @@
+\begin{table}[H]
+\centering
+\caption{Risultati medi su 5 esecuzioni}
+\begin{tabular}{lrrrrr}
+\toprule
+{} &  Legitimate &  Phishing &  accuracy &  macro avg &  weighted avg \\
+\midrule
+f1-score  &       0.944 &     0.369 &     0.898 &      0.656 &         0.873 \\
+precision &       0.910 &     0.809 &     0.898 &      0.860 &         0.898 \\
+recall    &       0.981 &     0.306 &     0.898 &      0.644 &         0.898 \\
+support   &   62059.200 &  8755.800 &     0.898 &  70815.000 &     70815.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Risultati minimi su 5 esecuzioni}
+\begin{tabular}{lrrrrr}
+\toprule
+{} &  Legitimate &  Phishing &  accuracy &  macro avg &  weighted avg \\
+\midrule
+f1-score  &       0.937 &     0.108 &     0.882 &      0.522 &         0.833 \\
+precision &       0.881 &     0.661 &     0.882 &      0.801 &         0.883 \\
+recall    &       0.953 &     0.057 &     0.882 &      0.528 &         0.882 \\
+support   &   61974.000 &  8700.000 &     0.882 &  70815.000 &     70815.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Risultati massimi su 5 esecuzioni}
+\begin{tabular}{lrrrrr}
+\toprule
+{} &  Legitimate &  Phishing &  accuracy &  macro avg &  weighted avg \\
+\midrule
+f1-score  &       0.952 &     0.656 &     0.916 &      0.804 &         0.916 \\
+precision &       0.951 &     0.996 &     0.916 &      0.939 &         0.915 \\
+recall    &       1.000 &     0.651 &     0.916 &      0.802 &         0.916 \\
+support   &   62115.000 &  8841.000 &     0.916 &  70815.000 &     70815.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Dev.St su 5 esecuzioni}
+\begin{tabular}{lrrrrr}
+\toprule
+{} &  Legitimate &  Phishing &  accuracy &  macro avg &  weighted avg \\
+\midrule
+f1-score  &       0.006 &     0.244 &     0.014 &      0.125 &         0.036 \\
+precision &       0.031 &     0.159 &     0.014 &      0.066 &         0.012 \\
+recall    &       0.022 &     0.265 &     0.014 &      0.122 &         0.014 \\
+support   &      65.201 &    65.201 &     0.014 &      0.000 &         0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tempo previsioni medio:
+0.018 s

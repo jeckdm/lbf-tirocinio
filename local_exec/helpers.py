@@ -27,7 +27,3 @@ def solve_FPR_SBF(b1, b2, F_p, F_n, alpha=0.6185):
 
 def determine_tau(FPR_tau, prob_list):
   return np.percentile(np.array(prob_list),100*(1.-FPR_tau))
-
-'''
-tolto tau analysis causa import ricorsivo di LBF
-'''

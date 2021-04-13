@@ -71,22 +71,18 @@ def empirical_analysis(models, fprs, fpr_ratios, SLBFs, X_test, y_test, testing_
             for fpr_ratio in fpr_ratios:
                 try:
                     # Carico il relativo SLBF/LBF
-                    #SLBF_filters = SLBFs[i][(fpr,fpr_ratio)] tupla,non credo possa funzionare
                     BF_initial = SLBFs_initial[i][(fpr,fpr_ratio)]
                     BF_backup = SLBFs_backup[i][(fpr,fpr_ratio)]
                     # Calcolo parametri empirici
                     fpr0, SLBF_size, t = SLBF.test_SLBF(BF_initial, models[i], BF_backup, taus[i][(fpr,fpr_ratio)],X_test,y_test,testing_list)
-                    # Calcolo la size del modello
-                    # Salvo i risultati
                     true_fpr_SLBF[i].loc[fpr_ratio,fpr] = fpr0
                     sizes_SLBF[i].loc[fpr_ratio,fpr] = SLBF_size + model_size
                     times_SLBF[i].loc[fpr_ratio,fpr] = t
-                    print(f"FPR Target, FPR Ratio: ({fpr},{fpr_ratio}), FPR empirico: {fpr0}, Size totale: {BF_size + model_size}, Size modello: {model_size} Tempo di accesso medio: {t}")
                     if save:
                         SLBFo = {"FPR": fpr0, "size": SLBF_size+model_size, "time": t}
                         # Andrebbe cambiato formato di salvataggio
                         # np.save(config.loc_nn+"SLBF_hid"+str(config.h_sizes[i])+"_FPR"+str(fpr)+"_ratio"+str(fpr_ratio), LBFo)
-                except:
+                except KeyError:
                     print("error", fpr_ratio, fpr) # Bad tau + false negs = 0
                     continue
         for fpr_ratio in fpr_ratios:
@@ -105,8 +101,8 @@ def SLBF_total_analisys(models, fprs, fpr_ratios, training_list, X_train, y_trai
     # Faccio analisi di tau e salvo relativi file
     print("ANALISI TAU")
     false_negs, taus = analysisTau.tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name=("false_negs2", "taus2"))
-    # false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
-    # taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
+    # false_negs = np.load(config.loc_nn + "false_negs2.npy", allow_pickle=True).item()
+    # taus = np.load(config.loc_nn + "taus2.npy", allow_pickle=True).item()
     # Creo i filtri di backup sulla base di fprs, fpr_ratios
     print("CREAZIONI BF BACKUP")
     SLBF_filters = create_SLBF_filters(models, fprs, fpr_ratios, false_negs, training_list)
@@ -117,5 +113,5 @@ def SLBF_total_analisys(models, fprs, fpr_ratios, training_list, X_train, y_trai
     print("ANALISI EMPIRICA")
     true_fpr_SLBF, sizes_SLBF, times_SLBF, size_struct_SLBF = empirical_analysis(models, fprs, fpr_ratios, SLBF_filters, X_test, y_test, testing_list, taus)
     # Genero grafici
-    graph.LBF_graph(fnrs, true_fpr_SLBF, sizes_SLBF,size_struct_SLBF, "SLBF")
+    graph.LBF_graph(fnrs, true_fpr_SLBF, sizes_SLBF, sizes_struct_SLBF, "SLBF")
     

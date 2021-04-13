@@ -48,10 +48,11 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
   sizes_LBF = {}
   times_LBF = {}
   size_struct_LBF = {}
+
   structs = ["backup_BF","model"]
   Fpr_Const = 0.02
-  # Grandezze dei modelli addestrati (Dei soli parametri (?))
-  models_size = analysisTau.get_models_size()
+  # Grandezze dei modelli addestrati
+  models_size = analysisTau.get_models_size() # Ritorna grandezza 16,8,4 (get_models_size peró é da cambiare, implementata male)
 
   for i in range(len(models)): # Cambiato range da 3 a models
     true_fpr_LBF[i] = pd.DataFrame(index = fpr_ratios, columns = fprs)
@@ -81,26 +82,33 @@ def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_l
           # Aggiunta except utile nel caso in cui il file non fosse stato salvato perché fn = 0
           print("error / numero falsi negativi 0")
           continue
+
     for fpr_ratio in fpr_ratios:
-        try:        
+        try:
           BF_backup = LBFs[i][(Fpr_Const,fpr_ratio)]
           size_struct_LBF[i].loc[fpr_ratio,"backup_BF"] = BF_backup.size /8
           size_struct_LBF[i].loc[fpr_ratio,"model"] = model_size 
         except:
           continue
 
-  return true_fpr_LBF, sizes_LBF, times_LBF , size_struct_LBF
+  return true_fpr_LBF, sizes_LBF, times_LBF, size_struct_LBF
 
 def total_LBF_analisys(models, fprs, fpr_ratios, training_list, X_train, y_train, X_test, y_test, testing_list, verbose=False):
+  # CREAZIONE STRUTTURE (Per questa parte uso training_dataset, quindi devo per forza inserire in training tutti i phishing(che sono quelli che devo salvarmi)) e posso variare i legit
+  # Ma a questo punto non posso usare direttamente la lista dei phishing + loro codifica, senza usare anche i legit?
   # Faccio analisi di tau e salvo relativi file
   print("ANALISI TAU")
   false_negs, taus = analysisTau.tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name=("false_negs", "taus"))
-  #false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
-  #taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
+  # false_negs = np.load(config.loc_nn + "false_negs.npy", allow_pickle=True).item()
+  # taus = np.load(config.loc_nn + "taus.npy", allow_pickle=True).item()
   # Creo i filtri di backup sulla base di fprs, fpr_ratios
   print("CREAZIONI BF BACKUP")
   LBF_backups = create_BFsbackup(models, fprs, fpr_ratios, false_negs)
   # Calcolo rate di falsi negativi per ogni fprs, fpr_ratios
+
+  # ANALISI DELLE STRUTTURE CREATI (RATE DI FALSI NEGATIVI + ANALISI EMPIRICA), a questo punto in training list ho solamente phishing, perché per calcolare il rate di falsi negativi faccio il rapporto
+  # tra il numero di falsi negativi ed il numero totale di chiavi CHE VOGLIO SALVARE (In questo caso tutti i phishing)
+  # Testing set invece contiene solamente legit per andare a testare in modo empirico nel caso peggiore il false positive ratio
   print("CALCOLO FNRS")
   fnrs = analysisTau.fnrs_analysis(models, fprs, fpr_ratios, false_negs, training_list)
   # Analisi empirica delle strutture create
@@ -108,9 +116,3 @@ def total_LBF_analisys(models, fprs, fpr_ratios, training_list, X_train, y_train
   true_fpr_LBF, sizes_LBF, times_LBF,sizes_struct_LBF = empirical_analysis(models, fprs, fpr_ratios, LBF_backups, X_test, y_test, testing_list, taus)
   # Genero grafici
   graph.LBF_graph(fnrs, true_fpr_LBF, sizes_LBF,sizes_struct_LBF, "LBF")
-
-'''
-- rimossi alcuni import
-- messi parametri globali
-- aggiunto if else per evitare di ripetere analisi di tau quando i file sono giá presenti
-'''

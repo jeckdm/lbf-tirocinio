@@ -7,7 +7,6 @@ def GPU_init():
     Ritorna, se presente, il device cuda, altrimenti la cpu (con relativo accelerator).
     '''
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # accelerator = cuda_output[0] if torch.cuda.is_available() else 'cpu'
     print(f"Dispositivo: {device}")
 
     if device.type == 'cuda':
@@ -25,14 +24,5 @@ loc_plots = "test/plots/"
 
 # Parametri RNN
 emb_size= 5
-h_sizes = [4,8,16]
+h_sizes = [16,8,4]
 layers = 1
-
-# Parametri per testing e analisi di tau
-
-
-
-''' 
-rimosso import init 
-aggiunti criterion ai parametri RNN
-'''
