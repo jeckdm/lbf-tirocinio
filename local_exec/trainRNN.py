@@ -47,7 +47,7 @@ def load_eval(X_test, y_test,criterion,h_sizes,emb_size,batch_size):
     print("model size (bytes)", model_sizes[i])
     models[i] = R.RNN(emb_size=emb_size, h_size=h_size, layers=layers).to(device)
     models[i].load_state_dict(torch.load(config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size)))
-    models[i].eval()  #in teoria superfluo
+    # models[i].eval()  #in teoria superfluo
     print(R.val(models[i], X_test,y_test,criterion,batch_size))
     
     avg_time = 0
@@ -91,16 +91,3 @@ def get_classifier_probs(model,X_train,y_train):
       probs0 += list(ps[y==0].detach().cpu().numpy())
 
   return probs1, probs0
-
-
-'''
-- aggiunti parametri globali
-- spostato for loop al di fuori di train
-- spostati emb_size, h_sizes, layers e criterion in config.py (Piú comodo per testare altri iperparametri?)
-- rimossi alcuni import
-
--rimesso loop in train per snellire main
--aggiunto criterion a config.py
--tolto criterion come argomento
--inserito n_models in modo da fare cicli in base a h_size
-'''

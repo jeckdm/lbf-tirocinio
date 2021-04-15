@@ -111,8 +111,3 @@ def run_BF(FPR, key_set, testing_list):
 
     # returns empirical FPR, BF size in bytes, and access time per element
     return avg_fp, BF.size/8, (total_time)/len(testing_list)
-
-'''
-- cambiati nomi di alcuni parametri
-- cancellato alcuni refusi
-'''

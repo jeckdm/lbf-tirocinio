@@ -13,8 +13,6 @@ i falsi negativi e le tau relativi ad ogni (fpr, fprs-rate) sono salvati come na
 Falsi negativi che vengono calcolati sulla base dei risultati del classificatore models sulla lista di phishing URLs in ingresso (Tramite relativa tau)
 '''
 def tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name = ("false_negs", "taus"), verbose = True):
-
-
 	false_negs = {}
 	taus = {}
 	# Per ognuno dei modelli salvo numero di falsi negativi del classificatore e tau ottimale nelle relative strutture sulla
@@ -42,9 +40,7 @@ def get_models_size():
   for filename in list(glob.glob(config.loc_nn + "RNN_*")):
     sizes.append(os.path.getsize(filename))
 
-  print(sorted(sizes))
-
-  return sorted(sizes)
+  return sorted(sizes, reverse=True)
 
 '''
 '''
@@ -59,9 +55,3 @@ def fnrs_analysis(models, fprs, fpr_ratios, false_negs, training_list):
         fnrs[i].loc[fpr_ratio,fpr] = len(false_negs[i][(fpr,fpr_ratio)])/len(training_list)
 
   return fnrs
-
-'''
-    -aggiunta per probelmi reccurent import
-	-aggiunto argomento per indicare se uso fpr_ratios o fprs_ratios2
-
-'''

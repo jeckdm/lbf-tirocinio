@@ -75,12 +75,3 @@ def test_LBF(model, LBF_backup, tau, X_test, y_test, testing_list):
   
   # returns empirical FPR, BF size, and avg access time
   return avg_fp, LBF_backup.size / 8, (total_time)/len(y_test)
-
-'''
-- aggiunti commenti
-- rimossi alcuni import
-- aggiunto device come variabile globale
-- spostato determine_tau in helpers.py
-Davide:
--sistemato total analysis
-'''

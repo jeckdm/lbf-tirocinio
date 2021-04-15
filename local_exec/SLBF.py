@@ -76,8 +76,3 @@ def test_SLBF(SLBF_initial, model, SLBF_backup, tau, X_test,y_test,testing_list)
   
   # returns empirical FPR, BF size, and avg access time
   return avg_fp, (SLBF_initial.size+SLBF_backup.size) / 8, (total_time)/len(y_test)
-
-'''
-- aggiunti commenti
-- rimossi alcuni import
-'''
