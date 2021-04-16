@@ -11,41 +11,44 @@ import pandas as pd
 import init
 
 
-def generic_classifier(X_train,y_train,X_test,y_test,classifier,name,verbose=True):
+def generic_classifier(X_train,y_train,X_test,y_test,classifier,name,verbose=True):  #classe per fare training e valutare il classificatore
     nb = Pipeline([
-                ('tfidf', TfidfTransformer()),
-                ('clf', classifier),
+                ('tfidf', TfidfTransformer()),                  #tfidf, va ad assegnare un vettore dei pesi in base alla composizione del testo 
+                ('clf', classifier),                            #applica classificatore passato come parametro
                 ])
-    nb.fit(X_train, y_train)
-    y_pred = nb.predict(X_test)
+    nb.fit(X_train, y_train)                                    #tfidf su X_train e training del classificatore
+    y_pred = nb.predict(X_test)                                 #tfidf su X_test e calcollo di y pred
     if(verbose):
         print(f"{name}:")
         print('accuracy %s' % sklearn.metrics.accuracy_score(y_test,y_pred))
         print(classification_report(y_test, y_pred))
-    return classification_report(y_test,y_pred,output_dict=True)
+    return classification_report(y_test,y_pred,output_dict=True)    # return classification report
 
-def Bayes_clasifier(alpha_params=1):
+def Bayes_clasifier(alpha_params=1):       
     return MultinomialNB(alpha=alpha_params)
 
 def SVM_classifier(C_param=1.0,penality_param='l2',loss_param = 'squared_hinge'):
-    return sklearn.svm.LinearSVC(C=C_param,penalty=penality_param,loss=loss_param)
+    return sklearn.svm.LinearSVC(C=C_param,penalty=penality_param,loss=loss_param,max_iter=10000)
     
 def LogisticRegression_classifier(C_param=1,max_iter_param=2000,solver_param='lbfgs'):
     return LogisticRegression(C=C_param,max_iter=max_iter_param,solver=solver_param)
 
 def get_set(sbilanciamento,codif=None):
-        legitimate_URLs,phishing_URLs = init.load_data(sbilanciamento) #prendo i dati (argomento uno va ad indicare il ratio fra phishing e legitimate
+        X,y = init.load_data(sbilanciamento) #prendo i dati (argomento uno va ad indicare il ratio fra phishing e legitimate
                                                         #ho scelto di usare un dataset bilanciato)
-        X= legitimate_URLs+phishing_URLs
-        y= [0]*len(legitimate_URLs)+ [1]*len(phishing_URLs)      #associo ad ogni legit 0 e ad ogni phish 1
-        X_train, X_test, y_train, y_test =train_test_split(X,y,test_size=0.3)
-        if(codif==None):
+        X =X.tolist()
+        y=y.tolist()
+        X_train, X_test, y_train, y_test =train_test_split(X,y,test_size=0.3)    #divido Train e test set
+        if(len(X_train) != len(list(set(X_train)-set(X_test)))):                #assertion error in caso di elementi presenti sia in X_train che in X_test
+            raise AssertionError()
+        if(codif==None):                                                        #default  ritorna X_train,y_train...
             return X_train,y_train,X_test,y_test
-        codif.fit(X)
-        X_train= codif.transform(X_train)
+        codif.fit(X)                                                            #creo dizionario con le parole
+        X_train= codif.transform(X_train)                                       #applico codifica (bag of word/bag of char) su dataset per intero
         X_test = codif.transform(X_test)
-        return X_train,y_train,X_test,y_test
-def makedict(list,metrics,names,iter= False):
+        return X_train,y_train,X_test,y_test                                    #ritorna X_train,X_test codificati
+
+def makedf(list,metrics,names,iter= False):                                    #stampa DF con risultati ed salva in latex
     diz= {}
     if (iter == True):
         for name in names:
@@ -67,7 +70,7 @@ def makedict(list,metrics,names,iter= False):
             dframe.to_latex(buf=f"/home/dav/Scrivania/latex/{name}es1.tex")
             print(pd.DataFrame(diz))
 
-def  analysis(iteration,namelist,classifiers,codif,verbose=False,sbilanciamento=1,ts=None):
+def  analysis(iteration,namelist,classifiers,codif,verbose=False,sbilanciamento=1,ts=None):     #funzione per andare a effettuare una o più iterazioni dati i classificatori
     metrics = ['precision','recall','f1-score','accuracy']
     rlist = {}
     for name in namelist:
@@ -87,12 +90,11 @@ def  analysis(iteration,namelist,classifiers,codif,verbose=False,sbilanciamento=
                     rlist[name][metric]+=[(res[metric])]
                 else:  
                     rlist[name][metric]+=[res['weighted avg'][metric]]
-    makedict(rlist,metrics,namelist,(iteration>1))
+    makedf(rlist,metrics,namelist,(iteration>1))
 
 def GridModelSelection(sbilanciamento,codifica,estimator,params,name):
     X_train,y_train,X_test,y_test =get_set(sbilanciamento)
     X_trainval,X_validation,y_trainval,y_validation= train_test_split(X_train,y_train,test_size=0.3)
-    print(len(X_train+y_train))
     codifica.fit(X_train+X_test)
     X_trainval=codifica.transform(X_trainval)
     X_validation = codifica.transform(X_validation)
@@ -104,12 +106,18 @@ def GridModelSelection(sbilanciamento,codifica,estimator,params,name):
     analysis(1,[name],[gridmodel.best_estimator_],codifica,ts=(X_train,y_train,X_test,y_test))
 
 
-def Bayesparams(start,end,granularity):
-    print(np.arange(start,end,granularity))
+def Bayes_params(start,end,granularity):
     return {'alpha' : np.arange(start,end,granularity)}
+def SMV_params(start,end,granularity):
+    return {'C' : np.arange(start,end,granularity)}
+def Logistic_params():
+    return {'C' : [10,100,1000,10000,100000,1000000]}
 
-codif =  CountVectorizer(analyzer='word')
-namelist = ["Naive Bayes","SVM","Logistic regression"]
-classifiers = [Bayes_clasifier(),SVM_classifier(),LogisticRegression_classifier()]
-
-GridModelSelection(1,codif,Bayes_clasifier(),Bayesparams(0,0.2,0.00001),"Naive Bayes")
+if __name__ == "__main__":
+    codif =  CountVectorizer(analyzer='char')
+    namelist = ["Naive Bayes","SVM","Logistic regression"]
+    classifiers = [Bayes_clasifier(),SVM_classifier(),LogisticRegression_classifier()]
+    # GridModelSelection(0,codif,Bayes_clasifier(),Bayes_params(0.1,5,0.1),"Naive Bayes")
+    #GridModelSelection(0,codif,LogisticRegression_classifier(),Logistic_params(),"Logistic Regression")
+    #GridModelSelection(0,codif,SVM_classifier(),SMV_params(0.1,2,0.1),"Linear SVM")
+    analysis(10,["Logistic regression"],[LogisticRegression_classifier(C_param=1000)],codif)
