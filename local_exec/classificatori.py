@@ -119,7 +119,6 @@ def GridModelSelection(codifica, estimator, params, name, nmparams):
            'accuracy':[],
            'f1-score':[]}
     for train,test in kf.split(X,y):
-        print(len(test))
         X_test, X_train = X[test], X[train]
         y_test, y_train = y[test], y[train]
         assert(len(X_test)==len(list(set(X_test)-set(X_train))))
@@ -140,26 +139,29 @@ def GridModelSelection(codifica, estimator, params, name, nmparams):
                                 'std': np.std(rlist[metric])}
 
     dfval = pd.DataFrame(valutazione)
-    dfparam.to_latex(buf=f"/home/dav/Scrivania/latex/{name}wordparams-score.tex")
-    dfval.to_latex(buf=f"/home/dav/Scrivania/latex/{name}wordvalidation.tex")
+    dfparam.to_latex(buf=f"/home/dav/Scrivania/latex/{name}charparams-score.tex")
+    dfval.to_latex(buf=f"/home/dav/Scrivania/latex/{name}charvalidation.tex")
     print(dfparam)
     print(dfval)
   
 
-def Bayes_params(start, end):
-    print(np.logspace(start, end, (end-start)))
-    return {'alpha' : np.logspace(start, end, (end-start))}
-def SMV_params(start, end, granularity):
-    return {'C' : np.arange(start, end, granularity)}
-def Logistic_params():
-    return {'C' : [10, 100, 1000, 10000, 100000, 1000000]}
+def select_params(start, end,name,nelem=None,logspace = True):
+    if (logspace):
+        if(nelem==None):
+            nelem=end-start+1
+        print(np.logspace(start, end, nelem))
+        return {name : np.logspace(start, end, nelem)}
+    if(nelem==None):
+        nelem = int(end/start)
+    return {name : np.linspace(start,end,nelem)}
+
 
 if __name__ == "__main__":
-    codif =  CountVectorizer(analyzer='word')
+    codif =  CountVectorizer(analyzer='char')
     namelist = ["Naive Bayes", "SVM", "Logistic regression"]
     classifiers = [Bayes_clasifier(), SVM_classifier(), LogisticRegression_classifier()]
-    GridModelSelection(codif, Bayes_clasifier(), Bayes_params(-10,10), "Naive bayes","alpha")
-    #GridModelSelection(codif, LogisticRegression_classifier(), Logistic_params(), "Logistic Regression","C")
-    #GridModelSelection(codif, SVM_classifier(), SMV_params(0.1, 0.5, 0.1), "Linear SVM")
+    GridModelSelection(codif, Bayes_clasifier(), select_params(-10,10,"alpha"), "Naive bayes","alpha")
+    #GridModelSelection(codif, LogisticRegression_classifier(), select_params(0,6,'C'), "Logistic Regression","C")
+    #GridModelSelection(codif, SVM_classifier(), select_params(-3, 1), "Linear SVM","C")
     #analysis(10, namelist,classifiers, codif,verbose=False) 
        
