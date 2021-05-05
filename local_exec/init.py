@@ -23,7 +23,7 @@ def load_data(verbose = True):
     legitimate_URLs = np.concatenate((legitimate_URLs,np.load(config.loc_data3 + "legitimate_URLs3.npy",allow_pickle=True)))
 
     # randomly permute URLs
-    np.random.seed()
+    np.random.seed(seed=0)
     legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
     phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])
 
