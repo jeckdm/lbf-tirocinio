@@ -10,7 +10,7 @@ from scipy import sparse
 import numpy as np
 import pandas as pd
 import math
-import helpers
+from classificatori import helpers
 import init
 
 savepath = "/home/dav/Scrivania/latex/" + "analysis"
@@ -69,10 +69,7 @@ def  analysis_holdout(iteration, classifier_name, classifiers, codif, verbose=Fa
     makedf(rlist, metrics, classifier_name,(iteration>1))
 
 def Cross_Validation_analisys(classifier_list,classifier_name,codif,componenti=None,frel=False,verbose=False):
-    X,y = init.load_data(False)
-    X = np.array(X)
-    y = np.array(y)
-    kf = StratifiedKFold()
+    X,y,kf = helpers.get_set_stratified()
     svname = ""
     rlist = {}
     for name in classifier_name:
@@ -84,20 +81,7 @@ def Cross_Validation_analisys(classifier_list,classifier_name,codif,componenti=N
         X_test, X_train = X[test], X[train]
         y_test, y_train = y[test], y[train]
         assert(len(X_test)==len(list(set(X_test)-set(X_train))))
-        codif.fit(X_test)
-        if(frel):
-            X_train = helpers.toRel(codif.transform(X_train),X_train)
-            X_test = helpers.toRel(codif.transform(X_test),X_test)
-            svname+="_lrel"
-        else:
-            X_train = codif.transform(X_train)
-            X_test = codif.transform(X_test)
-            
-        if(componenti!=None):
-            lsa = TruncatedSVD(n_components=componenti)
-            X_train,X_test = helpers.fit_lsa(X_train,X_test,lsa)
-            svname+=f"_sva{componenti}"
-            print("varianza informazione: ",np.sum(lsa.explained_variance_ratio_))
+        X_train, X_test, svname = helpers.codificate(X_train, X_test, codif, svname,frel,componenti)
 
 
         for classifier, name in zip(classifier_list, classifier_name):
