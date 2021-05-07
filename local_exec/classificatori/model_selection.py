@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 import math
 import init
-from classificatori.helpers import cutoff,makedf,get_set_stratified
+from classificatori.helpers import cutoff,makedf,get_set_stratified, codificate
 from classificatori.train_and_val import train_and_fit
 from scipy import stats
-savepath = "/home/dav/Scrivania/latex/Model_selection_"
+savepath = "~/latex/Model_selection_"
 
 def my_Grid_search(estimator, params, nmparams, multilevel, X_train,y_train):
     gridmodel = GridSearchCV(estimator, params, scoring='f1_macro', cv=5, return_train_score=True)          #creo oggetto GridSearch
@@ -29,16 +29,17 @@ def my_randomyze(estimator, params, X_train,y_train, iter =10):
 
 def ModelSelection(codifica, estimator, params, name, nmparams, Randomize = False, lcutoff = None, multilevel = False):
     #divisone partizioni
-    get_set_stratified(lcutoff)
+    X, y, kf = get_set_stratified(lcutoff)
     rlist={'accuracy':[],
            'f1-score':[]}
+    svname = ""
     for nmpar in nmparams:
         rlist[nmpar]:[]
     
     for train,test in kf.split(X,y):
         X_test, X_train = X[test], X[train]
         y_test, y_train = y[test], y[train]
-        X_train, X_test, svname = helpers.codificate(X_train, X_test, codif, svname,frel,componenti)
+        X_train, X_test, svname = codificate(X_train, X_test, codifica, svname)
         if Randomize:
             model = my_randomyze(estimator, params, X_train,y_train)
         else:
@@ -50,9 +51,9 @@ def ModelSelection(codifica, estimator, params, name, nmparams, Randomize = Fals
         rlist['f1-score'].append(res['Phishing']['f1-score'])
     dfparam = pd.DataFrame(rlist)
     print(dfparam)
-    dfparam.to_latex(buf=savepath + name + "model_selection_params.tex")
+    dfparam.to_latex(buf=savepath + name + svname + "model_selection_params.tex")
     metrics=['f1-score','accuracy']
-    makedf(rlist, metrics, savepath + name + "model_selection_score.tex")
+    makedf(rlist, metrics, savepath + name + svname + "model_selection_score.tex")
 
     
 
@@ -69,4 +70,4 @@ def grid_params(start, end,name,nelem=None,logspace = True):
 
 
 def randomize_params(scaleC=100,scaleGamma=0.1):
-    return {'C' : stats.expon(scaleC),'gamma':scipy.stats.expon(scale=scaleGamma) }
+    return {'C' : stats.expon(scaleC),'gamma': stats.expon(scale=scaleGamma) }

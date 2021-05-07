@@ -145,8 +145,8 @@ def codificate (X_train,X_test,codif,path,frel=None,lsa = None):
         X_test = toRel(codif.transform(X_test),X_test)
         path=path+'_frel'
     else:
-        X_train = codifica.transform(X_train)
-        X_test = codifica.transform(X_test)
+        X_train = codif.transform(X_train)
+        X_test = codif.transform(X_test)
     if(lsa!=None):
         lsa = TruncatedSVD(n_components=componenti,random_state=42)
         X_train,X_test = helpers.fit_lsa(X_train,X_test,lsa)
