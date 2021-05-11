@@ -37,7 +37,6 @@ def load_data(verbose = True):
     np.random.seed(seed=0)
     legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
     phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])
-    print("legit:",legitimate_URLs[:10])
    
 
   
