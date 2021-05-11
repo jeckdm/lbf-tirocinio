@@ -13,7 +13,7 @@ import math
 from classificatori import helpers
 import init
 
-savepath = "/home/dav/Scrivania/latex/" + "analysis"
+savepath = "~/latex/" + "analysis"
 metrics = ['precision', 'recall', 'f1-score', 'accuracy']
 
 def train_and_fit(X_train, y_train, X_test, y_test, classifier, name, verbose=True):  #classe per fare training e valutare il classificatore  -> train and set

@@ -17,7 +17,7 @@ nfeatureword = 750
 nfeaturechar = 0.90
 
 if __name__ == "__main__" :    
-    paramcodif= "char"
+    paramcodif= "word"
     codif =  CountVectorizer(analyzer=paramcodif,dtype=float)
     namelist,classifier_list = helpers.get_default_classifier_list(SVM=True)
     
@@ -25,9 +25,7 @@ if __name__ == "__main__" :
     #model_selection.ModelSelection(codif, Bayes_clasifier(), select_params(-10,10,"alpha"), "Naive bayes","alpha",multilevel=True)
     params = model_selection.randomize_params()
     model_selection.ModelSelection(codif,classifier_list.pop(),params,namelist.pop(),["C","gamma"],Randomize=True)
-    model_selection.ModelSelection(codif,classifier_list.pop(),params,namelist.pop(),["gamma"],multilevel=True)    
-    #model_selection.GridModelSelection(codif, classifier_list.pop(), params, "Logistic Regression","C",multilevel=True)
-    #model_selection.GridModelSelection(codif, SVM_linear_classifier(), select_params(-3, 1,'C'), "Linear SVM","C",multilevel=True)
+    #model_selection.ModelSelection(codif,classifier_list.pop(),params,namelist.pop(),["gamma"],multilevel=True)    
     #analysis(10, SVMnamelist,svm_try, codif) 
     #analysis(10, namelist, classifiers, codif,pca=True,small=False)
     

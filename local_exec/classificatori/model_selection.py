@@ -20,8 +20,8 @@ def my_Grid_search(estimator, params, nmparams, multilevel, X_train,y_train):
     print(gridmodel.best_params_)                                             #stampo best param
     return gridmodel
 
-def my_randomyze(estimator, params, X_train,y_train, iter =10):
-    randomodel = RandomizedSearchCV(estimator, params,n_iter=iter)
+def my_randomyze(estimator, params, X_train,y_train, iter =5):
+    randomodel = RandomizedSearchCV(estimator, params,n_iter=iter,n_jobs=-1)
     randomodel.fit(X_train,y_train)
     print(randomodel.best_params_)                                             #stampo best param
     return randomodel

@@ -93,6 +93,7 @@ def fit_lsa(X_train,X_test,lsa):
     lsa.fit(X_train)
     X_train = lsa.transform(X_train)
     X_test = lsa.transform(X_test)
+    print("varianza informazione: ", np.sum(lsa.explained_variance_ratio_))
     return X_train,X_test
 
 
@@ -137,9 +138,8 @@ def to_df(diz,savepath,name=None):
     dframe.to_latex(buf = savepath) 
 
 
-def codificate (X_train,X_test,codif,path,frel=None,lsa = None):
+def codificate (X_train, X_test, codif, path, frel=False, nfeatures = None):
     codif.fit(X_train)
-    assert(len(X_test)==len(list(set(X_test)-set(X_train))))
     if(frel):
         X_train = toRel(codif.transform(X_train),X_train)
         X_test = toRel(codif.transform(X_test),X_test)
@@ -147,10 +147,9 @@ def codificate (X_train,X_test,codif,path,frel=None,lsa = None):
     else:
         X_train = codif.transform(X_train)
         X_test = codif.transform(X_test)
-    if(lsa!=None):
-        lsa = TruncatedSVD(n_components=componenti,random_state=42)
-        X_train,X_test = helpers.fit_lsa(X_train,X_test,lsa)
-        path+=f"_sva{componenti}"
-        print("varianza informazione: ",np.sum(lsa.explained_variance_ratio_))
-    return X_train,X_test,path
+    if(nfeatures!=None):
+        lsa = TruncatedSVD(n_components = nfeatures, random_state = 42)
+        X_train,X_test = fit_lsa(X_train, X_test,lsa)
+        path+=f"_sva{nfeatures}" 
+    return X_train, X_test, path
         
