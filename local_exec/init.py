@@ -21,19 +21,27 @@ def load_data(verbose = True):
     phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data2 + "phishing_URLs2.npy",allow_pickle=True)))
     legitimate_URLs = np.concatenate((legitimate_URLs,np.load(config.loc_data2 + "legitimate_URLs2.npy",allow_pickle=True)))
     legitimate_URLs = np.concatenate((legitimate_URLs,np.load(config.loc_data3 + "legitimate_URLs3.npy",allow_pickle=True)))
-
-    # randomly permute URLs
-    np.random.seed(seed=0)
-    legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
-    phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])
-
-    # clean URLs
+     # clean URLs
     legitimate_URLs = [l.split('http://')[-1].split('www.')[-1].split('https://')[-1] for l in legitimate_URLs]
     phishing_URLs = [p.split('http://')[-1].split('www.')[-1].split('https://')[-1] for p in phishing_URLs]
-
     # Rimuovo duplicati
     phishing_URLs = list(set(phishing_URLs) - set(legitimate_URLs))
     legitimate_URLs = list(set(legitimate_URLs))
+    phishing_URLs.sort()
+    legitimate_URLs.sort()
+
+
+    # randomly permute URLs
+    phishing_URLs = np.array(phishing_URLs)
+    legitimate_URLs = np.array(legitimate_URLs)
+    np.random.seed(seed=0)
+    legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
+    phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])
+    print("legit:",legitimate_URLs[:10])
+   
+
+  
+    
 
     if verbose:
         print(len(legitimate_URLs),len(phishing_URLs), len(legitimate_URLs) + len(phishing_URLs))
