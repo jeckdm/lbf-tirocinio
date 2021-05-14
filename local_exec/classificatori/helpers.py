@@ -1,17 +1,11 @@
 from sklearn.naive_bayes import MultinomialNB
-import sys
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report
-from sklearn.feature_extraction.text import CountVectorizer,  TfidfTransformer
-from sklearn.model_selection import train_test_split, GridSearchCV , StratifiedKFold,KFold
+from sklearn.model_selection import train_test_split , StratifiedKFold
 from sklearn.linear_model import LogisticRegression
-from sklearn.decomposition import PCA,TruncatedSVD,IncrementalPCA
 import sklearn
-from scipy import sparse
 import numpy as np
 import pandas as pd
-import math
 import init
+from classificatori import do_codif
 
 
 def SVM_linear_classifier(C_param=1.0, penality_param='l2', loss_param = 'squared_hinge'):
@@ -39,26 +33,10 @@ def get_default_classifier_list(Bayes=False,Linear_SVM=False,Logistic= False, SV
         name_list.append("SVM")
     return name_list,classifier_list
 
-    
-
-def cutoff(X, y, length):
-    for i,x in enumerate(X):
-        X[i] = x[:min(len(x), length)]
-    pX = []
-    py = []
-    x_prev = ""
-    xy =  [(x, y1) for x, y1 in zip(X, y)]
-    for x,y in sorted(xy, key=lambda x:x[0]):    #ciclo per eliminare elementi doppi (X) e relative y dopo il cutoff
-        if(x != x_prev):
-            pX.append(x)
-            py.append(y)
-        x_prev = x
-    return pX, py
-
 def get_set_stratified(lcutoff=None):
     X, y = init.load_data(False)
     if(lcutoff):
-        X, y = cutoff(X, y, lcutoff)
+        X, y = do_codif.cutoff(X, y, lcutoff)
     X = np.array(X)
     y = np.array(y)
     kf = StratifiedKFold()
@@ -69,8 +47,8 @@ def get_set_holdout(codif=None, lcutoff=None, frel=False,lsa=None,ts=None):
         if(ts!=None):
             X,y = ts
         if(lcutoff!=None):                
-            X, y = cutoff(X, y, lcutoff)
-            savepath = savepath + "cutoff" + lcutoff
+            X, y = do_codif(X, y, lcutoff)
+            #savepath = savepath + "cutoff" + lcutoff
         
         X_train,  X_test,  y_train,  y_test = train_test_split(X, y, test_size=0.3)    #divido Train e test set
         assert(len(X_train) == len(list(set(X_train) - set(X_test))))             #assertion error in caso di elementi presenti sia in X_train che in X_test
@@ -81,31 +59,12 @@ def get_set_holdout(codif=None, lcutoff=None, frel=False,lsa=None,ts=None):
         cX_train = codif.transform(X_train)                                       #applico codifica (bag of word/bag of char) su dataset per intero
         cX_test = codif.transform(X_test)
         if(frel):
-            cX_train = toRel(cX_train, X_train)
-            cX_test = toRel(cX_test, X_test)        
+            cX_train = do_codif.toRel(cX_train, X_train)
+            cX_test = do_codif.toRel(cX_test, X_test)        
         if(lsa!=None):
-            cX_train,cX_test = fit_lsa(cX_train,cX_test)
+            cX_train,cX_test = do_codif.fit_lsa(cX_train,cX_test)
         return cX_train, y_train, cX_test, y_test           
                                  #ritorna X_train, X_test codificati
-
-
-def fit_lsa(X_train,X_test,lsa):
-    lsa.fit(X_train)
-    X_train = lsa.transform(X_train)
-    X_test = lsa.transform(X_test)
-    print("varianza informazione: ", np.sum(lsa.explained_variance_ratio_))
-    return X_train,X_test
-
-
-def toRel(X_codif,X):
-    X_len = [len(x) for x in X]
-    X_codif = X_codif.toarray()
-    for i, x in enumerate(X_codif):
-        if X_Len[i] == 0:
-            X_Len[i] = 1
-        X_codif[i] = x * 10000 / X_Len[i] 
-    return sparse.csr_matrix(X_codif)
-
 
 def makedf(list, metrics, savepath,names = None, iter=True):                                    #stampa DF con risultati ed salva in latex
     diz= {}
@@ -124,8 +83,8 @@ def makedf(list, metrics, savepath,names = None, iter=True):                    
     else:
         for metric in metrics:
             diz[metric] = {
-                'avg':np.average(list[name][metric]), 
-                'dev_std':np.std(list[name][metric])
+                'avg':np.average(list[metric]), 
+                'dev_std':np.std(list[metric])
             }
         to_df(diz, savepath)
 
@@ -135,21 +94,4 @@ def to_df(diz,savepath,name=None):
     print(pd.DataFrame(diz))
     if name:
         savepath = savepath + name
-    dframe.to_latex(buf = savepath) 
-
-
-def codificate (X_train, X_test, codif, path, frel=False, nfeatures = None):
-    codif.fit(X_train)
-    if(frel):
-        X_train = toRel(codif.transform(X_train),X_train)
-        X_test = toRel(codif.transform(X_test),X_test)
-        path=path+'_frel'
-    else:
-        X_train = codif.transform(X_train)
-        X_test = codif.transform(X_test)
-    if(nfeatures!=None):
-        lsa = TruncatedSVD(n_components = nfeatures, random_state = 42)
-        X_train,X_test = fit_lsa(X_train, X_test,lsa)
-        path+=f"_sva{nfeatures}" 
-    return X_train, X_test, path
-        
+    dframe.to_latex(buf = savepath)

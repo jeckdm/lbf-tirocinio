@@ -36,11 +36,7 @@ def load_data(verbose = True):
     legitimate_URLs = np.array(legitimate_URLs)
     np.random.seed(seed=0)
     legitimate_URLs = list(legitimate_URLs[np.random.permutation(len(legitimate_URLs))])
-    phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])
-   
-
-  
-    
+    phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])   
 
     if verbose:
         print(len(legitimate_URLs),len(phishing_URLs), len(legitimate_URLs) + len(phishing_URLs))
