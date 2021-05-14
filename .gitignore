@@ -1,7 +1,8 @@
 #elementi non rilevanti quindi da non sincronizzare
-__pycache__
+__pycache__/
 .ipynb_checkpoints
 test/
 data/
 *.pyc
-*.vscode
+*.vscodeS
+local_exec/classificatori/saved_model
