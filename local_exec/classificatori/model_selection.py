@@ -12,8 +12,8 @@ def my_Grid_search(estimator, params, nmparams, multilevel, X_train,y_train,verb
     gridmodel = GridSearchCV(estimator, params, scoring='f1_macro', cv=5, return_train_score=True)          #creo oggetto GridSearch
     gridmodel.fit(X_train, y_train)                                      #effettuo ricerca su X_trainval
     if(multilevel):
-        value = gridmodel.best_params_[nmparams.pop()]
-        newparams = grid_params(math.log10(value)-1, math.log10(value)+1, name=nmparams.pop(), nelem=len(params[nmparams.pop()]))
+        value = gridmodel.best_params_[nmparams[0]]
+        newparams = grid_params(math.log10(value)-1, math.log10(value)+1, name=nmparams[0], nelem=len(params[nmparams[0]]))
         gridmodel= GridSearchCV(estimator, newparams, scoring='f1_macro', cv=5, return_train_score=True) 
         gridmodel.fit(X_train, y_train)
     print(gridmodel.best_params_)                                             #stampo best param
