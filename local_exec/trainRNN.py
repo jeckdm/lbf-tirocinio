@@ -11,7 +11,7 @@ layers = config.layers
 device = config.device
 
 
-def train(X_train, y_train,criterion,h_sizes,emb_size,batch_size):
+def train(X_train, y_train, criterion, h_sizes, emb_size, batch_size):
   '''
   Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.
     '''

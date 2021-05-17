@@ -3,9 +3,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-import time
-import init
+import os
+import sys
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
 # Parametri globali
+
 import config
 
 device = config.device
@@ -105,3 +108,29 @@ def make_batch_test(X_t, y_t, B):
     batch_y = batch_y0.to(device)
 
     return batch_X, batch_y
+
+
+def score_report(model, X_test, y_test, device, batchsize = 256):
+    predictions, targets = get_predictions(model, torch.tensor(X_test), torch.tensor(y_test), batchsize, device)
+    print(confusion_matrix(targets, predictions))
+    RNN_score = classification_report(targets, predictions, output_dict=True)
+
+    return RNN_score
+
+def model_size(model, verbose = True):
+        weight_dict = model.state_dict()
+
+        weight_list = list(weight_dict.items())
+        weight_array = np.array(weight_list)
+        # Salvo il file e ne calcolo la dimensione
+        np.save("res", weight_array)
+
+        size = os.path.getsize("res.npy")
+
+        if verbose: 
+            print(f"Dimensione oggetto in memoria: {sys.getsizeof(weight_array)}")
+            print(f"Dimensione oggetto su disco: {size}")
+
+        os.remove("res.npy")
+
+        return size

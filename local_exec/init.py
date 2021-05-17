@@ -3,6 +3,7 @@ import torch
 import numpy as np
 from collections import Counter
 from imblearn.under_sampling import RandomUnderSampler
+from sklearn.feature_extraction.text import CountVectorizer
 
 # Parametri globali
 import config
@@ -11,10 +12,10 @@ import config
 device = config.device
 
 def load_data(verbose = True):
-    '''
+    """
     Carica ed effettua prepocessing del dataset di legitimate e phishing URL.
     I file del dataset devono trovarsi all'interno della cartella indicata dal parametro glocale loc_data ed avere estensione .npy
-    '''
+    """
     
     legitimate_URLs = np.load(config.loc_data1 + "legitimate_URLs.npy")
     phishing_URLs = np.load(config.loc_data1 + "phishing_URLs.npy")
@@ -29,7 +30,6 @@ def load_data(verbose = True):
     legitimate_URLs = list(set(legitimate_URLs))
     phishing_URLs.sort()
     legitimate_URLs.sort()
-
 
     # randomly permute URLs
     phishing_URLs = np.array(phishing_URLs)
@@ -46,12 +46,15 @@ def load_data(verbose = True):
 
     return X, y
 
-def map_to_number(X, y):
-    '''
-    Ritorna dataset codificati: assegna ad ogni carattere dell'URL un intero univoco in base al numero di
-    occorrenze, URL piú frequenti hanno un numero piú basso.
-    Il dataset risultante é un tensore
-    '''
+def CV_encode(X, y):
+    """ Codifica il dataset in ingresso sfruttando CountVectorizer, y non viene modificato """
+    vectorizer = CountVectorizer(analyzer = 'char') 
+    X_encoded = vectorizer.fit_transform(X)
+
+    return X_encoded.toarray(), y, vectorizer.vocabulary_
+
+def map_to_number(X):
+    """ Ritorna dizionario della forma 'carattere : ranking' con ranking intero """
 
     letters = ''.join(X) #String unica di URL senza spazi
     c = Counter(letters) # Counter con occorrenze delle lettere
@@ -62,7 +65,16 @@ def map_to_number(X, y):
 
     return d
 
+def RNN_encode(X, y, dict, char_cutoff = 150):
+    """ Codifica dato il dizionario in ingresso secondo assegnando a ogni carattero il relativo intero,"""
+    X_encoded = [[dict[l] if l in dict else 0 for l in url] for url in X]
+    X_encoded = [[l for l in url[:min([len(url),char_cutoff])]] + [0 for l in range(char_cutoff-len(url))] for url in X_encoded]
+    y_encoded = y
+
+    return np.array(X_encoded), np.array(y_encoded)
+
 def undersample(X, y, ratio = None):
+    """ Ribilancia il dataset in ingresso in base alla proporzione indicata in ratio """
     if ratio is not None:
         undersample = RandomUnderSampler(sampling_strategy = ratio)
         X_under, y_under = undersample.fit_resample(X, y)
@@ -71,9 +83,7 @@ def undersample(X, y, ratio = None):
     return X, y
 
 def LBF_train_test_split(X, y, X_encoded):
-    '''
-    Ritorna dataset in ingresso suddivisi in training (legit/2 + phishing) e testing set (legit/2) con relativi output.
-    '''
+    """ Ritorna dataset in ingresso suddivisi in training (legit/2 + phishing) e testing set (legit/2) con relativi output. """
 
     legitimate_URLs = X[y == 0]
     phishing_URLs = X[y == 1]

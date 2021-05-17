@@ -1,41 +1,12 @@
-import helpers
 import numpy as np
-import os
-import sys
-import FFNN as ff
 import torch
-import torch.nn as nn
-import pandas as pd
+import init
 import RNN as R
-import trainRNN
-from sklearn.metrics import classification_report, confusion_matrix
+from classifier_testing.esperimenti_ffnn import trainRNN
+from classifier_testing.esperimenti_ffnn import FFNN as ff
+from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier
-
-def rnn_evaluation(model, X_test, y_test, device, batchsize = 256):
-    predictions, targets = R.get_predictions(model, torch.tensor(X_test), torch.tensor(y_test), batchsize, device)
-    print(confusion_matrix(targets, predictions))
-    RNN_score = classification_report(targets, predictions, output_dict=True)
-
-    return RNN_score
-
-def rnn_model_size(model, verbose = True):
-        weight_dict = model.state_dict()
-
-        weight_list = list(weight_dict.items())
-        weight_array = np.array(weight_list)
-        # Salvo il file e ne calcolo la dimensione
-        np.save("res", weight_array)
-
-        size = os.path.getsize("res.npy")
-
-        if verbose: 
-            print(f"Dimensione oggetto in memoria: {sys.getsizeof(weight_array)}")
-            print(f"Dimensione oggetto su disco: {size}")
-
-        os.remove("res.npy")
-
-        return size
 
 def model_selection(X, y, params, ratio = 0.2, outer_folds = 5, inner_folds = 5, njobs = None): 
     # Outer cv
@@ -59,7 +30,7 @@ def model_selection(X, y, params, ratio = 0.2, outer_folds = 5, inner_folds = 5,
         y_train, y_test = y[train_index], y[test_index]
 
         # Bilancio solamente il dataset di train (Forse da togliere?)
-        X_train, y_train = helpers.undersample(X_train, y_train, ratio = ratio)
+        X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Faccio GridSearch su insieme di fold (Refit di base é a true, quindi best estimator é fittato su tutti e 4 i fold di train)
         # Refit permette di scegliere la metrica migliore su cui poi refittare il dataset
@@ -106,17 +77,17 @@ def rnn_cross_validation(X, y, folds, ratio, h_size = 16, emb_size = 5, layers =
         y_train, y_test = y[train_index], y[test_index]
 
         # Bilancio solamente il dataset di train (Modifico anche quello originale?)
-        X_train, y_train = helpers.undersample(X_train, y_train, ratio = ratio)
+        X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Training
         trainRNN.train(model, torch.tensor(X_train), torch.tensor(y_train), device = device, h_size = h_size, optimizer = optimizer)
 
         # Salvo pesi del modello
         # torch.save(model.state_dict(), f"rnn_pesi_modelli/{count}_RNN_emb{str(emb_size)}_hid{str(h_size)}")
-        size = rnn_model_size(model)
+        size = R.model_size(model)
 
         # Score del classificatore sul testing
-        scores = rnn_evaluation(model, X_test, y_test, device)
+        scores = R.score_report(model, X_test, y_test, device)
 
         # Aggiorno risultati delle metriche (Manca dev. st e size)
         results['accuracy'].append(scores['accuracy']) 
@@ -149,7 +120,7 @@ def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio, sa
         y_train, y_test = y[train_index], y[test_index]
 
         # Bilancio solamente il dataset di train (Modifico anche quello originale?)
-        X_train, y_train = helpers.undersample(X_train, y_train, ratio = ratio)
+        X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Training
         history[f"fold{count}"] = ff.train(model, X_train, y_train, validation_split = None, epochs = 30)

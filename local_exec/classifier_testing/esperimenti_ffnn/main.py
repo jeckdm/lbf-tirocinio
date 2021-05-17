@@ -1,7 +1,9 @@
-import helpers
-import cross_validation as cv
+import sys
+sys.path.append('.\local_exec')
 import pandas as pd
 import argparse
+import init
+from classifier_testing.esperimenti_ffnn import cross_validation as cv
 
 def main(args):
     # Parametri
@@ -13,12 +15,12 @@ def main(args):
     learning_rates = args.learnrate
 
     # Carico dataset
-    X, y = helpers.load_data()
+    X, y = init.load_data()
 
     # Codifico (A priori non aggiungo informazioni)
-    X_ff_encoded, y_ff_encoded, vocabulary = helpers.encode(X, y)
-    d = helpers.rnn_map_to_number(X, y)
-    X_rnn_encoded, y_rnn_encoded = helpers.rnn_encode(X, y, d)
+    X_ff_encoded, y_ff_encoded, vocabulary = init.CV_encode(X, y)
+    d = init.map_to_number(X)
+    X_rnn_encoded, y_rnn_encoded = init.RNN_encode(X, y, d)
 
     # Model selection
     model_results, params_results = cv.model_selection(X_ff_encoded, y_ff_encoded, params = {'hidden_layer_size' : hidden_layer_sizes, 'learning_rate' : learning_rates}, outer_folds = outer_folds, inner_folds = inner_folds, ratio = ratio, njobs = -1)
