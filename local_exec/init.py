@@ -45,8 +45,8 @@ def load_data(verbose = True):
     y = np.asarray([1 for i in range(len(phishing_URLs))] + [0 for i in range(len(legitimate_URLs))])
 
     return X, y
-    
-def map_to_number(X, y, char_cutoff = 150):
+
+def map_to_number(X, y):
     '''
     Ritorna dataset codificati: assegna ad ogni carattere dell'URL un intero univoco in base al numero di
     occorrenze, URL piú frequenti hanno un numero piú basso.
@@ -59,18 +59,14 @@ def map_to_number(X, y, char_cutoff = 150):
 
     for i, (l, _) in enumerate(c.most_common(128)):
         d[l] = i + 1 # Dizionario ordinato per numero di occorrenze ( associa ad ogni lettera il suo rank)
-    
-    X_encoded = [[d[l] if l in d else 0 for l in url] for url in X]
-    X_encoded = torch.tensor([[l for l in url[:min([len(url),char_cutoff])]] + [0 for l in range(char_cutoff-len(url))] for url in X_encoded])
-    y_encoded = torch.tensor(y)
 
-    return X_encoded, y_encoded
+    return d
 
 def undersample(X, y, ratio = None):
     if ratio is not None:
         undersample = RandomUnderSampler(sampling_strategy = ratio)
-        X_under, y_under = undersample.fit_resample(X.reshape(-1,1), y)
-        return X_under.reshape(-1), y_under
+        X_under, y_under = undersample.fit_resample(X, y)
+        return X_under, y_under
 
     return X, y
 
@@ -79,21 +75,20 @@ def LBF_train_test_split(X, y, X_encoded):
     Ritorna dataset in ingresso suddivisi in training (legit/2 + phishing) e testing set (legit/2) con relativi output.
     '''
 
-    legitimate_URLs = X[[y[i] == 0 for i in range(len(X))]]
-    phishing_URLs = X[[y[i] == 1 for i in range(len(X))]]
-
-    legitimate_URLs_encoded = X_encoded[[y[i] == 0 for i in range(len(X_encoded))]]
-    phishing_URLs_encoded = X_encoded[[y[i] == 1 for i in range(len(X_encoded))]]
+    legitimate_URLs = X[y == 0]
+    phishing_URLs = X[y == 1]
+    legitimate_URLs_encoded = X_encoded[y == 0]
+    phishing_URLs_encoded = X_encoded[y == 1]
 
     # training set: all keys plus non-keys
     # testing set: remaining non-keys 
-    training_list = np.array(phishing_URLs)
+    training_list = phishing_URLs
     testing_list = legitimate_URLs[int(len(legitimate_URLs)/2):]
         
-    X_train = torch.cat((legitimate_URLs_encoded[:int(len(legitimate_URLs_encoded)/2)],phishing_URLs_encoded))
+    X_train = torch.tensor(np.concatenate([legitimate_URLs_encoded[:int(len(legitimate_URLs_encoded)/2)],phishing_URLs_encoded]))
     y_train = torch.tensor([0]*int(len(legitimate_URLs_encoded)/2)+[1]*int(len(phishing_URLs_encoded)))
 
-    X_test = legitimate_URLs_encoded[int(len(legitimate_URLs_encoded)/2):]
+    X_test = torch.tensor(legitimate_URLs_encoded[int(len(legitimate_URLs_encoded)/2):])
     y_test = torch.tensor([0]*(len(testing_list)))
 
     return X_train, y_train, X_test, y_test, training_list, testing_list

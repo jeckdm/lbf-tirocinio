@@ -4,11 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import time
-import init
-# Parametri globali
-import config
-
-device = config.device
 
 class RNN(nn.Module):
     def __init__(self, input_size=150, output_size=2, emb_size=128, h_size=128, layers=1, dropout=0.3):
@@ -24,19 +19,14 @@ class RNN(nn.Module):
         x = self.linear(x)
         return x, h
 
-def val(model, X_t, y_t,criterion,batch_size):
-    '''
-    Valuta model sul dataset (X_t, y_t).
-    Ritorna rapporto tra previsioni corrette / totale e loss su ogni batch
-    '''
-
+def val(model, X_t, y_t, criterion, batch_size, device):
     model.eval()
     with torch.no_grad():
         total = 0
         total_right = 0
         total_loss = 0
         for batch in range(50):
-            x, y = make_batch_test(X_t, y_t, batch_size)
+            x, y = make_batch_test(X_t, y_t, batch_size, device)
             y_hat, _ = model(x)
             preds = y_hat.max(dim=2)[1][:,149]
             preds_eq = preds.eq(y)
@@ -47,7 +37,7 @@ def val(model, X_t, y_t,criterion,batch_size):
 
     return total_right / total, total_loss / 50
 
-def get_predictions(model, X_test, y_test):
+def get_predictions(model, X_test, y_test, batch_size, device):
     model.eval()
     with torch.no_grad():
         # Calcolo gli output del modello sul sample
@@ -60,15 +50,11 @@ def get_predictions(model, X_test, y_test):
 
     return predictions, targets
 
-def train(model,X_train,y_train,optimizer,criterion,batch_size):
-    '''
-    Addestra model sul dataset (X_train, y_train).
-    '''
-
+def train(model, X_train, y_train, optimizer, criterion, batch_size, device):
     model.train()
     total_loss = 0
     for batch in range(50):
-        x, y = make_batch_train(X_train, y_train, batch_size)
+        x, y = make_batch_train(X_train, y_train, batch_size, device)
         y_hat, _ = model(x)
         optimizer.zero_grad()
         y_hat = y_hat.view(-1,2)
@@ -80,7 +66,7 @@ def train(model,X_train,y_train,optimizer,criterion,batch_size):
     return total_loss / 50
 
 
-def make_batch_train(X_t, y_t, B):
+def make_batch_train(X_t, y_t, B, device):
     '''
     Ritorna batch di training di dimensione B del dataset in input.
     '''
@@ -93,7 +79,7 @@ def make_batch_train(X_t, y_t, B):
 
     return batch_X, batch_y
   
-def make_batch_test(X_t, y_t, B):
+def make_batch_test(X_t, y_t, B, device):
     '''
     Ritorna batch di testing di dimensione B del dataset in input.
     '''

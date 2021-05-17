@@ -22,7 +22,7 @@ def train(X_train, y_train,criterion,h_sizes,emb_size,batch_size):
     optimizer = torch.optim.Adamax(models[i].parameters())
     # Train and validate
     start = time.time()
-    for epoch in range(40):
+    for epoch in range(30):
         train_loss = R.train(models[i],X_train,y_train,optimizer,criterion,batch_size)
         val_acc, val_loss = R.val(models[i],X_train,y_train,criterion,batch_size)
         if(epoch%10 == 0):

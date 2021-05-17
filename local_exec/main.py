@@ -2,6 +2,7 @@
 import trainRNN #parametri per training della RNN -> per info train.py
 import analysisBF
 import torch.nn as nn
+import torch
 import analysisLBF
 import analysisSLBF
 import init
@@ -58,21 +59,22 @@ def main(args):
     print(f"Dataset caricato, Numero Legit(0) e Phishing(1): {Counter(y)}, Grandezza totale Dataset: {len(X)}")
     X, y = init.undersample(X, y, ratio = args.ratiolp) # Undersampling del dataset
     print(f"Dataset undersampled con ratio = {rate_lp}, Risultato: Numero Legit(0) e Phishing(1): {Counter(y)}, Grandezza totale Dataset: {len(X)}")
-    X_encoded, y_encoded = init.map_to_number(X, y) # Codifico gli URL, risultato é un tensor
+    X_encoded, y_encoded = init.map_to_number(X, y) # Codifico gli URL, risultato numpy array
     print("Url codificati")
 
     # Suddivisione dataset per training e valutazione del classificatore
     X_train, y_train, X_test, y_test = train_test_split(X_encoded, y_encoded) # Suddivisione in training e testing
-    print(f"Dataset splittato in training e testing per il classificatore con rapporto 0.75, Risultato: Grandezza train {X_train.shape}, {y_train.shape}, Grandezza test: {X_test.shape}, {y_test.shape}")
+    print(f"Dataset splittato in training e testing per il classificatore con rapporto 0.75, Risultato: Grandezza train {np.shape(X_train)}, {np.shape(y_train)}, Grandezza test: {np.shape(X_test)}, {np.shape(y_test)}")
 
     criterion = nn.CrossEntropyLoss()  #imposto criterion (utilizzato per la funzione di loss in fase di training e di valutazione)
 
     # Suddivisione dataset per creazione ed analisi delle strutture
-    LBF_X_train, LBF_y_train, LBF_X_test, LBF_y_test, LBF_training_list, LBF_testing_list = init.LBF_train_test_split(X, y, X_encoded)  # Suddivisione in training e testing set (+ list), al momento sono tensor posso cambiarli?
+    LBF_X_train, LBF_y_train, LBF_X_test, LBF_y_test, LBF_training_list, LBF_testing_list = init.LBF_train_test_split(X, y, X_encoded)  # Suddivisione in training e testing set (tensor) + list (np array), al momento sono tensor posso cambiarli?
     print (f"X_train: {len(LBF_X_train)} (Dovrebbe essere {310329/2 + 43744 }), X_test: {len(LBF_X_test)} (Dovrebbe essere {310329/2})")
+    print(np.shape(LBF_training_list))
 
     # Training classificatore + analisi
-    trainRNN.train(X_encoded, y_encoded, criterion, h_sizes, emb_size, batch_size) #eseguire solo la prima volta, parametri inseriti in config.
+    trainRNN.train(torch.tensor(X_encoded), torch.tensor(y_encoded), criterion, h_sizes, emb_size, batch_size) #eseguire solo la prima volta, parametri inseriti in config.
     models = trainRNN.load_eval(LBF_X_test, LBF_y_test, criterion, h_sizes ,emb_size, batch_size)
     print(models)
     
