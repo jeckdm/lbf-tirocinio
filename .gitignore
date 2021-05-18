@@ -7,3 +7,4 @@ data/
 *.vscodeS
 local_exec/classificatori/saved_model
 local_exec/classifier_testing/esperimenti_ffnn/testing
+local_exec/classifier_testing/esperimenti_ffnn/risultati

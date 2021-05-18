@@ -4,11 +4,12 @@ import init
 import RNN as R
 from classifier_testing.esperimenti_ffnn import trainRNN
 from classifier_testing.esperimenti_ffnn import FFNN as ff
+from classifier_testing.esperimenti_ffnn import helpers
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier
 
-def model_selection(X, y, params, ratio = 0.2, outer_folds = 5, inner_folds = 5, njobs = None): 
+def model_selection(X, y, params, epochs = 30, ratio = 0.2, outer_folds = 5, inner_folds = 5, njobs = None): 
     # Outer cv
     outer_cv = StratifiedKFold(n_splits = outer_folds)
 
@@ -20,7 +21,7 @@ def model_selection(X, y, params, ratio = 0.2, outer_folds = 5, inner_folds = 5,
         print(f"Iterazione {count}")
 
         # Creo modello nn e wrappo in sklearn
-        model = KerasClassifier(build_fn = ff.create_sequential, input_size = (82, ), epochs = 30, batch_size = 128, verbose = 0)
+        model = KerasClassifier(build_fn = ff.create_sequential, input_size = (82, ), epochs = epochs, batch_size = 128, verbose = 0)
 
         # Inner cv
         inner_cv = StratifiedKFold(n_splits = inner_folds)
@@ -55,7 +56,7 @@ def model_selection(X, y, params, ratio = 0.2, outer_folds = 5, inner_folds = 5,
 
     return model_results, param_results
 
-def rnn_cross_validation(X, y, folds, ratio, h_size = 16, emb_size = 5, layers = 1):
+def rnn_cross_validation(X, y, folds = 5, ratio = 0.2, h_size = 16, emb_size = 5, layers = 1):
     # Cross validation
     cv = StratifiedKFold(n_splits = folds)
     results = {'accuracy' : [], 'f1-score' : [], 'recall' : [], 'precision' : [], 'space' : []}
@@ -80,14 +81,14 @@ def rnn_cross_validation(X, y, folds, ratio, h_size = 16, emb_size = 5, layers =
         X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Training
-        trainRNN.train(model, torch.tensor(X_train), torch.tensor(y_train), device = device, h_size = h_size, optimizer = optimizer)
+        trainRNN.train(model, torch.tensor(X_train), torch.tensor(y_train), device = device, optimizer = optimizer)
 
         # Salvo pesi del modello
         # torch.save(model.state_dict(), f"rnn_pesi_modelli/{count}_RNN_emb{str(emb_size)}_hid{str(h_size)}")
         size = R.model_size(model)
 
         # Score del classificatore sul testing
-        scores = R.score_report(model, X_test, y_test, device)
+        scores = R.score_report(model, X_test, y_test)
 
         # Aggiorno risultati delle metriche (Manca dev. st e size)
         results['accuracy'].append(scores['accuracy']) 
@@ -102,13 +103,13 @@ def rnn_cross_validation(X, y, folds, ratio, h_size = 16, emb_size = 5, layers =
 
     return mean_results, std_results
 
-def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio, save_loss = True):
+def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio = 0.2, epochs = 30, callbacks = None, validation_split = None,  save_loss = True):
     # Cross validation
     cv = StratifiedKFold(n_splits = folds)
     results = {'accuracy' : [], 'f1-score' : [], 'recall' : [], 'precision' : [], 'space' : []}
-    history = {f'fold{i}' : None for i in range(folds) }
+    history = []
 
-    for count, (train_index, test_index) in enumerate(cv.split(X, y)):
+    for (train_index, test_index) in cv.split(X, y):
         # Inizializzo modello
         model = ff.create_sequential(input_size = (82, ), hidden_layer_size = hidden_layer_size, learning_rate = learning_rate, activation = 'relu')
 
@@ -123,7 +124,9 @@ def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio, sa
         X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Training
-        history[f"fold{count}"] = ff.train(model, X_train, y_train, validation_split = None, epochs = 30)
+        if validation_split is not None:
+            X_train, y_train = helpers.shuffle(X_train, y_train)
+        history.append(ff.train(model, X_train, y_train, cbs = callbacks, validation_split = validation_split, epochs = epochs))
 
         # Valuto size modello
         size = ff.model_size(model)
@@ -138,7 +141,7 @@ def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio, sa
         results['recall'].append(scores['1']['recall'])
 
     # Salvo grafico loss
-    ff.save_loss_plot(history, f"loss_plot_neuron{hidden_layer_size}_lr{learning_rate}")
+    if save_loss: ff.save_losses_plot(history[:3], f"loss_plot_neuron{hidden_layer_size}_lr{learning_rate}", colors = ['r', 'b', 'g'])
 
     # Media sui 5 risultati
     mean_results = {key : sum(value) / folds for key, value in results.items()}

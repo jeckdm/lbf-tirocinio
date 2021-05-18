@@ -110,27 +110,25 @@ def make_batch_test(X_t, y_t, B):
     return batch_X, batch_y
 
 
-def score_report(model, X_test, y_test, device, batchsize = 256):
-    predictions, targets = get_predictions(model, torch.tensor(X_test), torch.tensor(y_test), batchsize, device)
+def score_report(model, X_test, y_test):
+    predictions, targets = get_predictions(model, torch.tensor(X_test), torch.tensor(y_test))
     print(confusion_matrix(targets, predictions))
     RNN_score = classification_report(targets, predictions, output_dict=True)
 
     return RNN_score
 
 def model_size(model, verbose = True):
-        weight_dict = model.state_dict()
+    weight_dict = model.state_dict()
 
-        weight_list = list(weight_dict.items())
-        weight_array = np.array(weight_list)
-        # Salvo il file e ne calcolo la dimensione
-        np.save("res", weight_array)
+    kwargs = {'_use_new_zipfile_serialization' : False}
+    torch.save(weight_dict, 'res.pt', **kwargs)
 
-        size = os.path.getsize("res.npy")
+    size = os.path.getsize("res.pt")
 
-        if verbose: 
-            print(f"Dimensione oggetto in memoria: {sys.getsizeof(weight_array)}")
-            print(f"Dimensione oggetto su disco: {size}")
+    if verbose: 
+        print(f"Dimensione oggetto in memoria: {sys.getsizeof(weight_dict)}")
+        print(f"Dimensione oggetto su disco: {size}")
 
-        os.remove("res.npy")
+    os.remove("res.pt")
 
-        return size
+    return size

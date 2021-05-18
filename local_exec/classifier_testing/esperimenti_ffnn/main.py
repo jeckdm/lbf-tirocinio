@@ -1,17 +1,61 @@
 import sys
 sys.path.append('.\local_exec')
+
 import pandas as pd
 import argparse
 import init
+from keras.callbacks import EarlyStopping
+from keras.callbacks import ModelCheckpoint
 from classifier_testing.esperimenti_ffnn import cross_validation as cv
+
+def save_df(dicts, result_name, approx = 3):
+    """ Salva come tab latex i dizionari presenti in dicts """
+    with open(result_name, 'a') as file:
+        for d in dicts:
+            print(d)
+            file.write(pd.DataFrame(d).round(approx).to_latex(position = "H"))
+
+
+def save_model_selection(X, y, params, outer_folds = 5, inner_folds = 5, ratio = 0.2, n_jobs = -1, epochs = 30, result_name = "risultati"):
+    """ GridSearch sul modello ffnn con griglia = params, ritorna lista contenente i migliori parametri risultanti """
+    # Model selection
+    model_results, params_results = cv.model_selection(X, y, params = params, outer_folds = outer_folds, inner_folds = inner_folds, epochs = epochs, ratio = ratio, njobs = n_jobs)
+    # Migliori parametri
+    best_params = list(set(tuple(v.values()) for _,v in params_results.items()))
+
+    if result_name is not None: 
+        # Creo df risultati e salvo
+        save_df([model_results, params_results], f"local_exec/classifier_testing/esperimenti_ffnn/risultati/model_selection_{result_name}.tex")
+
+    return best_params
+
+def save_cross_vals_nn(X, y, params, folds = 5, ratio = 0.2, callbacks = None, epochs = 30, validation_split = 0.2, result_name = "risultati"):
+    """ Salva risultati cross validation con modelli aventi iperparametri (Neuroni, Learning rate) contenuti in params """
+    # Risultati cv FF
+    cv_mean_results = {str(p) : None for p in params}
+    cv_std_results = {str(p) : None for p in params}
+
+    # Da cambiare se aggiungo più parametri su cui faccio model selection
+    for hidden_layer_size, learning_rate in params:
+        cv_mean_results[str((hidden_layer_size, learning_rate))], cv_std_results[str((hidden_layer_size ,learning_rate))] = cv.nn_cross_validation(
+            X, y, 
+            folds = folds, 
+            ratio = ratio, 
+            hidden_layer_size = hidden_layer_size, 
+            learning_rate = learning_rate, 
+            callbacks = callbacks, 
+            validation_split = validation_split,
+            epochs = epochs
+        )
+    
+    if result_name is not None:
+        save_df([cv_mean_results, cv_std_results], f"local_exec/classifier_testing/esperimenti_ffnn/risultati/cross_validation_{result_name}.tex")
+
 
 def main(args):
     # Parametri
-    ratio = args.ratiolp
-    outer_folds = args.nfold[0]
-    inner_folds = args.nfold[1]
     hidden_layer_sizes = args.neurons
-    result_loc = args.resultloc
+    result_name = args.resultloc
     learning_rates = args.learnrate
 
     # Carico dataset
@@ -22,52 +66,32 @@ def main(args):
     d = init.map_to_number(X)
     X_rnn_encoded, y_rnn_encoded = init.RNN_encode(X, y, d)
 
+    # Funzioni callback keras
+    es = EarlyStopping(monitor = 'val_loss', mode = 'min', patience = 5)
+    mc = ModelCheckpoint('local_exec/classifier_testing/esperimenti_ffnn/risultati/best_model.h5', monitor = 'val_loss', mode = 'min')
+
+    # Grid
+    params = {'hidden_layer_size' : hidden_layer_sizes, 'learning_rate' : learning_rates}
+
     # Model selection
-    model_results, params_results = cv.model_selection(X_ff_encoded, y_ff_encoded, params = {'hidden_layer_size' : hidden_layer_sizes, 'learning_rate' : learning_rates}, outer_folds = outer_folds, inner_folds = inner_folds, ratio = ratio, njobs = -1)
-    # Creo df risultati e salvo
-    df_results = pd.DataFrame(model_results)
-    df_resultsp = pd.DataFrame(params_results)
-
-    with open(f"model_selection_{result_loc}.tex", "a") as file:
-        file.write(df_results.round(3).to_latex(position = "H"))
-        file.write(df_resultsp.to_latex(position = "H"))
+    best_params = save_model_selection(X_ff_encoded, y_ff_encoded, params, result_name = result_name, epochs = 1)
     
-    best_params = list(set(tuple(v.values()) for _,v in params_results.items()))
-
-    # Risultati cv FF
-    cv_mean_results = {str(p) : None for p in best_params}
-    cv_std_results = {str(p) : None for p in best_params}
-
-    for hidden_layer_size, learning_rate in best_params:
-        cv_mean_results[str((hidden_layer_size, learning_rate))], cv_std_results[str((hidden_layer_size ,learning_rate))] = cv.nn_cross_validation( X_ff_encoded, y_ff_encoded, 
-                                                                                                                                                    folds = outer_folds, 
-                                                                                                                                                    ratio = ratio, 
-                                                                                                                                                    hidden_layer_size = hidden_layer_size, 
-                                                                                                                                                    learning_rate = learning_rate)
-
-    with open(f"cross_validation_{result_loc}.tex", 'a') as file:
-        file.write(pd.DataFrame(cv_mean_results).to_latex(position = "H"))
-        file.write(pd.DataFrame(cv_std_results).to_latex(position = "H"))
+    # FF cross validation sui migliori parametri ottenuti
+    save_cross_vals_nn(X_ff_encoded, y_ff_encoded, best_params, callbacks = [es, mc], result_name = result_name, epochs= 10)
 
     # Risultati cv RNN con parametri di default articolo
-    cv_mean_results = {i : None for i in [16]}
-    cv_std_results = {i : None for i in [16]}
+    cv_mean_results = {'16' : None}
+    cv_std_results = {'16' : None}
 
-    for hidden_layer_size in [16]:
-        cv_mean_results[hidden_layer_size], cv_std_results[hidden_layer_size] = cv.rnn_cross_validation(X_rnn_encoded, y_rnn_encoded, outer_folds, ratio)
+    cv_mean_results['16'], cv_std_results['16'] = cv.rnn_cross_validation(X_rnn_encoded, y_rnn_encoded)
 
-    with open(f"cross_validation_{result_loc}.tex", 'a') as file:
-        file.write(pd.DataFrame(cv_mean_results).to_latex(position = "H"))
-        file.write(pd.DataFrame(cv_std_results).to_latex(position = "H"))
-    
+    save_df([cv_mean_results, cv_std_results], f"local_exec/classifier_testing/esperimenti_ffnn/risultati/cross_validation_{result_name}.tex")
     
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
-    parse.add_argument("--ratiolp", "-u", type = float, default = 0.2)
-    parse.add_argument("--nfold", "-f", type = int, nargs = "+", default = [5,5])
     parse.add_argument("--neurons", "-n", type = int, nargs = "+")
-    parse.add_argument("--learnrate", "-r", type = float, nargs = "+")
-    parse.add_argument("--resultloc", "-l", type = str)
+    parse.add_argument("--learnrate", "-l", type = float, nargs = "+")
+    parse.add_argument("--resultloc", "-r", type = str)
 
     args = parse.parse_args()
 
