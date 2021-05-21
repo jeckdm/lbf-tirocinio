@@ -8,7 +8,6 @@ import sys
 sys.path.append('local_exec/')
 import numpy as np
 from classificatori import helpers,do_codif,size
-import init
 savepath = "/home/dav/Scrivania/latex/analysis"
 modelPath = "local_exec/classificatori/saved_model"
 metrics = ['precision', 'recall', 'f1-score', 'accuracy']
@@ -106,7 +105,7 @@ def Cross_Validation_analisys(classifier_list,classifier_name,codif,componenti=N
         if(save):
             idf_size.append(size.save_tdf(tdf,modelPath + "/"+ svname))
             if(componenti):
-                lsa_size.append(size.save_lsa(lsa),modelPath + "/" + svname)
+                lsa_size.append(size.save_Truncated_SVD(lsa,modelPath + "/" + svname))
 
 
     if(save):
