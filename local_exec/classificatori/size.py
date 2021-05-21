@@ -24,29 +24,45 @@ def Model_saved(model,attributes,path,Numpy=True,Joblib=True,Pickle=True):
         with open(path+"joblib.pk1",'wb') as file:
             joblib.dump(model,file)
 
-def save_Naive_Bayes(model,path):
-    log_prob = model.feature_log_prob_
-    class_log = model.class_log_prior_
-    np.save(path+"log_prob",np.array(log_prob,dtype=np.float16))
-    np.save(path+"class_log",np.array(log_prob,dtype=np.float16))
-    size = os.path.getsize(path+"log_prob" + ".npy")
-    size = size + os.path.getsize(path+"class_log"+ ".npy")    
+def save_Naive_Bayes(model,path,numpy= False, pick = True):
+    if numpy:
+        log_prob = model.feature_log_prob_
+        class_log = model.class_log_prior_
+        np.save(path+"log_prob",np.array(log_prob,dtype=np.float16))
+        np.save(path+"class_log",np.array(class_log,dtype=np.float16))
+        size = os.path.getsize(path+"log_prob" + ".npy")
+        size = size + os.path.getsize(path+"class_log"+ ".npy")    
+    if pick:
+        size = save_pickle(model,path)
     return size
 
-def save_Linear_Logistic(model,path):
-    coef = model.coef_
-    intercept = model.intercept_
-    np.save(path+"coef",np.array(coef,dtype=np.float16))
-    np.save(path+"intercept",np.array(intercept,dtype=np.float16))
-    size = os.path.getsize(path+"coef"+".npy")
-    size = size + os.path.getsize(path+"intercept" + ".npy")
+def save_Linear_Logistic(model,path,numpy= False, pick = True):
+    if numpy:
+        coef = model.coef_
+        intercept = model.intercept_
+        np.save(path+"coef",np.array(coef,dtype=np.float16))
+        np.save(path+"intercept",np.array(intercept,dtype=np.float16))
+        size = os.path.getsize(path+"coef"+".npy")
+        size = size + os.path.getsize(path+"intercept" + ".npy")
+    if pick:
+        size = save_pickle(model,path)
     return size
 
-def save_tdf(tdf,path):
-    vect = tdf.idf_
-    path = path + "_idf"
-    np.save(path, np.array(vect,dtype=np.float16))
-    size = os.path.getsize(path+".npy")
+def save_pickle(model,path):
+    path+=".pk1"
+    with open(path,'wb') as file:
+            pickle.dump(model,file)
+            size = os.path.getsize(path)
+    return size
+
+def save_tdf(tdf,path,numpy= False, pick = True):
+    if(numpy):
+        vect = tdf.idf_
+        path = path + "_idf"
+        np.save(path, np.array(vect,dtype=np.float16))
+        size = os.path.getsize(path+".npy")
+    if(pick):
+       size = save_pickle(tdf,path)
     return size
 
 def save_SVM(model,path):
@@ -60,17 +76,12 @@ def save_SVM(model,path):
     probB = model.probB_
     n_support = model.n_support_
     gamma = model._gamma
-    np.save(path+"_support_vector", np.array(support_vector,dtype=np.float16))
-    np.save(path+"_intercept_", np.array(intercept,dtype=np.float16))
-    np.save(path+"_class_weight", np.array(class_weight,dtype=np.float16))
-    np.save(path+ "_dual_coef", np.array(dual_coef,dtype=np.float16))
-    np.save(path+ "_shape_fit", np.array(shape_fit,dtype=np.float16))
-    np.save(path+ "_sparse", np.array(sparse,dtype=np.float16))
-    np.save(path+ "_probA", np.array(probA,dtype=np.float16))
-    np.save(path+ "_probB", np.array(probB,dtype=np.float16))
-    np.save(path+ "_n_support", np.array(n_support,dtype=np.float16))
-    np.save(path+ "gamma", np.array(gamma,dtype=np.float16))
-    
+    size = save_pickle(model,path)
+    print(size)
+    print(f"il numero di support vector e' : {n_support}")
+    print(f"shape support vector: {type(support_vector)}")
+    return size
+
 def save_Truncated_SVD (model,path):
     componenti = model.components_
     path = path+"_SVD_size"
