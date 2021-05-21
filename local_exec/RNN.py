@@ -3,9 +3,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-import time
-import init
+import os
+import sys
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
 # Parametri globali
+
 import config
 
 device = config.device
@@ -47,7 +50,7 @@ def val(model, X_t, y_t,criterion,batch_size):
 
     return total_right / total, total_loss / 50
 
-def get_predictions(model, X_test, y_test, batch_size):
+def get_predictions(model, X_test, y_test):
     model.eval()
     with torch.no_grad():
         # Calcolo gli output del modello sul sample
@@ -68,17 +71,15 @@ def train(model,X_train,y_train,optimizer,criterion,batch_size):
     model.train()
     total_loss = 0
     for batch in range(50):
-        #x, y = make_batch_train(X_train, y_train, batch_size)
-        x,y = make_batch_test(X_train,y_train,batch_size)
+        x, y = make_batch_train(X_train, y_train, batch_size)
         y_hat, _ = model(x)
         optimizer.zero_grad()
-        #y_hat = y_hat.view(-1,2)
+        y_hat = y_hat.view(-1,2)
         y = y.view(-1).long()
-        loss = criterion(y_hat[:,149].view(-1,2), y)
+        loss = criterion(y_hat, y)
         loss.backward()
         optimizer.step()
-        total_loss += loss.item()
-
+    total_loss += loss.item()
     return total_loss / 50
 
 
@@ -107,3 +108,27 @@ def make_batch_test(X_t, y_t, B):
     batch_y = batch_y0.to(device)
 
     return batch_X, batch_y
+
+
+def score_report(model, X_test, y_test):
+    predictions, targets = get_predictions(model, torch.tensor(X_test), torch.tensor(y_test))
+    print(confusion_matrix(targets, predictions))
+    RNN_score = classification_report(targets, predictions, output_dict=True)
+
+    return RNN_score
+
+def model_size(model, verbose = True):
+    weight_dict = model.state_dict()
+
+    kwargs = {'_use_new_zipfile_serialization' : False}
+    torch.save(weight_dict, 'res.pt', **kwargs)
+
+    size = os.path.getsize("res.pt")
+
+    if verbose: 
+        print(f"Dimensione oggetto in memoria: {sys.getsizeof(weight_dict)}")
+        print(f"Dimensione oggetto su disco: {size}")
+
+    os.remove("res.pt")
+
+    return size
