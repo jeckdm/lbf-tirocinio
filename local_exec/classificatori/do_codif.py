@@ -52,7 +52,6 @@ def codificate (X_train, X_test, codif, path, frel=False, nfeatures = None, espe
         lsa = TruncatedSVD(n_components = nfeatures, random_state = 42)
         X_train,X_test = fit_lsa(X_train, X_test,lsa)
         path+=f"_sva{nfeatures}" 
-        
 
     tdf = TfidfTransformer()
     tdf.fit(X_train)

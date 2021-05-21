@@ -11,7 +11,7 @@ from classificatori import do_codif
 def SVM_linear_classifier(C_param=1.0, penality_param='l2', loss_param = 'squared_hinge'):
     return sklearn.svm.LinearSVC(C=C_param, penalty=penality_param, loss=loss_param,max_iter=3000)
 def SVM_classifier(kernel='rbf',gamma='scale'):
-    return sklearn.svm.SVC()
+    return sklearn.svm.SVC(kernel=kernel,gamma = gamma )
 def LogisticRegression_classifier(C_param=1, solver_param='lbfgs'):
     return LogisticRegression(C=C_param, solver=solver_param,max_iter=3000)
 
@@ -33,17 +33,22 @@ def get_default_classifier_list(Bayes=False,Linear_SVM=False,Logistic= False, SV
         name_list.append("SVM")
     return name_list,classifier_list
 
-def get_set_stratified(lcutoff=None):
+def get_set_stratified(lcutoff=None, small = False):
     X, y = init.load_data(False)
-    if(lcutoff):
+    if lcutoff:
         X, y = do_codif.cutoff(X, y, lcutoff)
+    if small:
+        X,_,y,_ = train_test_split(X,y,train_size=0.1,random_state=42)
+
     X = np.array(X)
     y = np.array(y)
     kf = StratifiedKFold()
     return X, y, kf
 
-def get_set_holdout(codif=None, lcutoff=None, frel=False,lsa=None,ts=None):
-        X, y = init.load_data() #prendo i dati (argomento uno va ad indicare il ratio fra phishing e legitimate                                                    
+def get_set_holdout(codif=None, lcutoff=None, frel=False,lsa=None,ts=None, small = True):
+        X, y = init.load_data() #prendo i dati (argomento uno va ad indicare il ratio fra phishing e legitimate        
+        if small:
+            X,y,_,_ = train_test_split(X,y,train_size=0.1,random_state=42)                                            
         if(ts!=None):
             X,y = ts
         if(lcutoff!=None):                

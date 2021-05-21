@@ -1,10 +1,13 @@
+from sys import path
 from sklearn.model_selection import GridSearchCV , StratifiedKFold,KFold, RandomizedSearchCV
+from sklearn.metrics import classification_report
 import numpy as np
 import pandas as pd
 import math
 from classificatori.helpers import makedf,get_set_stratified
 from classificatori.train_and_val import train_and_fit
 from classificatori.do_codif import codificate
+from classificatori.size import save_pickle
 from scipy import stats
 savepath = "/home/dav/Scrivania/latex/Model_selection_"
 
@@ -19,8 +22,8 @@ def my_Grid_search(estimator, params, nmparams, multilevel, X_train,y_train,verb
     print(gridmodel.best_params_)                                             #stampo best param
     return gridmodel
 
-def my_randomyze(estimator, params, X_train,y_train, iter =5,verbose= 0):
-    randomodel = RandomizedSearchCV(estimator, params,n_iter=iter,n_jobs=-1)
+def my_randomyze(estimator, params, X_train,y_train, iter =7,verbose= 3):
+    randomodel = RandomizedSearchCV(estimator, params,n_iter=iter,n_jobs=-1,verbose=verbose)
     randomodel.fit(X_train,y_train)
     print(randomodel.best_params_)                                             #stampo best param
     return randomodel
@@ -32,6 +35,8 @@ def ModelSelection(codifica, estimator, params, name, nmparams, Randomize = Fals
     rlist={'accuracy':[],
            'f1-score':[]}
     svname = ""
+    dictsize = {}
+    dictsize[name] = []
     for nmpar in nmparams:
         rlist[nmpar]=[]
     
@@ -43,11 +48,14 @@ def ModelSelection(codifica, estimator, params, name, nmparams, Randomize = Fals
             model = my_randomyze(estimator, params, X_train,y_train,verbose=verbose)
         else:
             model = my_Grid_search(estimator, params, nmparams, multilevel, X_train,y_train,verbose=verbose)
-        res = train_and_fit(X_train, y_train, X_test, y_test, model.best_estimator_, name, False)
+        y_pred = model.predict(X_test)
+        res = classification_report(y_test, y_pred, output_dict=True,target_names=["Legitimate","Phishing"])
         for nmpar in nmparams:
             rlist[nmpar].append(model.best_params_[nmpar])
         rlist['accuracy'].append(res['accuracy'])
         rlist['f1-score'].append(res['Phishing']['f1-score'])
+        dictsize[name].append(save_pickle(model.best_estimator_,savepath+name+svname+"_size"))
+
     dfparam = pd.DataFrame(rlist)
     print(dfparam)
     dfparam.to_latex(buf=savepath + name + svname + "model_selection_params.tex")
