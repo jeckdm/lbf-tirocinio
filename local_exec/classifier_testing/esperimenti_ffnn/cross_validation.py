@@ -1,3 +1,4 @@
+from itertools import count
 import numpy as np
 import torch
 import init
@@ -8,6 +9,7 @@ from classifier_testing.esperimenti_ffnn import helpers
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier
+from keras.models import load_model
 
 def model_selection(X, y, params, epochs = 30, ratio = 0.2, outer_folds = 5, inner_folds = 5, njobs = None): 
     # Outer cv
@@ -65,7 +67,7 @@ def rnn_cross_validation(X, y, folds = 5, ratio = 0.2, h_size = 16, emb_size = 5
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(torch.cuda.get_device_name(0))
 
-    for count, (train_index, test_index) in enumerate(cv.split(X, y)):
+    for count, (train_index, test_index) in enumerate(cv.split(X, y), 1):
         # Inizializzo modello
         model = R.RNN(emb_size = emb_size, h_size = h_size, layers = layers).to(device)
         optimizer = torch.optim.Adamax(model.parameters())
@@ -85,7 +87,7 @@ def rnn_cross_validation(X, y, folds = 5, ratio = 0.2, h_size = 16, emb_size = 5
 
         # Salvo pesi del modello
         # torch.save(model.state_dict(), f"rnn_pesi_modelli/{count}_RNN_emb{str(emb_size)}_hid{str(h_size)}")
-        size = R.model_size(model)
+        size = R.model_size(model, location = f"local_exec/classifier_testing/esperimenti_ffnn/risultati/pesi_modelli_addestrati/RNN_{count}.p")
 
         # Score del classificatore sul testing
         scores = R.score_report(model, X_test, y_test)
@@ -109,7 +111,7 @@ def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio = 0
     results = {'accuracy' : [], 'f1-score' : [], 'recall' : [], 'precision' : [], 'space' : []}
     history = []
 
-    for (train_index, test_index) in cv.split(X, y):
+    for count, (train_index, test_index) in enumerate(cv.split(X, y), 1):
         # Inizializzo modello
         model = ff.create_sequential(input_size = (82, ), hidden_layer_size = hidden_layer_size, learning_rate = learning_rate, activation = 'relu')
 
@@ -128,8 +130,11 @@ def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio = 0
             X_train, y_train = helpers.shuffle(X_train, y_train)
         history.append(ff.train(model, X_train, y_train, cbs = callbacks, validation_split = validation_split, epochs = epochs))
 
-        # Valuto size modello
-        size = ff.model_size(model)
+        # Da modificare
+        model = load_model('best_model.h5')
+
+        # Valuto size modello (Metto location come param)
+        size = ff.model_size(model, location = f"local_exec/classifier_testing/esperimenti_ffnn/risultati/pesi_modelli_addestrati/ff_{count}.p")
         # Score del classificatore sul testing
         scores = ff.evaluate(model, X_test, y_test, verbose = False)
 
@@ -141,7 +146,7 @@ def nn_cross_validation(X, y, folds, hidden_layer_size, learning_rate, ratio = 0
         results['recall'].append(scores['1']['recall'])
 
     # Salvo grafico loss
-    if save_loss: ff.save_losses_plot(history[:3], f"loss_plot_neuron{hidden_layer_size}_lr{learning_rate}", colors = ['r', 'b', 'g'])
+    if save_loss: ff.save_losses_plot(history[:3], f"test_plot_neuron{hidden_layer_size}_lr{learning_rate}", colors = ['r', 'b', 'g'])
 
     # Media sui 5 risultati
     mean_results = {key : sum(value) / folds for key, value in results.items()}

@@ -2,6 +2,7 @@ import numpy as np
 import sys
 import os
 import pandas as pd
+import pickle
 import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense
@@ -66,21 +67,37 @@ def evaluate(model, X_test, y_test, verbose = True, result_loc = None):
 
     return scores
 
-def model_size(model, verbose = True):
+def model_size(model, location = None, verbose = True, use_pickle = True):
     """ Ritorna la dimensione del modello, calcolata valutando la dimensione del file numpy dei pesi """
     
     weights = model.get_weights()
+
     # Salvo il file e ne calcolo la dimensione
-    np.save("res", weights)
-    size = os.path.getsize("res.npy")
+    if use_pickle:
+        with open(location, "wb") as file:
+            pickle.dump(weights, file)
+    else:
+        np.save(location, weights)
+
+    size = os.path.getsize(location)
 
     if verbose: 
         print(f"Dimensione oggetto in memoria: {sys.getsizeof(weights)}")
         print(f"Dimensione oggetto su disco: {size}")
 
-    os.remove("res.npy")
-
     return size
+
+def load_pickle_model(location, input_size, activation = 'relu', hidden_layer_size = 32, loss = BinaryCrossentropy(), optimizer = 'adam', metrics = ['accuracy'], learning_rate = 0.001):
+    """ Inizializza FFNN con iperparametri in input e pesi caricati dal file pickle indicati in location """
+
+    model = create_sequential(input_size, activation, hidden_layer_size, loss, optimizer, metrics, learning_rate)
+    with open(location, "rb") as file:
+        # Ricavo array dei pesi
+        weights = pickle.load(file)
+        # Carico i pesi
+        model.set_weights(weights)
+
+    return model
 
 def save_losses_plot(history, name, colors):
     """ Salva il grafico delle curve di apprendimento ricavate dalla lista di history in ingresso, len(colors) == len(history), history devono essere passate in ordine crescente"""

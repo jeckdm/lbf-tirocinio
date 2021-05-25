@@ -1,4 +1,5 @@
 # Libraries
+import pickle
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -117,18 +118,28 @@ def score_report(model, X_test, y_test):
 
     return RNN_score
 
-def model_size(model, verbose = True):
+def model_size(model, location = None, use_pickle = True,  verbose = True):
     weight_dict = model.state_dict()
 
-    kwargs = {'_use_new_zipfile_serialization' : False}
-    torch.save(weight_dict, 'res.pt', **kwargs)
+    if use_pickle:
+        with open(location, "wb") as file:
+            pickle.dump(weight_dict, file)
+    else:
+        torch.save(weight_dict, location)
 
-    size = os.path.getsize("res.pt")
+    size = os.path.getsize(location)
 
     if verbose: 
         print(f"Dimensione oggetto in memoria: {sys.getsizeof(weight_dict)}")
         print(f"Dimensione oggetto su disco: {size}")
 
-    os.remove("res.pt")
-
     return size
+
+def load_pickle_model(location, input_size = 150, output_size = 2, emb_size = 5, h_size = 16, layers = 1, dropout = 0.3):
+    """ Ritorna RNN, inizializzata con parametri in input, con i pesi presenti nel file pickle in location"""
+
+    model = RNN(input_size, output_size, emb_size, h_size, layers, dropout)
+    with open(location, "rb") as file:
+        model.load_state_dict(pickle.load(file))
+
+    return model

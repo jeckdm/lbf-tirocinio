@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn 
 
 # Device e location
-device = device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 loc_data1 = "data/dataset1/"
 loc_data2 = "data/dataset2/"
 loc_data3 = "data/dataset3/"

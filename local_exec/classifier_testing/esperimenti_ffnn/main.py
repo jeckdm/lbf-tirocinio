@@ -74,10 +74,10 @@ def main(args):
     params = {'hidden_layer_size' : hidden_layer_sizes, 'learning_rate' : learning_rates}
 
     # Model selection
-    best_params = save_model_selection(X_ff_encoded, y_ff_encoded, params, result_name = result_name, epochs = 1)
+    best_params = save_model_selection(X_ff_encoded, y_ff_encoded, params, result_name = result_name, epochs = 30, n_jobs = 8)
     
     # FF cross validation sui migliori parametri ottenuti
-    save_cross_vals_nn(X_ff_encoded, y_ff_encoded, best_params, callbacks = [es, mc], result_name = result_name, epochs= 10)
+    save_cross_vals_nn(X_ff_encoded, y_ff_encoded, best_params, callbacks = [es, mc], result_name = result_name, epochs = 30)
 
     # Risultati cv RNN con parametri di default articolo
     cv_mean_results = {'16' : None}
