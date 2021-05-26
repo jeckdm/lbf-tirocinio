@@ -119,5 +119,18 @@ def save_losses_plot(history, name, colors):
 
     plt.savefig(f"local_exec/classifier_testing/esperimenti_ffnn/risultati/{name}.png")
 
+def get_classifier_probs(model, X, y):
+    """ Restituisce liste contenenti rispettivamente le predizioni del classificatore per la classe 0 e la classe 1 """
+    # Ho già una sigmoide come ultimo strato del modello?
+    predictions = model.predict(X)
+
+    probs1 = predictions[y == 1]
+    probs0 = predictions[y == 0]
+
+    return probs0, probs1
+
+
+
+
 
 

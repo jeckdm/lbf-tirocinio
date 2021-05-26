@@ -39,8 +39,6 @@ def create_BFsbackup(models, fprs, fpr_ratios, false_negs):
 
   return LBF_backups
 
-'''
-'''
 def empirical_analysis(models, fprs, fpr_ratios, LBFs, X_test, y_test, testing_list, taus, save = False):
   # Per ogni modello salvo in base a fpr, fpr_ratio target l'frp empirico, la grandezza ed il tempo di accesso per elemento del LBF relativa
   # Utile per i grafici successivi

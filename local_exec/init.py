@@ -95,10 +95,10 @@ def LBF_train_test_split(X, y, X_encoded):
     training_list = phishing_URLs
     testing_list = legitimate_URLs[int(len(legitimate_URLs)/2):]
         
-    X_train = torch.tensor(np.concatenate([legitimate_URLs_encoded[:int(len(legitimate_URLs_encoded)/2)],phishing_URLs_encoded]))
-    y_train = torch.tensor([0]*int(len(legitimate_URLs_encoded)/2)+[1]*int(len(phishing_URLs_encoded)))
+    X_train = np.concatenate([legitimate_URLs_encoded[:int(len(legitimate_URLs_encoded)/2)],phishing_URLs_encoded])
+    y_train = [0]*int(len(legitimate_URLs_encoded)/2)+[1]*int(len(phishing_URLs_encoded))
 
-    X_test = torch.tensor(legitimate_URLs_encoded[int(len(legitimate_URLs_encoded)/2):])
-    y_test = torch.tensor([0]*(len(testing_list)))
+    X_test = legitimate_URLs_encoded[int(len(legitimate_URLs_encoded)/2):]
+    y_test = [0]*(len(testing_list))
 
-    return X_train, y_train, X_test, y_test, training_list, testing_list
+    return X_train, np.asarray(y_train), X_test, np.asarray(y_test), training_list, testing_list
