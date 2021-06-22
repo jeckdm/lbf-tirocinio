@@ -1,0 +1,69 @@
+\documentclass{article}
+
+% Margini
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[titletoc,title]{appendix}
+
+\begin{document}
+
+\section{Introduzione}
+
+\section{Aspetti Teorici}
+\subsection{Filtri di Bloom}
+\subsubsection{Filtri di Bloom appresi}
+\subsection{Deep Learning} % Introduzione sugli aspetti più importanti del deep learning (Quali?) + focus su Reti FF e Reti Ricorrenti
+\subsubsection{Reti Neurali Feed Forward}
+\subsubsection{Reti Neurali Ricorrenti}
+
+% Titolo da cambiare
+\section{Introduzione Esperimenti}
+
+% Spiego scopo degli esperimenti: capire se è veramente necessario una rete complessa come la RNN o se una rete FFNN è sufficiente per migliorare le prestazioni
+\subsection{Classificatori e Filtri di Bloom appresi}
+
+% Spiegazione struttura RNN e FFNN utilizzate
+\subsection{Struttura dei classificatori utilizzati}
+\subsubsection{Rete ricorrente}
+\subsubsection{Rete feed forward}
+
+% Spiegazione teorica delle tecinche utilizzate per l'analisi delle prestazioni dei classificatori e l'ottimizzazione dei parametri
+\subsection{Tecniche di validazione e ottimizzazione dei parametri}
+\subsubsection{Cross Validation}
+\subsubsection{Model selection}
+
+% Spiegazione delle codifiche utilizzate, con eventuale spiegazione del perchè non posso utilizzare per entrambe le reti la stessa codifica
+\subsection{Codifiche utilizzate}
+\subsubsection{Codifica Rete Ricorrente}
+\subsubsection{Codifica Count Vectorizer}
+\subsubsection{Discussioni sulle differenze tra le codifiche}
+
+% Illustro i dataset utilizzati, eventualmente confrontando con quelli utilizzati nell'articolo ed eventualmente spiego la suddivisione del dataset usata per il testing dei filtri spiegandone la motivazione
+\subsection{Raccolta dei dati}
+
+% Spiegazione delle tecniche utilizzate per la serializzazione dei modelli ed il perchè della scelte: pickle vs funzioni di libreria, menziono inoltre le differenze ottenute sopratutto utilizzando pytorch nelle dimensioni del modello prima e dopo l'addestramento
+\subsection{Serializzazione dei modelli}
+
+\section{Esperimenti}
+
+% Esperimenti al fine di valutare la bontà della rete ricorrente: voglio ottimizzare la rete ricorrente sul mio dataset e poi valutare le prestazioni sui filtri di bloom
+\subsection{Analisi delle prestazioni della Rete Ricorrente}
+\subsubsection{Dimensioni degli insiemi di addestramento e testing}
+\subsubsection{Analisi delle prestazioni variando lo sbilanciamento del dataset}
+\subsubsection{Analisi del bias introdotto dalla codifica utilizzata}
+
+% Esperimenti per valutare prestazioni della rete feedforward sul dataset + ottimizzazione dei parametri e del modello tramite funzioni di keras
+\subsection{Analisi delle prestazioni e ottimizzazione della Rete feed forward}
+\subsubsection{Risultati preliminari}
+\subsubsection{Ottimizzazione dei parametri del modello} % Cross validation e Model selection
+\subsubsection{Analisi delle prestazioni con EarlyStopping e BestModel}
+
+% Confronto risultati riguardanti le prestazioni dei classificatori e le relative differenze nelle prestazioni dei filtri appresi 
+\subsection{Confronto delle prestazioni dei classificatori}
+\subsection{Analisi e confronto dei classificatori applicati ai Filtri appresi}
+% Traggo le conclusioni degli esperimenti: è necessario utilizzare una rete complessa come quella ricorrente o posso utilizzare anche reti più "semplici" come una feed forward?
+\subsubsection{Discussioni su bilanciamento tra spazio e prestazioni}
+
+\section{Conclusioni}
+
+\end{document}
