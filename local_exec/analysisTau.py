@@ -31,8 +31,6 @@ def tau_analysis(models, fprs, fpr_ratios, training_list, X_train, y_train, name
 
 	return false_negs,taus
 
-'''
-'''
 def get_models_size():
   # Ritorna grandezza dei modelli nell'ordine in cui sono salvati nella cartella
   sizes = []
@@ -42,8 +40,6 @@ def get_models_size():
 
   return sorted(sizes, reverse=True)
 
-'''
-'''
 def fnrs_analysis(models, fprs, fpr_ratios, false_negs, training_list):
   # Per ognuno dei modelli costruisco un dataframe in cui salvo il rate di falsi negativi per ogni fpr e fprs_ratio
   fnrs = {}

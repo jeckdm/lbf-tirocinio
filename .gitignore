@@ -8,3 +8,4 @@ data/
 local_exec/classificatori/saved_model
 local_exec/classifier_testing/esperimenti_ffnn/testing
 local_exec/classifier_testing/esperimenti_ffnn/risultati
+local_exec/classifier_testing/risultati

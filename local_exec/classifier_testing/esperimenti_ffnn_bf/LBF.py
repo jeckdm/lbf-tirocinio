@@ -1,7 +1,10 @@
 import time
+import numpy as np
 from classifier_testing.esperimenti_ffnn import FFNN
-from helpers import determine_tau
 from BF import BloomFilter
+
+def determine_tau(FPR_tau, probs_0):
+  return np.percentile(np.array(probs_0),100*(1.-FPR_tau))
 
 def build_LBF_classifier(probs0, probs1, phishing, FPR_tau):
     # probs0, probs1 = FFNN.get_classifier_probs(model, X, y)
@@ -9,17 +12,11 @@ def build_LBF_classifier(probs0, probs1, phishing, FPR_tau):
     false_negs = []
 
     for i, url in enumerate(phishing):
-        if(probs1[i] < tau):
-            false_negs += [url]
+        if(probs1[i] < tau): false_negs += [url]
 
     return false_negs, tau
 
 def build_LBF_backup(false_negs, FPR, FPR_tau):
-  '''
-  Ritorna un BloomFilter definito sull'insieme dei falsi negativi ed avente un target FPR calcolato tramite la formula:
-    FPR_B = (FPR-FPR_tau)/(1-FPR_tau)
-  '''
-
   num_false_negs = len(false_negs)
   FPR_B = (FPR-FPR_tau)/(1-FPR_tau)
   if(FPR_B <= 0):
@@ -40,8 +37,10 @@ def test_LBF(LBF_backup, tau, testing_list, prediction):
 
     for index, prob in enumerate(prediction):
         # Legit classificato come phishing
-        if(prob > tau): fps += 1
-        else: LBF_backup.check(prediction[index])
+        if(prob > tau): result = True
+        else: result = LBF_backup.check(prediction[index])
+
+        if result: fps += 1
 
     end = time.time()
     # Tempo totale speso per accedere al BF di backup

@@ -11,13 +11,14 @@ from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier
 from keras.models import load_model
 
-def model_selection(X, y, params, epochs = 30, ratio = 0.2, outer_folds = 5, inner_folds = 5, njobs = None): 
+def model_selection(X, y, params, undersample = False, epochs = 30, ratio = 0.2, outer_folds = 5, inner_folds = 5, njobs = None): 
     # Outer cv
     outer_cv = StratifiedKFold(n_splits = outer_folds)
 
     # Salvo risultati per ogni configurazione di parametri
     model_results = {f'fold{i}' : {'f1' : 0, 'precision' : 0, 'recall' : 0, 'accuracy' : 0} for i in range(outer_folds)}
     param_results = {f'fold{i}' : {} for i in range(outer_folds)}
+    best_models = {f'fold{i}' : None for i in range(outer_folds)}
 
     for count, (train_index, test_index) in enumerate(outer_cv.split(X, y)):
         print(f"Iterazione {count}")
@@ -33,7 +34,8 @@ def model_selection(X, y, params, epochs = 30, ratio = 0.2, outer_folds = 5, inn
         y_train, y_test = y[train_index], y[test_index]
 
         # Bilancio solamente il dataset di train (Forse da togliere?)
-        X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
+        if undersample: 
+            X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Faccio GridSearch su insieme di fold (Refit di base é a true, quindi best estimator é fittato su tutti e 4 i fold di train)
         # Refit permette di scegliere la metrica migliore su cui poi refittare il dataset
@@ -49,6 +51,7 @@ def model_selection(X, y, params, epochs = 30, ratio = 0.2, outer_folds = 5, inn
         scores = classification_report(y_test, y_pred, output_dict = True)
 
         param_results[f'fold{count}'] = best_params
+        best_models[f'fold{count}'] = best_model
         model_results[f'fold{count}']['f1'] = scores['1']['f1-score']
         model_results[f'fold{count}']['precision'] = scores['1']['recall']
         model_results[f'fold{count}']['recall'] = scores['1']['precision']
@@ -56,7 +59,7 @@ def model_selection(X, y, params, epochs = 30, ratio = 0.2, outer_folds = 5, inn
 
         print(f"f1-score test {scores['1']['f1-score']}, f1-score inner cv {grid.cv_results_['mean_test_score'][best_result_idx]} ({grid.cv_results_['std_test_score'][best_result_idx]}) con {best_params}")
 
-    return model_results, param_results
+    return best_models, model_results, param_results, 
 
 def rnn_cross_validation(X, y, folds = 5, ratio = 0.2, h_size = 16, emb_size = 5, layers = 1):
     # Cross validation
