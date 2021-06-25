@@ -13,26 +13,27 @@
 \subsection{Filtri di Bloom}
 \subsubsection{Filtri di Bloom appresi}
 \subsection{Deep Learning} % Introduzione sugli aspetti più importanti del deep learning (Quali?) + focus su Reti FF e Reti Ricorrenti
-\subsubsection{Reti Neurali Feed Forward}
+\subsubsection{Percettroni multistrato}
 \subsubsection{Reti Neurali Ricorrenti}
 
 % Titolo da cambiare
 \section{Introduzione Esperimenti}
 
-% Spiego scopo degli esperimenti: capire se è veramente necessario una rete complessa come la RNN o se una rete FFNN è sufficiente per migliorare le prestazioni
-\subsection{Classificatori e Filtri di Bloom appresi}
+% Spiego scopo degli esperimenti: rapporto tra classificatori e filtri, capire se è veramente necessario una rete complessa come la RNN o se una rete FFNN è sufficiente per migliorare le prestazioni
+\subsection{Classificatori e Filtri di Bloom}
 
-% Spiegazione struttura RNN e FFNN utilizzate
+% Illustro la struttura RNN e FFNN utilizzate
 \subsection{Struttura dei classificatori utilizzati}
 \subsubsection{Rete ricorrente}
-\subsubsection{Rete feed forward}
+\subsubsection{Percettrone multistrato}
 
 % Spiegazione teorica delle tecinche utilizzate per l'analisi delle prestazioni dei classificatori e l'ottimizzazione dei parametri
 \subsection{Tecniche di validazione e ottimizzazione dei parametri}
-\subsubsection{Cross Validation}
-\subsubsection{Model selection}
+\subsubsection{Convalida incrociata} % Nome?
+\subsubsection{Selezione del modello} % Gridsearch e nested CV
 
 % Spiegazione delle codifiche utilizzate, con eventuale spiegazione del perchè non posso utilizzare per entrambe le reti la stessa codifica
+% + eventuale codifica binaria ancora da testare
 \subsection{Codifiche utilizzate}
 \subsubsection{Codifica Rete Ricorrente}
 \subsubsection{Codifica Count Vectorizer}
@@ -53,7 +54,7 @@
 \subsubsection{Analisi del bias introdotto dalla codifica utilizzata}
 
 % Esperimenti per valutare prestazioni della rete feedforward sul dataset + ottimizzazione dei parametri e del modello tramite funzioni di keras
-\subsection{Analisi delle prestazioni e ottimizzazione della Rete feed forward}
+\subsection{Analisi delle prestazioni e ottimizzazione del Percettrone multistrato}
 \subsubsection{Risultati preliminari}
 \subsubsection{Ottimizzazione dei parametri del modello} % Cross validation e Model selection
 \subsubsection{Analisi delle prestazioni con EarlyStopping e BestModel}

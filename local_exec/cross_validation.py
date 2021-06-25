@@ -3,9 +3,9 @@ import numpy as np
 import torch
 import init
 import RNN as R
-from classifier_testing.esperimenti_ffnn import trainRNN
-from classifier_testing.esperimenti_ffnn import FFNN as ff
-from classifier_testing.esperimenti_ffnn import helpers
+import trainRNN
+import FFNN as ff
+import helpers
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier

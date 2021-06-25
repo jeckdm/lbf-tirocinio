@@ -5,11 +5,6 @@ from collections import Counter
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.feature_extraction.text import CountVectorizer
 
-# Parametri globali
-import config
-
-# Setting device
-device = config.device
 
 def load_data(verbose = True):
     """
@@ -17,11 +12,11 @@ def load_data(verbose = True):
     I file del dataset devono trovarsi all'interno della cartella indicata dal parametro glocale loc_data ed avere estensione .npy
     """
     
-    legitimate_URLs = np.load(config.loc_data1 + "legitimate_URLs.npy")
-    phishing_URLs = np.load(config.loc_data1 + "phishing_URLs.npy")
-    phishing_URLs = np.concatenate((phishing_URLs,np.load(config.loc_data2 + "phishing_URLs2.npy",allow_pickle=True)))
-    legitimate_URLs = np.concatenate((legitimate_URLs,np.load(config.loc_data2 + "legitimate_URLs2.npy",allow_pickle=True)))
-    legitimate_URLs = np.concatenate((legitimate_URLs,np.load(config.loc_data3 + "legitimate_URLs3.npy",allow_pickle=True)))
+    legitimate_URLs = np.load("data/dataset1/legitimate_URLs.npy")
+    phishing_URLs = np.load("data/dataset1/phishing_URLs.npy")
+    phishing_URLs = np.concatenate((phishing_URLs,np.load("data/dataset2/phishing_URLs2.npy",allow_pickle=True)))
+    legitimate_URLs = np.concatenate((legitimate_URLs,np.load("data/dataset2/legitimate_URLs2.npy",allow_pickle=True)))
+    legitimate_URLs = np.concatenate((legitimate_URLs,np.load("data/dataset3/legitimate_URLs3.npy",allow_pickle=True)))
      # clean URLs
     legitimate_URLs = [l.split('http://')[-1].split('www.')[-1].split('https://')[-1] for l in legitimate_URLs]
     phishing_URLs = [p.split('http://')[-1].split('www.')[-1].split('https://')[-1] for p in phishing_URLs]

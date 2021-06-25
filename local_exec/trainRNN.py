@@ -9,27 +9,16 @@ import config
 # Rinomino parametri globali per comoditá
 layers = config.layers
 device = config.device
+def train(model, X_train, y_train, optimizer, criterion = nn.CrossEntropyLoss(), batch_size = 256):
+  '''Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.'''
+  # Train and validate
+  for epoch in range(30):
+      _ = R.train(model, X_train, y_train, optimizer, criterion, batch_size)
+      val_acc, val_loss = R.val(model, X_train, y_train, criterion, batch_size)
+      if(epoch%10 == 0):
+        print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
 
-
-def train(X_train, y_train, criterion, h_sizes, emb_size, batch_size):
-  '''
-  Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.
-    '''
-  for i,h_size in enumerate(h_sizes):
-    models = {}
-    # Create model, loss function, optimizer
-    models[i] = R.RNN(emb_size=emb_size, h_size=h_size, layers=config.layers).to(device)
-    optimizer = torch.optim.Adamax(models[i].parameters())
-    # Train and validate
-    start = time.time()
-    for epoch in range(30):
-        train_loss = R.train(models[i],X_train,y_train,optimizer,criterion,batch_size)
-        val_acc, val_loss = R.val(models[i],X_train,y_train,criterion,batch_size)
-        if(epoch%10 == 0):
-          print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
-    end = time.time()
-    torch.save(models[i].state_dict(), config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))  
-    print(end-start)  
+  return model
 
 def load_eval(X_test, y_test,criterion,h_sizes,emb_size,batch_size):
   '''

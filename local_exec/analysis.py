@@ -1,7 +1,6 @@
-from time import time
 import pandas as pd
-from classifier_testing.esperimenti_ffnn_bf import LBF
-from classifier_testing.esperimenti_ffnn_bf import SLBF
+import LBF
+import SLBF
 
 def tau_analysis(probs0, probs1, fprs, fprs_ratios, phishing, verbose = True):
     false_negs = {}
