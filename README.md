@@ -10,7 +10,7 @@ conda env create -f env_settings/env.yml
 ```
 In seguito attivare l'env ed eseguire il seguente comando:
 ```bash
-conda update -all
+conda update --all
 ```
 In modo da aggiornare tutti i package per il sistema operativo utilizzato.
 
