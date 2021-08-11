@@ -1,70 +1,92 @@
-\documentclass{article}
+\documentclass{report}
 
 % Margini
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage[titletoc,title]{appendix}
 
+% Subfiles
+\usepackage{subfiles}
+
+% Immagini
+\usepackage{graphicx}
+\graphicspath{immagini/}
+
+% Bibliografia
+\usepackage[backend = biber, citestyle = alphabetic]{biblatex}
+\addbibresource{bibliografia/bibliografia.bib}
+
+% Formule, definizioni
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{mathtools}
+\newtheorem{dfn}{Definizione}[chapter]
+
+% Spacing paragrafi
+\usepackage{parskip}
+
 \begin{document}
 
-\section{Introduzione}
+\tableofcontents
 
-\section{Aspetti Teorici}
-\subsection{Filtri di Bloom}
-\subsubsection{Filtri di Bloom appresi}
-\subsection{Deep Learning} % Introduzione sugli aspetti più importanti del deep learning (Quali?) + focus su Reti FF e Reti Ricorrenti
-\subsubsection{Percettroni multistrato}
-\subsubsection{Reti Neurali Ricorrenti}
+\chapter{Introduzione}
+
+\chapter{Aspetti Teorici}
+\section{Definizioni di Base}
+
+\chapter{Filtri di Bloom}
+
+\chapter{Apprendimento automatico}
+\subfile{capitoli/4_ApprendimentoAutomatico/4_0_ApprendimentoAutomatico}
+\section{Classificazione e regressione}
+\subfile{capitoli/4_ApprendimentoAutomatico/4_1_Classificazione_Regressione.tex}
+\section{Reti neurali profonde} % Introduzione sugli aspetti più importanti del deep learning (Quali?) + focus su Reti FF e Reti Ricorrenti
+\subsection{Percettrone multistrato}
+\subsection{Reti Neurali Ricorrenti}
+
+\chapter{Filtri di Bloom appresi}
+    \section{Learned Bloom Filters (LBF)}
+    \section{Sandwitched Learned Bloom Filters (SLBF)}
 
 % Titolo da cambiare
-\section{Introduzione Esperimenti}
+\chapter{Esperimenti}
 
 % Spiego scopo degli esperimenti: rapporto tra classificatori e filtri, capire se è veramente necessario una rete complessa come la RNN o se una rete FFNN è sufficiente per migliorare le prestazioni
-\subsection{Classificatori e Filtri di Bloom}
+\section{Valutazione del ruolo dei classificatori nei filtri di Bloom appresi}
 
-% Illustro la struttura RNN e FFNN utilizzate
-\subsection{Struttura dei classificatori utilizzati}
-\subsubsection{Rete ricorrente}
-\subsubsection{Percettrone multistrato}
+% Illustro i dataset utilizzati, eventualmente confrontando con quelli utilizzati nell'articolo ed eventualmente spiego la suddivisione del dataset usata per il testing dei filtri spiegandone la motivazione
+\section{Dati}
 
 % Spiegazione teorica delle tecinche utilizzate per l'analisi delle prestazioni dei classificatori e l'ottimizzazione dei parametri
-\subsection{Tecniche di validazione e ottimizzazione dei parametri}
-\subsubsection{Convalida incrociata} % Nome?
-\subsubsection{Selezione del modello} % Gridsearch e nested CV
+\section{Metriche di valutazione}
+\subsection{Convalida incrociata} % Nome?
+\subsection{Selezione del modello} % Gridsearch e nested CV
+
+% Illustro la struttura RNN e FFNN utilizzate
+\section{Struttura dei classificatori utilizzati}
+\subsection{Rete ricorrente}
+\subsection{Percettrone multistrato}
 
 % Spiegazione delle codifiche utilizzate, con eventuale spiegazione del perchè non posso utilizzare per entrambe le reti la stessa codifica
 % + eventuale codifica binaria ancora da testare
-\subsection{Codifiche utilizzate}
-\subsubsection{Codifica Rete Ricorrente}
-\subsubsection{Codifica Count Vectorizer}
-\subsubsection{Discussioni sulle differenze tra le codifiche}
-
-% Illustro i dataset utilizzati, eventualmente confrontando con quelli utilizzati nell'articolo ed eventualmente spiego la suddivisione del dataset usata per il testing dei filtri spiegandone la motivazione
-\subsection{Raccolta dei dati}
-
 % Spiegazione delle tecniche utilizzate per la serializzazione dei modelli ed il perchè della scelte: pickle vs funzioni di libreria, menziono inoltre le differenze ottenute sopratutto utilizzando pytorch nelle dimensioni del modello prima e dopo l'addestramento
-\subsection{Serializzazione dei modelli}
+\section{Implementazione}
 
-\section{Esperimenti}
+\chapter{Risultati}
 
 % Esperimenti al fine di valutare la bontà della rete ricorrente: voglio ottimizzare la rete ricorrente sul mio dataset e poi valutare le prestazioni sui filtri di bloom
-\subsection{Analisi delle prestazioni della Rete Ricorrente}
-\subsubsection{Dimensioni degli insiemi di addestramento e testing}
-\subsubsection{Analisi delle prestazioni variando lo sbilanciamento del dataset}
-\subsubsection{Analisi del bias introdotto dalla codifica utilizzata}
-
 % Esperimenti per valutare prestazioni della rete feedforward sul dataset + ottimizzazione dei parametri e del modello tramite funzioni di keras
-\subsection{Analisi delle prestazioni e ottimizzazione del Percettrone multistrato}
-\subsubsection{Risultati preliminari}
-\subsubsection{Ottimizzazione dei parametri del modello} % Cross validation e Model selection
-\subsubsection{Analisi delle prestazioni con EarlyStopping e BestModel}
+\section{Valutazione dei classificatori}
+
 
 % Confronto risultati riguardanti le prestazioni dei classificatori e le relative differenze nelle prestazioni dei filtri appresi 
-\subsection{Confronto delle prestazioni dei classificatori}
-\subsection{Analisi e confronto dei classificatori applicati ai Filtri appresi}
 % Traggo le conclusioni degli esperimenti: è necessario utilizzare una rete complessa come quella ricorrente o posso utilizzare anche reti più "semplici" come una feed forward?
-\subsubsection{Discussioni su bilanciamento tra spazio e prestazioni}
+\section{Valutazione sull'impatto dei classificatori nei filtri di Bloom appresi}
 
-\section{Conclusioni}
+\chapter{Conclusioni}
+
+
+\printbibliography
 
 \end{document}

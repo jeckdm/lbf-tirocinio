@@ -3,7 +3,7 @@ import numpy as np
 from BF import BloomFilter
 
 def determine_tau(FPR_tau, probs_0):
-  return np.percentile(np.array(probs_0),100*(1.-FPR_tau))
+  return np.percentile(np.array(probs_0), 100 * (1. - FPR_tau))
 
 def build_LBF_classifier(probs0, probs1, phishing, FPR_tau):
     # probs0, probs1 = FFNN.get_classifier_probs(model, X, y)

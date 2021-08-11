@@ -1,23 +1,21 @@
-from os.path import exists
-import torch
 import numpy as np
 from collections import Counter
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.feature_extraction.text import CountVectorizer
 
 
-def load_data(verbose = True):
+def load_data(data_loc, verbose = True):
     """
     Carica ed effettua prepocessing del dataset di legitimate e phishing URL.
     I file del dataset devono trovarsi all'interno della cartella indicata dal parametro glocale loc_data ed avere estensione .npy
     """
     
-    legitimate_URLs = np.load("data/dataset1/legitimate_URLs.npy")
-    phishing_URLs = np.load("data/dataset1/phishing_URLs.npy")
-    phishing_URLs = np.concatenate((phishing_URLs,np.load("data/dataset2/phishing_URLs2.npy",allow_pickle=True)))
-    legitimate_URLs = np.concatenate((legitimate_URLs,np.load("data/dataset2/legitimate_URLs2.npy",allow_pickle=True)))
-    legitimate_URLs = np.concatenate((legitimate_URLs,np.load("data/dataset3/legitimate_URLs3.npy",allow_pickle=True)))
-     # clean URLs
+    legitimate_URLs = np.load(f"{data_loc}/dataset1/legitimate_URLs.npy")
+    phishing_URLs = np.load(f"{data_loc}/dataset1/phishing_URLs.npy")
+    phishing_URLs = np.concatenate((phishing_URLs,np.load(f"{data_loc}/dataset2/phishing_URLs2.npy", allow_pickle=True)))
+    legitimate_URLs = np.concatenate((legitimate_URLs,np.load(f"{data_loc}/dataset2/legitimate_URLs2.npy", allow_pickle=True)))
+    legitimate_URLs = np.concatenate((legitimate_URLs,np.load(f"{data_loc}/dataset3/legitimate_URLs3.npy", allow_pickle=True)))
+    # clean URLs
     legitimate_URLs = [l.split('http://')[-1].split('www.')[-1].split('https://')[-1] for l in legitimate_URLs]
     phishing_URLs = [p.split('http://')[-1].split('www.')[-1].split('https://')[-1] for p in phishing_URLs]
     # Rimuovo duplicati
@@ -47,6 +45,14 @@ def CV_encode(X, y):
     X_encoded = vectorizer.fit_transform(X)
 
     return X_encoded.toarray(), y, vectorizer.vocabulary_
+
+def bin_encode(X, y, d, char_cutoff = 30):
+    """ Codifica dato il dizionario in ingresso secondo assegnando a ogni carattero il relativo intero,"""
+
+    X_encoded = [''.join(format(d[x], '07b') for x in url[:min(len(url), char_cutoff)]) + format(127, '07b') * (char_cutoff - len(url)) for url in X]
+    X_encoded = [[ord(c) - ord('0') for c in url] for url in X_encoded]
+
+    return np.array(X_encoded), np.array(y)
 
 def map_to_number(X):
     """ Ritorna dizionario della forma 'carattere : ranking' con ranking intero """

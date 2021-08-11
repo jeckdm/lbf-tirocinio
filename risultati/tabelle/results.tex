@@ -1,0 +1,68 @@
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|c|c|c|c|}
+\hline
+     &      &        & \multicolumn{4}{|c|}{FPR} \\
+     &      &        & 0.001 & 0.005 & 0.010 & 0.020 \\
+\textbf{Struttura} & \textbf{Classificatore} & \textbf{Dimensioni} &       &       &       &       \\
+\hline
+\textbf{BF} &      & \textbf{Totale} & 76.00 & 58.00 & 51.00 & 43.00 \\
+\multirow{14}{*}{\textbf{LBF}} & \multirow{2}{*}{\textbf{FFNN(20, 0.001)}} & \textbf{Classificatore} &  6.81 &  6.81 &  6.81 &  6.81 \\
+     &      & \textbf{Totale} & 70.04 & 39.74 & 29.55 & 20.98 \\
+\cline{2-7}
+     & \multirow{2}{*}{\textbf{FFNN(30, 0.001)}} & \textbf{Classificatore} & 10.09 & 10.09 & 10.09 & 10.09 \\
+     &      & \textbf{Totale} & 68.43 & 41.23 & 31.08 & 22.40 \\
+\cline{2-7}
+     & \multirow{2}{*}{\textbf{FFNN\_Bin(10, 0.001)}} & \textbf{Classificatore} &  8.53 &  8.53 &  8.53 &  8.53 \\
+     &      & \textbf{Totale} & 75.01 & 44.26 & 30.49 & 21.13 \\
+\cline{2-7}
+     & \multirow{2}{*}{\textbf{FFNN\_Bin(8, 0.001)}} & \textbf{Classificatore} &  6.87 &  6.87 &  6.87 &  6.87 \\
+     &      & \textbf{Totale} & 75.98 & 49.45 & 34.56 & 22.33 \\
+\cline{2-7}
+     & \multirow{2}{*}{\textbf{RNN16}} & \textbf{Classificatore} &  9.67 &  9.67 &  9.67 &  9.67 \\
+     &      & \textbf{Totale} & 86.52 & 64.79 & 53.37 & 40.06 \\
+\cline{2-7}
+     & \multirow{2}{*}{\textbf{RNN4}} & \textbf{Classificatore} &  5.78 &  5.78 &  5.78 &  5.78 \\
+     &      & \textbf{Totale} & 77.82 & 59.92 & 52.16 & 44.80 \\
+\cline{2-7}
+     & \multirow{2}{*}{\textbf{RNN8}} & \textbf{Classificatore} &  6.70 &  6.70 &  6.70 &  6.70 \\
+     &      & \textbf{Totale} & 82.94 & 61.51 & 49.81 & 34.50 \\
+\cline{1-7}
+\cline{2-7}
+\multirow{28}{*}{\textbf{SLBF}} & \multirow{4}{*}{\textbf{FFNN(20, 0.001)}} & \textbf{Backup} & 18.22 & 11.58 & 11.58 & 11.58 \\
+     &      & \textbf{Classificatore} &  6.81 &  6.81 &  6.81 &  6.81 \\
+     &      & \textbf{Iniziale} & 29.58 & 17.84 & 10.14 &  2.43 \\
+     &      & \textbf{Totale} & 54.61 & 36.23 & 28.53 & 20.82 \\
+\cline{2-7}
+     & \multirow{4}{*}{\textbf{FFNN(30, 0.001)}} & \textbf{Backup} & 16.86 & 10.26 & 10.26 & 10.26 \\
+     &      & \textbf{Classificatore} & 10.09 & 10.09 & 10.09 & 10.09 \\
+     &      & \textbf{Iniziale} & 29.12 & 17.45 &  9.75 &  2.05 \\
+     &      & \textbf{Totale} & 56.07 & 37.80 & 30.10 & 22.40 \\
+\cline{2-7}
+     & \multirow{4}{*}{\textbf{FFNN\_Bin(10, 0.001)}} & \textbf{Backup} & 17.31 & 13.10 & 10.72 & 10.72 \\
+     &      & \textbf{Classificatore} &  8.53 &  8.53 &  8.53 &  8.53 \\
+     &      & \textbf{Iniziale} & 29.27 & 14.90 &  9.88 &  2.18 \\
+     &      & \textbf{Totale} & 55.10 & 36.53 & 29.13 & 21.43 \\
+\cline{2-7}
+     & \multirow{4}{*}{\textbf{FFNN\_Bin(8, 0.001)}} & \textbf{Backup} & 20.36 & 12.47 & 12.47 & 12.47 \\
+     &      & \textbf{Classificatore} &  6.87 &  6.87 &  6.87 &  6.87 \\
+     &      & \textbf{Iniziale} & 30.41 & 18.12 & 10.42 &  2.72 \\
+     &      & \textbf{Totale} & 57.64 & 37.47 & 29.76 & 22.06 \\
+\cline{2-7}
+     & \multirow{4}{*}{\textbf{RNN16}} & \textbf{Backup} & 28.17 &  9.64 &  5.12 &  5.12 \\
+     &      & \textbf{Classificatore} &  9.67 &  9.67 &  9.67 &  9.67 \\
+     &      & \textbf{Iniziale} & 36.13 & 28.08 & 24.27 & 16.57 \\
+     &      & \textbf{Totale} & 73.97 & 47.38 & 39.06 & 31.36 \\
+\cline{2-7}
+     & \multirow{4}{*}{\textbf{RNN4}} & \textbf{Backup} & 47.82 & 14.83 &  5.85 &  4.24 \\
+     &      & \textbf{Classificatore} &  5.78 &  5.78 &  5.78 &  5.78 \\
+     &      & \textbf{Iniziale} & 24.14 & 31.21 & 27.11 & 20.94 \\
+     &      & \textbf{Totale} & 77.73 & 51.81 & 38.75 & 30.95 \\
+\cline{2-7}
+     & \multirow{4}{*}{\textbf{RNN8}} & \textbf{Backup} & 27.56 & 10.12 &  7.06 &  8.38 \\
+     &      & \textbf{Classificatore} &  6.70 &  6.70 &  6.70 &  6.70 \\
+     &      & \textbf{Iniziale} & 35.26 & 28.28 & 23.38 & 14.35 \\
+     &      & \textbf{Totale} & 69.52 & 45.10 & 37.14 & 29.44 \\
+\hline
+\end{tabular}
+\end{table}

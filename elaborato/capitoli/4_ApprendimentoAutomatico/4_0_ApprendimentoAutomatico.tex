@@ -1,0 +1,48 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+    Obiettivo di questo capitolo è di fornire una breve introduzione ai concetti fondamentali dell'apprendimento autmatico con un interesse particolare per i concetti di \textbf{apprendimento supervisionato} e, nello specifico, alla \textbf{classificazione} e alla \textbf{regressione}.
+
+    Riprendendo la definizione di \textbf{apprendimento} riportata in \cite{Mitchell97}
+    
+    \begin{dfn}
+        Data una classe di problemi $T$ ed un metodo di misura delle prestazioni $P$ si dice che un generico programma \textbf{apprende} dall'esperienza accumulata in $T$ se le sue prestazioni, misurate tramite $P$, migliorano all'aumentare dell'esperienza $E$.
+    \end{dfn}
+
+    Nel contesto dei nostri esperimenti, ad esempio, il programma migliorerà le proprie prestazioni $P$, misurate come abilità di discernere correttamente URL legittimi o di phishing, grazie all'esperienza  $E$ guadagnata tramite l'osservazione di un elevato numero di URL di entrambe le categorie, \textit{imparando} poi a generalizzare le caratteristiche principali di entrambe le tipologie di indirizzi e riuscendo infine a \textit{classificare} correttamente nuovi URL mai osservati in precedenza.
+
+
+    In generale quindi posso definire un problema di apprendimento identificando tre proprietà: la classe del problema, la metrica per le prestazioni e la fonte dell'esperienza.
+
+    Identficato un problema di apprendimento l'obiettivo è ora quello di definire un approccio per la progettazione di sistemi in grado di risolvere tali problemi.\\
+    A tal proposito è utile introdurre il concetto di \textbf{agente}, che può essere definito come un'entità in grado di percepire l'ambiente tramite sensori e di interagire con tale ambiente tramite degli attuatori, potrò definire diverse tipologie di agente a seconda di come questo lavora sulle percezioni ottenute dall'ambiente.
+
+    Nell'ambito dell'apprendimento automatico si dice quindi che un agente \textit{apprende} se le sue performance vanno a migliorare grazie a ripetute interazioni con l'ambiente in cui è inserito.
+    Importante notare come il concetto di agente sia applicabile in generale a tutti i campi dell'intelligenza artificiale, non solo a quello del \textit{machine learning}, trattato in questo capitolo.
+
+    Riprendendo il libro \textsc{Artificial Intelligence: a Modern Approach} \cite{russel2010}, dato un agente posso andare a caratterizzare le forme di apprendimento in base a quattro aree:
+
+    \begin{itemize}
+        \item Quale \textit{componente} viene migliorato.
+        \item Quali \textit{conoscenze a priori} l'agente possiede.
+        \item Quale \textit{rappresentazione} è usata per i dati e il componente.
+        \item Quale \textit{feedback} viene restitutito dall'ambiente.
+    \end{itemize}
+
+    Concentrandosi sul quarto punto, esistono principalmente tre tipi di feedback, che vanno a determinare i tre principali tipi di \textit{apprendimento}.
+
+    \textbf{Apprendimento supervisionato}: in questo caso l'agente apprende tramite un dataset di esempi, in cui ogni esempio è nella forma $<input, output>$.
+
+    \textbf{Apprendimento non supervisionato}: a differenza di ciò che accade nel caso precendente, in questo contesto l'agente riesce ad apprendere senza avere un feedback con cui confrontare le proprie assunzioni. Esempio classico di apprendimento di questo tipo è il \textbf{clustering}.
+
+    \textbf{Apprendimento per rinforzo}: l'agente apprende tramite una serie di \textit{reward} o \textit{punishment}.
+
+    È importante sottolineare come seppur l'apprendimento per rinforzo sia spesso presentato come uno dei tipi di apprendimento insieme agli altri due in realtà non è del tutto comparabile: molte tecniche classificabili come di apprendimento supervisionato, ad esempio, possono essere sfruttate nel contesto dell'apprendimento per rinforzo (\textit{Regressione} $\rightarrow$ \textit{Q-learning}).
+
+    Mi concentro ora sull'apprendimento supervisionato, che sarà la tipologia di apprendimento che sfrutterò negli esperimenti descritti in seguito.
+    
+
+
+\end{document}

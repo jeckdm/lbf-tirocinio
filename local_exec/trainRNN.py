@@ -3,24 +3,19 @@ import torch.nn as nn
 import os
 import time
 import RNN as R
-# Parametri globali
-import config
 
-# Rinomino parametri globali per comoditá
-layers = config.layers
-device = config.device
-def train(model, X_train, y_train, optimizer, criterion = nn.CrossEntropyLoss(), batch_size = 256):
+def train(model, X_train, y_train, optimizer, criterion = nn.CrossEntropyLoss(), batch_size = 256, device = torch.device('cpu') ):
   '''Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.'''
   # Train and validate
   for epoch in range(30):
       _ = R.train(model, X_train, y_train, optimizer, criterion, batch_size)
-      val_acc, val_loss = R.val(model, X_train, y_train, criterion, batch_size)
-      if(epoch%10 == 0):
+      val_acc, val_loss = R.val(model, X_train, y_train, criterion, batch_size, device)
+      if(epoch % 10 == 0):
         print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
 
   return model
 
-def load_eval(X_test, y_test,criterion,h_sizes,emb_size,batch_size):
+def load_eval(location, X_test, y_test, criterion, h_sizes, emb_size, batch_size, layers = 1, device = torch.device('cpu')):
   '''
   Carica i parametri delle RNN giá addestrate presenti in loc e ritorna una lista di RNN definite con gli  iperparametri contenuti in (h_sizes, emb_sizes, layers).
 
@@ -32,10 +27,10 @@ def load_eval(X_test, y_test,criterion,h_sizes,emb_size,batch_size):
 
   for i,h_size in enumerate(h_sizes):
     print("hidden size", h_size)
-    model_sizes[i] = os.path.getsize(config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))
+    model_sizes[i] = os.path.getsize(location+"RNN_emb"+str(emb_size)+"_hid"+str(h_size))
     print("model size (bytes)", model_sizes[i])
-    models[i] = R.RNN(emb_size=emb_size, h_size=h_size, layers=layers).to(device)
-    models[i].load_state_dict(torch.load(config.loc_nn+"RNN_emb"+str(emb_size)+"_hid"+str(h_size)))
+    models[i] = R.RNN(emb_size = emb_size, h_size = h_size, layers = layers).to(device)
+    models[i].load_state_dict(torch.load(location+"RNN_emb"+str(emb_size)+"_hid"+str(h_size)))
     # models[i].eval()  #in teoria superfluo
     print(R.val(models[i], X_test,y_test,criterion,batch_size))
     
@@ -52,7 +47,7 @@ def load_eval(X_test, y_test,criterion,h_sizes,emb_size,batch_size):
 
   return models
 
-def get_classifier_probs(model,X_train,y_train):
+def get_classifier_probs(model, X_train, y_train, device = torch.device('cpu')):
   '''
   Ritorna le previsioni di model sul dataset (X_train, y_train).
   Le previsioni vengono ritornate come:
