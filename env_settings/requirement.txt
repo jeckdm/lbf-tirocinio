@@ -1,3 +1,0 @@
-wheel==0.34.1
-mmh3
-bitarray
