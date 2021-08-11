@@ -1,36 +1,18 @@
 # lbf-tirocinio
 
-## conversione da archivio a dataset .npy:<br>
-utilizzare URL_script.py -> inserire il path dell'archivio al posto di 'pathdesiderato'
+## Download dataset2
+Per scaricare il secondo dataset eseguire lo script `getdataset.py` presente nella cartella data/dataset2
 
-## impostare enviroment esecuzione
-per eseguire il notebook utilizzeremo un virtual enviroment. Per creare il virtual env. assicurarsi di aver installato anaconda (https://www.anaconda.com/products/individual) ed eseguire il seguente script nella home directory del git:
+## Enviroment
+Per eseguire il codice è necessario avere diversi package installabili tramite conda utilizzando l'enviroment presente nella cartella env_settings. Per creare il virtual env. assicurarsi di aver installato anaconda (https://www.anaconda.com/products/individual) ed eseguire il seguente script nella home directory del git:
 ```bash
-conda env create -f env_settings/enviroment.yml 
+conda env create -f env_settings/env.yml 
 ```
-in seguito attivare l'env ed eseguire il seguente comando:
-
+In seguito attivare l'env ed eseguire il seguente comando:
 ```bash
-ldconfig -p|grep cudart.so|sed -e 's/.*\.\([0-9]*\)\.\([0-9]*\)$/cu\1\2/'
+conda update -all
 ```
-nel caso di utenti linux, oppure:
-```bash
-conda env create -f env_settings/enviroment_win.yml 
-```
-nel caso di utenti windows.
+In modo da aggiornare tutti i package per il sistema operativo utilizzato.
 
-prima di eseguire il codice assicurarsi di aver attivato l'env  
-```bash 
-conda activate LBF-env
-``` 
-
-dopo l'esecuzione si consiglia di disattivare l'env 
-```bash 
-conda deactivate
-```
-
-## esecuzione notebook: 
-per eseguire il notebook assicurarsi le path da cui vengono caricati i file coincidano con quelle in cui avete scaricato il dataset. Al momento i due dataset utilizzati sono uno in 'data/dataset1' e per il secondo è necessario seguire le istruzioni contenute in 'data/dataset2/info_dataset'. Le path del notebook cercano i file in quelle cartelle.
-
-## esecuzione codice:
-per eseguire direttamente il codice (senza utilizzare il notebook) eseguire main.py situato nella cartella local_excec. la maggior parte dei parametri possono essere direttamente impostati cambiando i valori inseriti nel file config.py (size embedding, dimensioni GRU, fpr/fpr ratio utilizzate per la creazione di grafici...). Al momento i due dataset utilizzati sono uno in 'data/dataset1' e per utilizzare il secondo è necessario seguire le istruzioni contenute in 'data/dataset2/info_dataset'
+## Esecuzione codice:
+Per replicare i risultati ottenuti è necessario eseguire lo script `main.py` presente nella cartella local_exec, lo script necessita di due argomenti obbligatori da linea di comando: rispettivamente la cartella in cui verranno salvati i risultati e la cartella da cui verranno prelevati gli URL.
