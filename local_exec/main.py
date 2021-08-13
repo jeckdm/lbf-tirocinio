@@ -207,15 +207,15 @@ def main(args):
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
 
-    parse.add_argument("resultloc", type = str)
-    parse.add_argument("dataloc", type = str)
-    parse.add_argument("fprs", type = float, nargs = "?", default = [0.001, 0.005, 0.01, 0.02])
-    parse.add_argument("ffhidden", type = int, nargs = "?", default = [30, 20])
-    parse.add_argument("ffbinhidden", type = int, nargs = "?", default = [10, 8])
-    parse.add_argument("fflearning", type = int, nargs = "?", default = [0.001])
-    parse.add_argument("rnnpar", type = int, nargs = "?", default = [16, 8, 4])
-    parse.add_argument("lbfratio", type = float, nargs = "?", default = [.1 * i for i in range(1, 11)])
-    parse.add_argument("slbfratio" , type = float, nargs = "?", default = [1. * i for i in range(1, 11)])
+    parse.add_argument("resultloc", type = str, help = "Cartella in cui vengono salvati grafici e tabelle")
+    parse.add_argument("dataloc", type = str, help = "Cartella da cui caricare i dataset")
+    parse.add_argument("fprs", type = float, nargs = "?", default = [0.001, 0.005, 0.01, 0.02], help = "Lista di false positive rate su cui testare le strutture")
+    parse.add_argument("ffhidden", type = int, nargs = "?", default = [30, 20], help = "Numero di neuroni nello strato nascosto della rete feed forward")
+    parse.add_argument("ffbinhidden", type = int, nargs = "?", default = [10, 8], help =  "Numero di neuroni nello strato nascosto della rete feed forward con codifica binaria ")
+    parse.add_argument("fflearning", type = int, nargs = "?", default = [0.001], help = "Learning rate della rete feed forward")
+    parse.add_argument("rnnpar", type = int, nargs = "?", default = [16, 8, 4], help = "Grandezza strato hidden della rete ricorrente")
+    parse.add_argument("lbfratio", type = float, nargs = "?", default = [.1 * i for i in range(1, 11)], help = "Lista di fpr ratio usati per l'analisi di tau su LBF")
+    parse.add_argument("slbfratio" , type = float, nargs = "?", default = [1. * i for i in range(1, 11)], help = "Lista di fpr ratio usati per l'analisi di tau su SLBF")
 
     args = parse.parse_args()
 

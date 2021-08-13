@@ -29,12 +29,14 @@
 
     Prendendo come riferimento una funzione $h$ lineare vado ora ad analizzare i due casi di regressione e classificazione:
 
-    \textbf{Regressione}: Partendo quindi da una funzione d'ipotesi definita come:
-    \[h(x) = w_0 + w_1x_1 + w_2x_2 + \dots + w_nx_n = \bm{w^T x}\]
-    Il problema in questo caso viene detto di \textbf{regressione lineare multi-variata}; l'idea è quella di sfruttare gli elementi dell'insieme di training a disposizione per trovare un vettore dei parametri $\bm{w}$ che permetta di minimizzare, per ognuno degli $y_i$, una funzione, chiamata di \textit{loss}, definita come la differenza tra $y_i$ e $h(x_i)$, solitamente viene utilizzata una funzione di loss quadratica:
+    \subsubsection{Regressione}{}
+    
+    Partendo quindi da una funzione d'ipotesi definita come:
+    \[h(x) = w_0 + w_1x_1 + w_2x_2 + \dots + w_nx_n = \boldsymbol{w^T x}\]
+    Il problema in questo caso viene detto di \textbf{regressione lineare multi-variata}; l'idea è quella di sfruttare gli elementi dell'insieme di training a disposizione per trovare un vettore dei parametri $\boldsymbol{w}$ che permetta di minimizzare, per ognuno degli $y_i$, una funzione, chiamata di \textit{loss}, definita come la differenza tra $y_i$ e $h(x_i)$, solitamente viene utilizzata una funzione di loss quadratica:
     \[L(w) = \sum_{j=1}^N(y_j - h(x_j))^2\]
     Per minimizzare la funzione è necessario trovare dei parametri tali per cui la derivata di $L$, in funzione di tali parametri, sia pari a 0:
-    \[\frac{\sigma}{\sigma w} L(h) = 0\]
+    \[\frac{\partial}{\partial w} L(h) = 0\]
     Nel caso della regressione lineare l'approccio più semplice è di risolvere analiticamente la derivata al fine di ricavare una funzione generale con cui calcolare direttamente il valore di ognuno dei parametri, prendendo il caso più semplice in cui $h$ è in una sola variabile ottengo le seguenti derivate:
     \[
     \begin{cases}
@@ -49,7 +51,7 @@
     $\bf{w} \leftarrow \text{Punto d'inizializzazione}$\\
     \textbf{do}:\\
     - \quad \textbf{foreach $w_i$ in $\bf{w}$}:\\
-    - \quad \quad $w_i \leftarrow w_i - \alpha \frac{\sigma}{\sigma w_i} L(\bf{w})$\\
+    - \quad \quad $w_i \leftarrow w_i - \alpha \frac{\partial}{\partial w_i} L(\bf{w})$\\
     \textbf{while} (not convergenza)
 
     Dove $\alpha$, chiamato \textbf{learning rate}, rappresenta la "forza" della modifica dei pesi ad ogni passo.
@@ -57,23 +59,77 @@
     Utilizzando ancora una volta una perdita quadratica (Questa volta però calcolata sui singoli elementi dell'insieme di addestramento):
     \[L(\bf{w}) = \frac{1}{2}(y_j - h(\bf{x_j}))^2\]
     L'aggiornameto dei pesi ad ogni passo verrebbe calcolato come:
-    \[\frac{\sigma L(\bf{w})}{\sigma w_i} = \frac{1}{2}\frac{\sigma(y_j - h(\bf{x_j}))^2}{\sigma w_i} = - (y_j - h(\bf{x_j})) x_i\]
+    \[\frac{\partial L(\bf{w})}{\partial w_i} = \frac{1}{2}\frac{\partial(y_j - h(\bf{x_j}))^2}{\partial w_i} = - (y_j - h(\bf{x_j})) x_i\]
     \[w_i \leftarrow w_i + \alpha (z_j - h(\bf{x_j})) x_i\]
-    \begin{figure}[h!]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width = \textwidth/2]{immagini/4_1/loss_function.png}
+        \includegraphics[scale = 0.6]{immagini/4_1/loss_function.png}
         \caption{Esempio del funzionamento dell'algoritmo del gradiente utilizzato per aggiornare il valore dei pesi: noto come il valore della funzione di perdita diminuisca all'aumentare del numero di iterazioni fino ad arrivare a convergenza}
     \end{figure}
    
 
-    \textbf{Classificazione}: Se la funzione $f$ da approssimare ha un codominio discreto si parla di classificazione, in questo contesto i metodi per la regressione possono essere riadattati per affrontare questa tipologia di problemi: il modello calcola un punteggio a cui si applica una soglia.
+    \subsubsection{Classificazione} 
+    
+    \begin{dfn}
+        La Classificazione è il problema che ha come fine l'identificazione dell'etichetta di una serie di elementi.
+    \end{dfn}
 
-    Un modello lineare può ad esempio essere utilizzato anche nel contesto dei problemi di classificazione: ad esempio in figura si può vedere un insieme di punti appartenenti a due classi differenti, in generale si definisce \textbf{decision boundary} la linea che separa i punti delle due classi, se tale boundary è, come nell'esempio, una linea retta si parla di classi \textit{linearmente separabili}. Per adattare questo approccio al caso della classificazione semplicemente definisco una \textit{soglia}: se un determinato elemento assume un valore $> 0$ nella funzione $h$ allora $h(x) = 1$ altrimenti $h(x) = 0$, formalmente posso quindi pensare di far passare il risultato di $h$ in una funzione di soglia ed utilizzare tale risultato come classe risultante:
-    \[h\bf(x) = Soglia(\bf{w} \cdot \bf{x}) \ \text{con} \ Soglia(z) = 1 \ \text{se} \ z \geq 0 \ \text{altrimenti} \ 0\]
-    Noto come defininendo in questo modo il modello sia non sia però possibile aggiornare i pesi utilizzando lo stesso approccio adottato nel caso della regressione: il gradiente di $h$ è infatti sempre pari a 0 tranne nei punti in cui $\bf{w} \cdot \bf{x} = 0$ in cui però è indefinito.
+    Se la funzione $f$ da approssimare ha un codominio discreto si parla di classificazione, in questo contesto i metodi per la regressione possono essere riadattati per affrontare questa tipologia di problemi: il modello calcola un punteggio a cui si applica una soglia.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale = 0.6]{immagini/4_1/classification_datasets.png}
+        \caption{Esempio del funzionamento dell'algoritmo del gradiente utilizzato per aggiornare il valore dei pesi: noto come il valore della funzione di perdita diminuisca all'aumentare del nuaaamero di iterazioni fino ad arrivare a convergenza}
+        \label{fig:classification_datasets}
+    \end{figure}
+
+    Un modello lineare può ad esempio essere utilizzato anche nel contesto dei problemi di classificazione: ad esempio in Figura \ref{fig:classification_datasets} sono rappresentati un insieme di punti appartenenti a due classi (\textit{etichette}) differenti, fornito un dataset di questo tipo l'obiettivo in un problema di classificazione è apprendere una funzione d'ipotesi $h$ che, dato un nuovo punto $(x, y)$, fornisca in output l'etichetta corretta.
+    
+    In generale si definisce \textbf{decision boundary} il piano che separa i punti delle due classi, se tale boundary è, come nell'esempio, una linea retta si parla di classi \textit{linearmente separabili}. Per adattare l'approccio già citato per il caso della regressione al contesto della classificazione semplicemente introduco il concetto di \textit{soglia}: se un determinato elemento assume un valore $> 0$ nella funzione $h$ allora $h(x) = 1$ altrimenti $h(x) = 0$, formalmente posso quindi pensare di far passare il risultato di $h$ in una \textbf{funzione di soglia} ed utilizzare tale risultato come classe risultante:
+    \[h\boldsymbol(x) = Soglia(\bf{w} \cdot \bf{x}) \ \text{con} \ Soglia(z) = 1 \ \text{se} \ z \geq 0 \ \text{altrimenti} \ 0\]
+    Noto come defininendo in questo modo il modello sia non sia però possibile aggiornare i pesi utilizzando lo stesso approccio adottato nel caso della regressione: il gradiente di $h$ è infatti sempre pari a 0 tranne nei punti in cui $\boldsymbol{w} \cdot \boldsymbol{x} = 0$ in cui però è indefinito.
     
     La soluzione è quella di utilizzare la \textbf{percepron learning rule}:
-    \[w_i \leftarrow w_i + \alpha (y - h(\bf{x})) x_i\]
-    lavorando su problemi di classificazione binaria 0/1 questa regola intuitivamente aggiornerà i pesi solamente nel caso in cui il risultato del modello sia errato.
+    \[w_i \leftarrow w_i + \alpha (y - h(\boldsymbol{x})) x_i\]
+    lavorando su problemi di classificazione binaria 0/1 questa regola intuitivamente aggiornerà i pesi solamente nel caso in cui il risultato del modello sia errato, infatti:
+    \begin{itemize}
+        \item Se l'output è corretto i pesi non vengono aggiornati: $w_i \leftarrow w_i + \alpha \cdot 0 = w_i$
+        \item Se $y = 1$ ma $h(\bf{x}) = 0$ allora $w_i$ viene aumentato quando il relativo $x_i$ è positivo e diminuito quando è negativo, in questo modo il prodotto $\boldsymbol{w} \cdot \boldsymbol{x}$ aumenta e la funzione d'ipotesi viene di conseguenza corretta  verso il valore 1.
+        \item Se $y = 0$ ma $h(\bf{x}) = 1$ allora $w_i$ viene diminuito quando il relativo $x_i$ è positivo e aumentato quando è negativo, in questo modo il prodotto $\boldsymbol{w} \cdot \boldsymbol{x}$ diminuisce e la funzione d'ipotesi viene di conseguenza corretta verso il valore 0.
+    \end{itemize}
+    Solitamente questa regola di apprendimento viene applicata un esempio alla volta, estraendo casualmente elementi dal dataset.
+
+    Come appena dimostrato quindi utilizzare l'output di un modello lineare come input di una \textit{funzione soglia} permette di adattare l'approccio già utilizzato per il problema della regressione al contesto della classficazione, il principale lato negativo di utilizzare una funzione di questo tipo deriva dal fatto che non è differenziabile, un classificatore basato su una funzione di questo tipo inoltre fornisce sempre valori binari, anche quando il risultato è molto vicino al valore della soglia e nella maggior parte delle situazioni una funzione di questo tipo non è ciò di cui abbiamo bisogno.
+
+    Per i motivi appena descritti spesso si preferisce utilizzare una \textbf{funzione logistica} che intuitivamente corrisponde ad una versione \textit{rilassata} della funzione soglia, formalmente è definita come:
+    \[ \text{Logistica}(z) = \frac{1}{1 + e^{-z}}\]
+    Utilizzando come input il risultato del modello:
+    \[h(\bf{x}) = \text{Logistica}(\bf{w} \cdot \boldsymbol{x}) = \frac{1}{1 + e^{- \boldsymbol{w \cdot x}}}\]
+    Importante notare come l'output della funzione non sia più, come nella funzione soglia, un numero tra 0 e 1, bensì un valore continuo compreso nell'intervallo $[0, 1]$ che può essere interpretato come la probabilità che il punto $\bf{x}$ appartenga all'etichetta 1.
+
+    La funzione logistica ha proprietà matematiche più vantaggiose rispetto alla funzione precedente, prima fra tutte la derivabilità su tutto il dominio, proprietà sfruttata per il processo di aggiornamento dei pesi, che prende il nome di \textbf{regressione logistica}. Non esiste, come nella regressione lineare, una soluzione in forma chiusa per trovare in modo analitico l'ottimo del vettore $\bf{w}$, ma posso ancora una volta sfruttare la discesa del gradiente: l'aggiornamento dei pesi avverrà quindi secondo la seguente formula:
+    \[w_i \leftarrow w_i - \alpha \frac{\partial}{\partial w_i} L(\boldsymbol{w})\]
+    Calcolando la derivata parziale della funzione di perdita (Anche in questo caso quadratica):
+    \[\frac{\partial}{\partial w_i} L(\boldsymbol{w}) = -2 (y - h(\boldsymbol{x})) \times h(\boldsymbol{x})(1 - h(\boldsymbol{x})) \times x_i\]
+    Posso quindi riscrivere la formula per l'aggiornamento dei pesi:
+    \[w_i \leftarrow w_i + \alpha (y - h(\boldsymbol{x})) \times h(\boldsymbol{x})(1 - h(\boldsymbol{x})) \times x_i\]
+
+    I metodi come la regressione lineare/logistica rimangono comunque fortemente limitati nel tipo di pattern dei dati che possono descrivere, per questo molto spesso si rendono necessari modelli più \textit{espressivi} per  poter approssimare un determinato dataset, modelli di questo tipo prendono il nome di \textbf{reti neurali}: modelli complessi basati su circuiti algebrici.
+
+    \begin{figure}[H]
+        \begin{subfigure}{0.5\textwidth}
+            \centering
+            \includegraphics[scale = 0.6]{immagini/4_1/threshold.png} 
+            \caption{Funzione Soglia}
+            \label{fig:threshold}
+        \end{subfigure}
+        \begin{subfigure}{0.5\textwidth}
+            \centering
+            \includegraphics[scale = 0.6]{immagini/4_1/logistic.png}
+            \caption{Funzione Logistica}
+            \label{fig:logistic}
+        \end{subfigure}
+        \caption{Grafici della funzioni soglia e logistica.}
+    \end{figure}
 
 \end{document}
