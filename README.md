@@ -8,11 +8,6 @@ Per eseguire il codice è necessario avere diversi package installabili tramite 
 ```bash
 conda env create -f env_settings/env.yml 
 ```
-In seguito attivare l'env ed eseguire il seguente comando:
-```bash
-conda update --all
-```
-In modo da aggiornare tutti i package per il sistema operativo utilizzato.
 
 ## Esecuzione codice:
 Per replicare i risultati ottenuti è necessario eseguire lo script `main.py` presente nella cartella local_exec, lo script necessita di due argomenti obbligatori da linea di comando: rispettivamente la cartella in cui verranno salvati i risultati e la cartella da cui verranno prelevati gli URL.
