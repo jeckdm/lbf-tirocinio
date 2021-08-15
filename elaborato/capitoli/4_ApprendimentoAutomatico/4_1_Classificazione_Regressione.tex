@@ -5,7 +5,7 @@
 \begin{document}
     Formalmente posso definire l'obiettivo dell'apprendimento supervisionato come:
     
-    \begin{dfn}
+    \begin{dfn}\label{def:supervised_learn}
         Dato un \textbf{training set} nella forma:
         \[(x_1, y_1), (x_2, y_2), \dots, (x_N, y_N)\]
         con ogni $y_i$ generato da una funzione ignota $y = f(x)$ trovare una funzione $h$, detta funzione \textbf{d'ipotesi}, o modello, che approssimi in modo accettabile la vera funzione $f$.
@@ -27,24 +27,29 @@
 
     A seconda di come la funzione $f$ è definita esistono due principali tipi di apprendimento supervisionato: nel caso in cui $f$ abbia come codominio $\mathbb{R}$ sono in un problema di \textbf{regressione}, se invece $f$ ha un codominio con un numero discreto e finito di elementi (Quindi assegna un'\textit{etichetta} ad ogni elemento dell'insieme di training) allora parlo di problema di \textbf{classificazione}.
 
-    Prendendo come riferimento una funzione $h$ lineare vado ora ad analizzare i due casi di regressione e classificazione:
+    Esistono in generale diversi algoritmi nelle due tipologie di problemi appena descritte che differiscono principalmente per la loro \textit{espressività}, ovvero la capacità di rappresentare determinati pattern di dati. Importante notare come molti algoritmi possano essere sfruttati sia nell'ambito della classficazione che in quello della regressione.\\
+    Mi concentro brevemente, a scopo esemplificativo, sulla \textit{regressione lineare} per problemi di regressione e sulla \textit{regressione logistica} per problemi di classificazione per poi passare, nel prossimo paragrafo, alla descrizione delle \textit{reti neurali}, utilizzate poi negli esperimenti sui filtri.
 
-    \subsubsection{Regressione}{}
+    \subsubsection{Regressione}
+
+    Nel caso della regressione l'obiettivo è analogo a quello enunciato nella Definizione \ref{def:supervised_learn}, nello specifico la funzione $f$ da approssimare è una funzione continua, come già accennato in precedenza sono diversi i metodi utilizzabili in problemi di questo tipo, per citarne alcuni: \textit{regressione lineare, regressione polinomiale, random forest, support vector machines ...} approcci che si differenziano principalmente per la complessità della funzione $h$ con conseguenti differenze nelle capacità di approssimazione di $f$.
+
+    Mi concentro su uno dei metodi più semplici per ragionare su problemi di regressione: la \textit{regressione lineare}:
     
-    Partendo quindi da una funzione d'ipotesi definita come:
+    Parto quindi da una funzione d'ipotesi definita come:
     \[h(x) = w_0 + w_1x_1 + w_2x_2 + \dots + w_nx_n = \boldsymbol{w^T x}\]
     Il problema in questo caso viene detto di \textbf{regressione lineare multi-variata}; l'idea è quella di sfruttare gli elementi dell'insieme di training a disposizione per trovare un vettore dei parametri $\boldsymbol{w}$ che permetta di minimizzare, per ognuno degli $y_i$, una funzione, chiamata di \textit{loss}, definita come la differenza tra $y_i$ e $h(x_i)$, solitamente viene utilizzata una funzione di loss quadratica:
     \[L(w) = \sum_{j=1}^N(y_j - h(x_j))^2\]
     Per minimizzare la funzione è necessario trovare dei parametri tali per cui la derivata di $L$, in funzione di tali parametri, sia pari a 0:
     \[\frac{\partial}{\partial w} L(h) = 0\]
-    Nel caso della regressione lineare l'approccio più semplice è di risolvere analiticamente la derivata al fine di ricavare una funzione generale con cui calcolare direttamente il valore di ognuno dei parametri, prendendo il caso più semplice in cui $h$ è in una sola variabile ottengo le seguenti derivate:
+    Nel caso della regressione lineare l'approccio più semplice è di risolvere analiticamente la derivata al fine di ricavare una funzione generale con cui calcolare direttamente il valore di ognuno dei parametri, prendendo ad esempio il caso più semplice in cui $h$ è in una sola variabile (\textit{regressione univariata}) ottengo le seguenti derivate:
     \[
     \begin{cases}
         w_0 = & \frac{\sum_{i=1}^N z_i - w_1 \sum_{i=1}^N}{N}\\
         w_1 = & \frac{N(\sum_{i=1}^N z_ix_i) - \sum_{i=1}^N z_i \sum_{i=1}^N x_i}{N(\sum_{i=1}^N x_i^2 - (\sum_{i=1}^N x_i)^2)} 
     \end{cases}    
     \]
-    Non sempre però un approccio di questo tipo è possibile: non sempre infatti esiste una soluzione in forma chiusa della funzione $L$, in casi di questo tipo solitamente si ricorre ad un approccio \textit{iterativo} più generale (https://stats.stackexchange.com/questions/23128/solving-for-regression-parameters-in-closed-form-vs-gradient-descent) con algoritmi che sfruttano il gradiente della funzione $L$, nel nostro caso utilizzeremo un algoritmo di \textbf{discesa del gradiente}, in quanto l'obiettivo è di \textit{minimizzare} il valore della perdita.
+    Non sempre però un approccio di questo tipo è possibile: non sempre infatti esiste una soluzione in forma chiusa della funzione $L$, in casi di questo tipo solitamente si ricorre ad un approccio \textit{iterativo} più generale (https://stats.stackexchange.com/questions/23128/solving-for-regression-parameters-in-closed-form-vs-gradient-descent) con algoritmi che sfruttano il gradiente della funzione $L$, nel nostro caso utilizzeremo un algoritmo di \textbf{discesa del gradiente} (Figura \ref{fig:gradient_descent}), in quanto l'obiettivo è di \textit{minimizzare} il valore della perdita.
 
     Intuitivamente l'algoritmo lavora non più sulla perdita calcolata su tutto il dataset ma analizzando gli elementi di tale insieme uno alla volta ed aggiornando il valore dei pesi di conseguenza, sottoforma di pseudocodice l'algoritmo ha la seguente forma:
 
@@ -65,21 +70,20 @@
         \centering
         \includegraphics[scale = 0.6]{immagini/4_1/loss_function.png}
         \caption{Esempio del funzionamento dell'algoritmo del gradiente utilizzato per aggiornare il valore dei pesi: noto come il valore della funzione di perdita diminuisca all'aumentare del numero di iterazioni fino ad arrivare a convergenza}
+        \label{fig:gradient_descent}
     \end{figure}
    
 
     \subsubsection{Classificazione} 
     
-    \begin{dfn}
-        La Classificazione è il problema che ha come fine l'identificazione dell'etichetta di una serie di elementi.
-    \end{dfn}
 
-    Se la funzione $f$ da approssimare ha un codominio discreto si parla di classificazione, in questo contesto i metodi per la regressione possono essere riadattati per affrontare questa tipologia di problemi: il modello calcola un punteggio a cui si applica una soglia.
+    Se la funzione $f$ da approssimare ha un codominio discreto si parla di classificazione, a seconda inoltre nel numero di elementi nel codominio di $f$ faccio riferimento a diversi tipi di classificazione: se mi trovo di fronte a dati che mostrano solamente due etichette parlo di classficazione \textit{binaria}, in caso contrario parlo di classficazione \textit{multiclasse}. Anche in questo caso sono diversi i metodi che vengono utilizzati, citando alcuni dei più popolari: \textit{Regressione logistica, Naive-Bayes, Alberi di Decisione, ...}.\\
+    Anche in questo caso mi concentro su uno dei metodi più semplici: la regressione logistica, ma mostro prima come sia possibile adattare la regressione lineare, introdotta nel paragrafo precedente, anche per problemi di classificazione sfruttando il concetto di \textit{soglia}.
 
     \begin{figure}[H]
         \centering
         \includegraphics[scale = 0.6]{immagini/4_1/classification_datasets.png}
-        \caption{Esempio del funzionamento dell'algoritmo del gradiente utilizzato per aggiornare il valore dei pesi: noto come il valore della funzione di perdita diminuisca all'aumentare del nuaaamero di iterazioni fino ad arrivare a convergenza}
+        \caption{Esempio del funzionamento dell'algoritmo del gradiente utilizzato per aggiornare il valore dei pesi: noto come il valore della funzione di perdita diminuisca all'aumentare del numero di iterazioni fino ad arrivare a convergenza}
         \label{fig:classification_datasets}
     \end{figure}
 
