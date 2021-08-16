@@ -57,7 +57,7 @@ def tau_graph(probs0, probs1, BF_sizes, fprs, LBF_fpr_ratio, SLBF_fpr_ratio, pre
 
     return true_fpr_LBF, true_fpr_SLBF, sizes_LBF, sizes_SLBF, df_result_LBF, df_result_SLBF
 
-def comparison_graph(df_best_sizes, df_sizes, fprs, ffnn_par, rnn_par, save_loc):
+def comparison_graph(df_best_sizes, df_sizes, fprs, ffnn_par, ffnn_bin_par, rnn_par, save_loc):
     '''
     Genera il grafico di confronto delle dimensioni delle strutture al variare dell'fpr per ognuno dei classificatori testati.
     '''
@@ -70,6 +70,10 @@ def comparison_graph(df_best_sizes, df_sizes, fprs, ffnn_par, rnn_par, save_loc)
     for par in ffnn_par:
         axes[0].scatter(df_sizes['LBF'][f'FFNN{par}']['x'], df_sizes['LBF'][f'FFNN{par}']['y'], marker = '.')
         axes[1].scatter(df_sizes['SLBF'][f'FFNN{par}']['x'], df_sizes['SLBF'][f'FFNN{par}']['y'], marker = '.')
+
+    for par in ffnn_bin_par:
+        axes[0].scatter(df_sizes['LBF'][f'FFNN_Bin{par}']['x'], df_sizes['LBF'][f'FFNN_Bin{par}']['y'], marker = '.')
+        axes[1].scatter(df_sizes['SLBF'][f'FFNN_Bin{par}']['x'], df_sizes['SLBF'][f'FFNN_Bin{par}']['y'], marker = '.')
 
     for par in rnn_par:
         axes[0].scatter(df_sizes['LBF'][f'RNN{par}']['x'], df_sizes['LBF'][f'RNN{par}']['y'], marker = '.')
@@ -192,7 +196,7 @@ def main(args):
             dataframe_result, scatter_result = update_dfs(dataframe_result, df_result_LBF, df_result_SLBF, scatter_result, true_fpr_SLBF, sizes_SLBF, true_fpr_LBF, sizes_LBF, par, fpr, f"RNN{par}")
 
     # Genero grafico di confronto spazio tra RNN e FFNN
-    comparison_graph(dataframe_result, scatter_result, fprs, FFNN_params, RNN_params, save_loc)
+    comparison_graph(dataframe_result, scatter_result, fprs, FFNN_params, FFNN_bin_params, RNN_params, save_loc)
     
     # Salvo tabella risultati
     with open(f'{save_loc}/tabelle/results.tex', 'a') as file:
