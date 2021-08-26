@@ -1,0 +1,77 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+
+Parlo di \textit{percettrone} nel caso di una rete \textit{feed forward} composta solamente da un livello di input e da un livello di output.
+
+Il problema di questa tipologia di reti deriva dal fatto di essere in grado di rappresentare solamente funzioni \textit{linearmente separabili}, che indubbiamente costituiscono una minoranza delle funzioni che spesso mi trovo a voler approssimare.
+
+Per questo si preferisce spesso una tipologia di rete più complessa: il \textit{percettrone multistrato}, come intuibile dal nome anche in questo caso mi trovo di fronte ad una topologia feed forward, composta però non più solamente dai due livelli di entrata e uscita, ma bensì anche da molteplici \textit{livelli nascosti}; un modello di questo tipo è ovviamente più complesso rispetto al sopra citato percepttrone, per questo motivo viene facile pensare che sia anche in grado di approssimare funzioni più complesse, questa intuizione oltre ad essere corretta può anche essere formalizzata nel \textit{teorema di approssimazione universale} che rivela un risultato ancora più forte:
+\textit{una rete con un singolo strato nascosto (ed un numero finito di neuroni) è in grado di approssimare qualsiasi funzione continua} (Quindi funzioni anche \textit{non} linearmente separabili), il teorema purtroppo non fornisce però indicazioni sul come costruire tale rete e se la scelta di un solo livello nascosto sia effettivamente la scelta più efficiente.
+
+Passo ora ad analizzare le regole di \textit{apprendimento} per un percettrone multistrato, intuitivamente, avendo a che fare con un output che non è altro che una funzione \textit{innestata} posso anche in questo caso sfruttare i gradienti per minimizzare una funzione di perdita, in questo caso utilizzando anche il concetto di \textit{backpropagation}.
+
+\subsubsection{Apprendimento nei percettroni multistrato}
+La chiave per l'apprendimento risiede anche in questo caso nell'aggiornamento dei parametri del modello con l'obbiettivo di minimizzare un data funzione di perdita.
+
+L'algoritmo più utilizzato in questo senso è la discesa del gradiente (\ref{alg:gradient_desc}); il principale problema è il fatto che, avendo a che fare con una rete composta da molteplici livelli, non ho un metodo diretto per calcolare la funzione di perdita dei livelli nascosti (e di conseguenza il suo gradiente), a differenza infatti di ciò che accade nel livello di uscita non ho un vettore $\boldsymbol{y}$ con cui confrontare il vettore d'uscita dei neuroni.
+
+La soluzione viene fornita da una tecnica nota come \textit{backpropagation}: intuitivamente la tecnica consiste nel calcolare il gradiente partendo dallo strato finale della rete per poi \textit{propagare} l'errore a ritroso fino ad arrivare al primo livello nascosto; una volta risolto il problema del calcolo dei gradienti, la regola per l'aggiornamento dei pesi rimarrà equivalente all'equazione già descritta nei paragrafi precedenti:
+\begin{equation}
+    \begin{dcases}
+        w_{j,k} \leftarrow w_{j,k} + \alpha \times a_j \times \Delta_k & \text{Per i neuroni d'uscita } k\\
+        w_{i,j} \leftarrow w_{i,j} + \alpha \times a_i \times \Delta_j & \text{Per i neuroni interni } j
+    \end{dcases}   
+\end{equation}
+
+Dove $\Delta_k$ e $\Delta_j$ rappresentano gli errori commessi dai rispettivi neuroni:
+\[
+\begin{dcases}
+    \Delta_k = (\boldsymbol{y} - h(\boldsymbol{w})) \times g'(in_k)\\[5pt]
+    \Delta_j = g'(in_j) \sum_k \left(w_{j,k} \Delta_k \right)
+\end{dcases}    
+\]
+
+L'idea è che il neurone intermedio $j$ sia responsabile solamente di una frazione dell'errore finale $\Delta_k$, frazione che è tanto maggiore quanto maggiore è il peso dell'arco che collega i due.
+
+Per ricavare gli stessi risultati procedendo in modo più formale è semplicemente necessario calcolare le derivate della funzione d'errore:
+
+Chiamo $Loss_k = (y_k - a_k)^2$ la perdita del $k$-esimo output, noto come nel contesto di reti con multipli neuroni d'uscita quando calcolo il gradiente di $Loss_k$ in funzione dei pesi ho dei risultati diversi da 0 solamente per gli archi che si connettono al neurone $k$. Per questi pesi ho:
+\begin{equation}
+    \begin{aligned}
+        \frac{\partial Loss_k}{\partial w_{j,k}} &= -2 (y_k - a_k) \frac{\partial a_k}{\partial w_{j,k}} = -2(y_k - a_k) \frac{\partial g(in_k)}{\partial w_{j,k}}\\
+        & = -2(y_k - a_k)g'(in_k)\frac{\partial in_k}{w_{j,k}} = -2(y_k - a_k)g'(in_k) \frac{\partial}{\partial w_{j,k}}\left(\sum_j w_{j,k} a_j \right)\\
+        & = -2(y_k - a_k)g'(in_k) a_j = -a_j \Delta_k        
+    \end{aligned}
+\end{equation}
+Similmente posso ricavare l'equazione di un elemento del vettore del gradiente del neurone intermedio $j$:
+\begin{equation}
+    \begin{aligned}
+        \frac{\partial Loss_j}{\partial w_{i,j}} &= -2 (y_k - a_k) \frac{\partial a_k}{\partial w_{j,k}} = -2(y_k - a_k) \frac{\partial g(in_k)}{\partial w_{j,k}}\\
+        &= -2(y_k - a_k)g'(in_k)\frac{\partial in_k}{w_{j,k}} = -2 \Delta_k \frac{\partial}{\partial w_{i,j}}\left(\sum_j w_{j,k} a_j \right) \\
+        &= -2 \Delta_k w_{j,k} \frac{\partial a_j}{\partial w_{i,j}} = -2 \Delta_k w_{j,k} \frac{\partial g(in_j)}{\partial w_{i,j}} \\
+        &= -2 \Delta_k w_{j,k} g'(in_j) \frac{\partial in_j}{\partial w_{i,j}} = -2 \Delta_k w_{j,k} g'(in_j) \frac{\partial}{\partial w_{i,j}} \left(\sum_{i} w_{i,j} a_j\right)\\
+        &= -2 \Delta_k w_{j,k} g'(in_j) a_i = -a_i \Delta_j
+    \end{aligned}
+\end{equation}
+Il termine $\Delta_k$ appare durante il processo di derivazione della perdita  del neurone $j$, in questo senso l'errore si \textit{propaga} dallo strato finale a risalire fino al primo strato nascosto.
+
+In entrambi i casi è stata utilizzata una regola di derivazione che prende il nome di \textit{regola della catena}: regola di derivazione che permette di calcolare la derivata di una funzione composta da due funzioni derivabili.
+
+Dato $x \in \mathbb{R}$, e $f$ e $g$ funzioni definite come $\mathbb{R} \rightarrow \mathbb{R}$ suppongo che $y = g(x)$ e $z = f(g(x)) = f(y)$. La regola della catena dice che:
+\[\frac{dz}{dx} = \frac{dz}{dy} \frac{dy}{dx}\]
+Posso generalizzare questo risultato anche a casi non scalari: dati $\boldsymbol{x \in \mathbb{R}^m}$, $\boldsymbol{y} \in \mathbb{R}^n$ e due funzioni $g: \mathbb{R}^m \rightarrow \mathbb{R}^n$ e $f: \mathbb{R}^n \rightarrow \mathbb{R}$, se $\boldsymbol{y} = g(\boldsymbol{x})$ e $z = f(\boldsymbol{y})$ allora
+\[\frac{\partial z}{\partial x_i} = \sum_j \frac{\partial z}{\partial y_j} \frac{\partial y_j}{\partial x_i}\]
+In notazione vettoriale:
+\[\nabla_{\boldsymbol{x}} z = \left(\frac{\partial \boldsymbol{y}}{\partial \boldsymbol{x}}\right)^T \nabla_{\boldsymbol{y}} z\]
+
+Applicando la regola appena descritta in modo ricorsivo posso calcolare i gradienti dei nodi di output della rete, che andrò poi a sfruttare per aggiornare i pesi. 
+
+Noto infine come nelle derivazioni mostrate ho ragionato su un solo elemento del gradiente della funzione di perdita, nel caso di funzioni di perdita additive però il calcolo totale del gradiente si rivela piuttosto semplice:
+\[\frac{\partial}{\partial w} Loss(\boldsymbol{w}) = \frac{\partial}{\partial w} (\boldsymbol{y} - h(\boldsymbol{w}))^2 = \frac{\partial}{\partial w} \sum_k (y_k - a_k) ^ 2 = \sum_k \frac{\partial}{\partial w} (y_k - a_k) ^ 2\]
+Abbiamo quindi ricavato formalmente come il valore $\Delta_j$ prima ottenuto intuitivamente:
+\[\frac{\partial}{\partial w} Loss(\boldsymbol{w}) = \sum_k \left(-a_i g'(in_j) w_{j,k} \Delta_k \right) = -a_i g'(in_j) \sum_k w_{j,k} \Delta_k = -a_i \Delta_j \]
+
+\end{document}

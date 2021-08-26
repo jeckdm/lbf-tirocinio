@@ -13,6 +13,7 @@
 \usepackage{subcaption}
 \usepackage[export]{adjustbox}
 \usepackage{float}
+\usepackage{wrapfig}
 \graphicspath{immagini/}
 
 % Bibliografia
@@ -25,12 +26,17 @@
 \usepackage{amsfonts}
 \usepackage{bm}
 \usepackage{mathtools}
+\usepackage{nccmath}
 \newtheorem{dfn}{Definizione}[chapter]
 
 % Spacing paragrafi
 \usepackage{parskip}
 
-% Enviroment
+% Pseudocodice
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
 
 \begin{document}
 
@@ -48,9 +54,13 @@
 \section{Classificazione e regressione}
 \subfile{capitoli/4_ApprendimentoAutomatico/4_1_Classificazione_Regressione.tex}
 \section{Reti neurali profonde} % Introduzione sugli aspetti più importanti del deep learning (Quali?) + focus su Reti FF e Reti Ricorrenti
-\subfile{capitoli/4_ApprendimentoAutomatico/4_2_RetiProfonde.tex}
+\subfile{capitoli/4_ApprendimentoAutomatico/4_2_0_RetiProfonde.tex}
 \subsection{Percettrone multistrato}
+\subfile{capitoli/4_ApprendimentoAutomatico/4_2_1_PercettroneMultiStrato.tex}
 \subsection{Reti Neurali Ricorrenti}
+\subfile{capitoli/4_ApprendimentoAutomatico/4_2_2_RetiRicorrenti.tex}
+\subsection{Overfitting e Underfitting}
+\subfile{capitoli/4_ApprendimentoAutomatico/4_2_3_SceltaIperparametri.tex}
 
 \chapter{Filtri di Bloom appresi}
     \section{Learned Bloom Filters (LBF)}
