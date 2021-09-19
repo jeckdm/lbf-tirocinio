@@ -1,0 +1,320 @@
+\documentclass[4apaper,11pt]{report}
+\usepackage[italian]{babel}
+
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\begin{document}
+    \subsubsection{FFNN (8, 0.001) (Binaria)}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 1.002E-05 & 1.000E-05 & 1.001E-05 & 9.956E-06 \\
+        &0.2& 9.658E-06 & 9.988E-06 & 9.963E-06 & 9.884E-06 \\
+        &0.3& 1.021E-05 & 1.008E-05 & 1.014E-05 & 1.012E-05 \\
+        &0.4& 1.021E-05 & 1.011E-05 & 1.007E-05 & 1.001E-05 \\
+        &0.5& 1.007E-05 & 1.013E-05 & 1.002E-05 & 1.001E-05 \\
+        &0.6& 1.008E-05 & 1.003E-05 & 9.976E-06 & 9.916E-06 \\
+        &0.7& 1.005E-05 & 1.009E-05 & 1.006E-05 & 1.002E-05 \\
+        &0.8& 1.010E-05 & 1.003E-05 & 9.946E-06 & 1.001E-05 \\
+        &0.9& 1.009E-05 & 1.001E-05 & 9.955E-06 & 1.006E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 9.787E-06 & 1.225E-05 & 1.222E-05 & 1.232E-05 \\
+        &2.0 & 9.535E-06 & 1.002E-05 & 1.027E-05 & 1.051E-05 \\
+        &3.0 & 9.371E-06 & 9.756E-06 & 9.879E-06 & 9.929E-06 \\
+        &4.0 & 9.354E-06 & 9.576E-06 & 9.669E-06 & 9.668E-06 \\
+        &5.0 & 9.267E-06 & 9.442E-06 & 9.440E-06 & 9.496E-06 \\
+        &6.0 & 9.231E-06 & 9.335E-06 & 9.353E-06 & 9.378E-06 \\
+        &7.0 & 9.174E-06 & 9.368E-06 & 9.258E-06 & 9.317E-06 \\
+        &8.0 & 9.151E-06 & 9.332E-06 & 9.282E-06 & 9.414E-06 \\
+        &9.0 & 9.111E-06 & 9.182E-06 & 9.259E-06 & 9.238E-06 \\
+        &10. & 9.079E-06 & 9.214E-06 & 9.177E-06 & 9.202E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni)}
+    \end{table}
+
+    \subsubsection{FFNN (10, 0.001) (Binaria)}
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 9.558E-06 & 9.074E-06 & 9.070E-06 & 9.060E-06 \\
+        &0.2& 9.133E-06 & 9.052E-06 & 9.010E-06 & 8.985E-06 \\
+        &0.3& 9.093E-06 & 9.100E-06 & 9.090E-06 & 9.110E-06 \\
+        &0.4& 9.128E-06 & 9.107E-06 & 9.085E-06 & 9.104E-06 \\
+        &0.5& 9.063E-06 & 9.097E-06 & 9.065E-06 & 9.053E-06 \\
+        &0.6& 9.170E-06 & 9.067E-06 & 9.046E-06 & 8.974E-06 \\
+        &0.7& 9.107E-06 & 9.115E-06 & 9.090E-06 & 9.106E-06 \\
+        &0.8& 9.075E-06 & 9.065E-06 & 9.057E-06 & 8.972E-06 \\
+        &0.9& 9.114E-06 & 9.093E-06 & 9.049E-06 & 9.018E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 9.020E-06 & 1.135E-05 & 1.126E-05 & 1.129E-05 \\
+        &2.0 & 8.746E-06 & 9.281E-06 & 9.471E-06 & 9.597E-06 \\
+        &3.0 & 8.541E-06 & 9.003E-06 & 9.085E-06 & 9.124E-06 \\
+        &4.0 & 8.518E-06 & 8.802E-06 & 8.896E-06 & 8.931E-06 \\
+        &5.0 & 8.502E-06 & 8.666E-06 & 8.681E-06 & 8.729E-06 \\
+        &6.0 & 8.479E-06 & 8.545E-06 & 8.589E-06 & 8.596E-06 \\
+        &7.0 & 8.440E-06 & 8.565E-06 & 8.484E-06 & 8.549E-06 \\
+        &8.0 & 8.369E-06 & 8.513E-06 & 8.550E-06 & 8.545E-06 \\
+        &9.0 & 8.364E-06 & 8.455E-06 & 8.489E-06 & 8.473E-06 \\
+        &10. & 8.326E-06 & 8.412E-06 & 8.464E-06 & 8.435E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni).}
+    \end{table}
+
+    \subsubsection{FFNN (20, 0.001) }
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 9.158E-06 & 8.877E-06 & 8.823E-06 & 8.788E-06 \\
+        &0.2& 8.864E-06 & 8.887E-06 & 8.797E-06 & 8.770E-06 \\
+        &0.3& 8.895E-06 & 8.875E-06 & 8.891E-06 & 8.863E-06 \\
+        &0.4& 8.879E-06 & 8.888E-06 & 8.907E-06 & 8.881E-06 \\
+        &0.5& 8.843E-06 & 8.900E-06 & 8.887E-06 & 8.790E-06 \\
+        &0.6& 8.901E-06 & 8.814E-06 & 8.774E-06 & 8.824E-06 \\
+        &0.7& 8.902E-06 & 8.900E-06 & 8.896E-06 & 8.858E-06 \\
+        &0.8& 8.951E-06 & 8.861E-06 & 8.812E-06 & 8.786E-06 \\
+        &0.9& 8.964E-06 & 8.841E-06 & 8.855E-06 & 8.843E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 9.127E-06 & 1.117E-05 & 1.108E-05 & 1.109E-05 \\
+        &2.0 & 8.653E-06 & 9.103E-06 & 9.214E-06 & 9.381E-06 \\
+        &3.0 & 8.487E-06 & 8.818E-06 & 8.892E-06 & 8.941E-06 \\
+        &4.0 & 8.333E-06 & 8.553E-06 & 8.619E-06 & 8.696E-06 \\
+        &5.0 & 8.345E-06 & 8.435E-06 & 8.505E-06 & 8.503E-06 \\
+        &6.0 & 8.292E-06 & 8.357E-06 & 8.402E-06 & 8.385E-06 \\
+        &7.0 & 8.227E-06 & 8.257E-06 & 8.347E-06 & 8.308E-06 \\
+        &8.0 & 8.211E-06 & 8.306E-06 & 8.282E-06 & 8.317E-06 \\
+        &9.0 & 8.136E-06 & 8.250E-06 & 8.288E-06 & 8.260E-06 \\
+        &10. & 8.085E-06 & 8.189E-06 & 8.258E-06 & 8.203E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni).}
+    \end{table}
+
+    \subsubsection{FFNN (30, 0.001) }
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 8.931E-06 & 8.872E-06 & 8.859E-06 & 8.841E-06 \\
+        &0.2& 8.896E-06 & 8.869E-06 & 8.826E-06 & 8.764E-06 \\
+        &0.3& 8.953E-06 & 8.919E-06 & 8.947E-06 & 8.930E-06 \\
+        &0.4& 8.908E-06 & 8.925E-06 & 8.909E-06 & 8.913E-06 \\
+        &0.5& 8.848E-06 & 8.926E-06 & 8.871E-06 & 8.874E-06 \\
+        &0.6& 8.979E-06 & 8.869E-06 & 8.800E-06 & 8.853E-06 \\
+        &0.7& 8.933E-06 & 8.930E-06 & 8.916E-06 & 8.916E-06 \\
+        &0.8& 8.880E-06 & 8.882E-06 & 8.868E-06 & 8.805E-06 \\
+        &0.9& 8.982E-06 & 8.875E-06 & 8.873E-06 & 8.804E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 9.278E-06 & 1.111E-05 & 1.113E-05 & 1.113E-05 \\
+        &2.0 & 8.760E-06 & 9.152E-06 & 9.325E-06 & 9.426E-06 \\
+        &3.0 & 8.555E-06 & 8.840E-06 & 8.874E-06 & 8.929E-06 \\
+        &4.0 & 8.383E-06 & 8.554E-06 & 8.673E-06 & 8.654E-06 \\
+        &5.0 & 8.295E-06 & 8.417E-06 & 8.521E-06 & 8.517E-06 \\
+        &6.0 & 8.271E-06 & 8.345E-06 & 8.356E-06 & 8.374E-06 \\
+        &7.0 & 8.202E-06 & 8.272E-06 & 8.297E-06 & 8.261E-06 \\
+        &8.0 & 8.185E-06 & 8.300E-06 & 8.323E-06 & 8.297E-06 \\
+        &9.0 & 8.150E-06 & 8.264E-06 & 8.256E-06 & 8.215E-06 \\
+        &10. & 8.135E-06 & 8.171E-06 & 8.231E-06 & 8.127E-06 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni).}
+    \end{table}
+
+    \subsubsection{RNN 16}
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 4.582E-05 & 4.549E-05 & 4.545E-05 & 4.547E-05 \\
+        &0.2& 4.557E-05 & 4.545E-05 & 4.540E-05 & 4.546E-05 \\
+        &0.3& 4.554E-05 & 4.555E-05 & 4.556E-05 & 4.564E-05 \\
+        &0.4& 4.554E-05 & 4.556E-05 & 4.551E-05 & 4.547E-05 \\
+        &0.5& 4.546E-05 & 4.550E-05 & 4.553E-05 & 4.550E-05 \\
+        &0.6& 4.551E-05 & 4.547E-05 & 4.548E-05 & 4.542E-05 \\
+        &0.7& 4.548E-05 & 4.555E-05 & 4.552E-05 & 4.547E-05 \\
+        &0.8& 4.557E-05 & 4.551E-05 & 4.544E-05 & 4.544E-05 \\
+        &0.9& 4.555E-05 & 4.545E-05 & 4.555E-05 & 4.547E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 4.704E-05 & 4.634E-05 & 4.685E-05 & 4.876E-05 \\
+        &2.0 & 4.570E-05 & 4.606E-05 & 4.635E-05 & 4.667E-05 \\
+        &3.0 & 4.555E-05 & 4.585E-05 & 4.608E-05 & 4.628E-05 \\
+        &4.0 & 4.546E-05 & 4.577E-05 & 4.593E-05 & 4.605E-05 \\
+        &5.0 & 4.553E-05 & 4.566E-05 & 4.577E-05 & 4.584E-05 \\
+        &6.0 & 4.553E-05 & 4.568E-05 & 4.565E-05 & 4.577E-05 \\
+        &7.0 & 4.544E-05 & 4.566E-05 & 4.571E-05 & 4.566E-05 \\
+        &8.0 & 4.547E-05 & 4.562E-05 & 4.564E-05 & 4.572E-05 \\
+        &9.0 & 4.543E-05 & 4.556E-05 & 4.563E-05 & 4.565E-05 \\
+        &10. & 4.542E-05 & 4.552E-05 & 4.555E-05 & 4.555E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni).}
+    \end{table}
+
+    \subsubsection{RNN 8}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 2.205E-05 & 2.180E-05 & 2.175E-05 & 2.173E-05 \\
+        &0.2& 2.188E-05 & 2.173E-05 & 2.174E-05 & 2.174E-05 \\
+        &0.3& 2.181E-05 & 2.184E-05 & 2.185E-05 & 2.182E-05 \\
+        &0.4& 2.183E-05 & 2.179E-05 & 2.183E-05 & 2.185E-05 \\
+        &0.5& 2.179E-05 & 2.177E-05 & 2.175E-05 & 2.183E-05 \\
+        &0.6& 2.184E-05 & 2.173E-05 & 2.178E-05 & 2.173E-05 \\
+        &0.7& 2.180E-05 & 2.180E-05 & 2.181E-05 & 2.178E-05 \\
+        &0.8& 2.183E-05 & 2.176E-05 & 2.175E-05 & 2.171E-05 \\
+        &0.9& 2.183E-05 & 2.177E-05 & 2.177E-05 & 2.176E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} &  &   0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 2.006E-05 & 2.057E-05 & 2.112E-05 & 2.304E-05 \\
+        &2.0 & 1.994E-05 & 2.032E-05 & 2.062E-05 & 2.089E-05 \\
+        &3.0 & 1.982E-05 & 2.015E-05 & 2.040E-05 & 2.058E-05 \\
+        &4.0 & 1.980E-05 & 2.008E-05 & 2.024E-05 & 2.030E-05 \\
+        &5.0 & 1.980E-05 & 1.999E-05 & 2.008E-05 & 2.016E-05 \\
+        &6.0 & 1.974E-05 & 2.000E-05 & 2.003E-05 & 2.003E-05 \\
+        &7.0 & 1.978E-05 & 1.999E-05 & 1.997E-05 & 2.000E-05 \\
+        &8.0 & 1.972E-05 & 1.991E-05 & 1.997E-05 & 1.995E-05 \\
+        &9.0 & 1.973E-05 & 1.988E-05 & 1.993E-05 & 1.995E-05 \\
+        &10. & 1.972E-05 & 1.981E-05 & 1.985E-05 & 1.987E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni).}
+    \end{table}
+
+    \subsubsection{RNN 4}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{9}{*}{\textbf{FPR-Ratio}} & 0.1& 1.535E-05 & 1.518E-05 & 1.518E-05 & 1.515E-05 \\
+        &0.2& 1.528E-05 & 1.518E-05 & 1.513E-05 & 1.511E-05 \\
+        &0.3& 1.523E-05 & 1.522E-05 & 1.526E-05 & 1.526E-05 \\
+        &0.4& 1.522E-05 & 1.523E-05 & 1.519E-05 & 1.520E-05 \\
+        &0.5& 1.525E-05 & 1.520E-05 & 1.519E-05 & 1.516E-05 \\
+        &0.6& 1.526E-05 & 1.517E-05 & 1.517E-05 & 1.514E-05 \\
+        &0.7& 1.519E-05 & 1.524E-05 & 1.522E-05 & 1.515E-05 \\
+        &0.8& 1.521E-05 & 1.516E-05 & 1.517E-05 & 1.519E-05 \\
+        &0.9& 1.524E-05 & 1.519E-05 & 1.517E-05 & 1.515E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su LBF(calcolati su 5 iterazioni).}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{llrrrr}
+        \toprule
+        {} & & \multicolumn{4}{c}{\textbf{FPR}}\\
+        {} & &    0.001 &     0.005 &     0.010 &     0.020 \\
+        \midrule
+        \multirow{10}{*}{\textbf{FPR-Ratio}} &1.0 & 1.498E-05 & 1.517E-05 & 1.553E-05 & 1.612E-05 \\
+        &2.0 & 1.470E-05 & 1.497E-05 & 1.528E-05 & 1.567E-05 \\
+        &3.0 & 1.466E-05 & 1.485E-05 & 1.514E-05 & 1.537E-05 \\
+        &4.0 & 1.461E-05 & 1.486E-05 & 1.504E-05 & 1.517E-05 \\
+        &5.0 & 1.457E-05 & 1.488E-05 & 1.492E-05 & 1.502E-05 \\
+        &6.0 & 1.454E-05 & 1.480E-05 & 1.484E-05 & 1.491E-05 \\
+        &7.0 & 1.455E-05 & 1.475E-05 & 1.488E-05 & 1.486E-05 \\
+        &8.0 & 1.456E-05 & 1.472E-05 & 1.487E-05 & 1.487E-05 \\
+        &9.0 & 1.454E-05 & 1.464E-05 & 1.475E-05 & 1.481E-05 \\
+        &10. & 1.454E-05 & 1.467E-05 & 1.471E-05 & 1.471E-05 \\
+        \bottomrule
+        \end{tabular}
+        \caption{Tempi medi di accesso per elemento su SLBF (calcolati su 5 iterazioni).}
+
+    \end{table}
+\end{document}

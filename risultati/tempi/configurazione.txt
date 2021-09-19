@@ -1,0 +1,4 @@
+Processore e RAM del PC su cui sono stati presi i tempi riportati:
+
+Processore: AMD Ryzen 3700x
+RAM: 16gb
