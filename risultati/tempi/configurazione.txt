@@ -4,3 +4,4 @@ Processore: AMD Ryzen 3700x
 RAM: 32gb
 
 Per il momento nelle tabelle ho riportato i tempi medi per ogni fpr ed fpr-ratio, se necessario posso modificarle riportando solamente i tempi migliori per ogni classificatore.
+Sia per FFNN che RNN è stato utilizzato solamente il processore.
