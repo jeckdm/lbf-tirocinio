@@ -1,0 +1,139 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+    \subsubsection{Proporzione training-testing}
+    Il primo esperimento viene effettuato sulle tre tipologie di GRU descritte, ed il fine è quello di esaminare le prestazioni del classificatore al variare della proporzione training set, testing set. 
+    
+    Questo esperimento è utile ad evidenziare eventuali bias negativi dovuti ad un sottodimensionamento dell'insieme d'addestramento; intuitivamente, essendo il dataset utilizzato relativamente grande, non ci aspettiamo cambiamenti di performance significative nelle proporzioni testate: il training set dovrebbe avere in ogni caso una grandezza sufficiente per permettere al modello di apprendere il problema al meglio delle sue potenzialità.
+
+    Vengono testate tre proporzioni training-testing: $\frac{1}{2}$ $\frac{1}{2}$, $\frac{2}{3}$ $\frac{1}{3}$ e $\frac{4}{5}$ $\frac{1}{5}$, che corrispondono rispettivamente ad una 2 fold, 3 fold e 5 fold cross validation.
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-score }      &      $0.720 \pm 0.038$ & $0.657 \pm 0.008$ & $0.563 \pm 0.136$\\
+            \textbf{Recupero   }    &      $0.720 \pm 0.096$ & $0.647 \pm 0.012$ & $0.485 \pm 0.183$\\
+            \textbf{Precisione}     &      $0.731 \pm 0.022$ & $0.668 \pm 0.002$ & $0.727 \pm 0.006$\\
+            \textbf{Accuratezza }   &      $0.932 \pm 0.004$ & $0.917 \pm 0.001$ & $0.914 \pm 0.015$\\
+            \bottomrule
+        \end{tabular}
+        \caption{Risultati medi di una 2 fold cross validation, calcolati sulla classe dei phishing.}
+        \label{tab:2foldCV}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-score }      &      $0.694 \pm 0.029$ & $0.659 \pm 0.061$ & $0.592 \pm 0.040$\\
+            \textbf{Recupero   }    &      $0.659 \pm 0.077$ & $0.625 \pm 0.088$ & $0.545 \pm 0.079$\\
+            \textbf{Precisione}     &      $0.744 \pm 0.044$ & $0.702 \pm 0.025$ & $0.660 \pm 0.028$\\
+            \textbf{Accuratezza }   &      $0.929 \pm 0.004$ & $0.921 \pm 0.009$ & $0.908 \pm 0.001$\\
+            \bottomrule
+        \end{tabular}
+        \caption{Risultati medi di una 3 fold cross validation, calcolati sulla classe dei phishing.}
+        \label{tab:3foldCV}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-score }      &      $0.745 \pm 0.011$ & $0.666 \pm 0.064$ & $0.569 \pm 0.051$\\
+            \textbf{Recupero   }    &      $0.791 \pm 0.034$ & $0.655 \pm 0.114$ & $0.526 \pm 0.103$\\
+            \textbf{Precisione}     &      $0.707 \pm 0.045$ & $0.689 \pm 0.011$ & $0.641 \pm 0.055$\\
+            \textbf{Accuratezza }      &      $0.933 \pm 0.006$ & $0.921 \pm 0.009$ & $0.903 \pm 0.005$\\
+            \bottomrule
+        \end{tabular}
+        \caption{Risultati medi di una 5 fold cross validation, calcolati sulla classe dei phishing.}
+        \label{tab:5foldCV}
+    \end{table}
+
+    Le tabelle \ref{tab:2foldCV}, \ref{tab:3foldCV}, \ref{tab:5foldCV} riportano i risultati al variare delle proporzioni. Come ci aspettavamo, le prestazioni non sembrano essere influenzate dalla variazione della grandezza del training set: la tabella \ref{tab:2foldCV}, ad esempio, presenta un F1-score sensibilmente maggiore rispetto alla \ref{tab:3foldCV} per la GRU a 16 dimensioni, mentre nell'ultima tabella la stessa metrica questo valore risale.
+
+    Dato che le prestazioni non sembrano essere influenzate dalla grandezza del training set, la scelta è di mantenere una proporzione $\frac{2}{3}$ $\frac{1}{3}$.
+
+    \subsubsection{Sbilanciamento del dataset}
+    Come riportato nel paragrafo \ref{sec:dataset}, il nostro dataset contiene un numero significativamente superiore di esempi etichettati come URL legittimi, nello specifico per ogni URL di phishing sono presenti circa sette URL legittimi.
+
+    L'idea di questo esperimento è quindi quella di verificare se una variazione della proporzione legittimi:phishing possa portare ad un aumento delle performance del classificatore. Queste variazione viene attuata eliminando  casualmente URL legittimi, fino ad ottenere la proporzione desiderata, questa tecnica prende il nome di random undersampling. Anche in questo caso l'esperimento viene effettuato solamente sulle tre GRU.
+
+    Le tabelle \ref{tab:5a1Undersampling}, \ref{tab:3a1Undersampling}, \ref{tab:2a1Undersampling} e \ref{tab:1a1Undersampling} mostrano i risultati di un 5-fold cross validation sulle proporzioni riportate.
+
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-Score }      &      $0.733 \pm 0.010$ & $0.751 \pm 0.005$ & $0.677 \pm 0.035$\\
+            \textbf{Recupero   }    &      $0.834 \pm 0.026$ & $0.790 \pm 0.015$ & $0.711 \pm 0.063$\\
+            \textbf{Precisione}     &      $0.654 \pm 0.011$ & $0.717 \pm 0.017$ & $0.649 \pm 0.046$\\
+            \textbf{Accuratezza }   &      $0.925 \pm 0.003$ & $0.935 \pm 0.002$ & $0.916 \pm 0.009$\\
+            \bottomrule
+        \end{tabular}
+        \caption{Proporzioni legittimi phishing 5:1. Risultati medi di una 5 fold cross validation, calcolati sulla classe dei phishing.}
+        \label{tab:5a1Undersampling}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-Score }      &      $0.734 \pm 0.012$ & $0.703 \pm 0.037$ & $0.706 \pm 0.027$\\
+            \textbf{Recupero   }    &      $0.872 \pm 0.004$ & $0.902 \pm 0.029$ & $0.884 \pm 0.022$\\
+            \textbf{Precisione}     &      $0.633 \pm 0.019$ & $0.580 \pm 0.059$ & $0.590 \pm 0.047$\\
+            \textbf{Accuratezza }   &      $0.922 \pm 0.005$ & $0.905 \pm 0.019$ & $0.908 \pm 0.013$\\
+            \bottomrule
+        \end{tabular}     
+        \caption{Proporzioni legittimi phishing 3:1. Risultati medi di una 5 fold cross validation, calcolati sulla classe dei phishing.}   
+        \label{tab:3a1Undersampling}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-Score }      &      $0.746 \pm 0.021$ & $0.698 \pm 0.018$ & $0.658 \pm 0.019$\\
+            \textbf{Recupero   }    &      $0.911 \pm 0.010$ & $0.906 \pm 0.014$ & $0.928 \pm 0.004$\\
+            \textbf{Precisione}     &      $0.632 \pm 0.032$ & $0.568 \pm 0.030$ & $0.510 \pm 0.024$\\
+            \textbf{Accuratezza }   &      $0.923 \pm 0.009$ & $0.903 \pm 0.010$ & $0.880 \pm 0.011$\\
+            \bottomrule
+        \end{tabular}     
+        \caption{Proporzioni legittimi phishing 2:1. Risultati medi di una 5 fold cross validation, calcolati sulla classe dei phishing.} 
+        \label{tab:2a1Undersampling}  
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \midrule
+            \textbf{F1-Score }      &      $0.612 \pm 0.003$ & $0.632 \pm 0.010$ & $0.642 \pm 0.043$\\
+            \textbf{Recupero   }    &      $0.986 \pm 0.004$ & $0.972 \pm 0.005$ & $0.957 \pm 0.021$\\
+            \textbf{Precisione}     &      $0.444 \pm 0.004$ & $0.468 \pm 0.013$ & $0.486 \pm 0.053$\\
+            \textbf{Accuratezza }   &      $0.846 \pm 0.002$ & $0.860 \pm 0.007$ & $0.866 \pm 0.028$\\
+            \bottomrule
+        \end{tabular}     
+        \caption{Proporzioni legittimi phishing 1:1. Risultati medi di una 5 fold cross validation, calcolati sulla classe dei phishing.}  
+        \label{tab:1a1Undersampling} 
+    \end{table}
+
+
+    
+\end{document}

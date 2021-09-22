@@ -1,8 +1,8 @@
-\documentclass{report}
+\documentclass[4apaper,11pt]{report}
+\usepackage[italian]{babel}
 
 % Margini
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
 \usepackage[titletoc,title]{appendix}
 
 % Subfiles
@@ -10,10 +10,13 @@
 
 % Immagini
 \usepackage{graphicx}
-\usepackage{subcaption}
+\usepackage[labelformat=simple]{subcaption}
 \usepackage[export]{adjustbox}
 \usepackage{float}
 \usepackage{wrapfig}
+\usepackage{booktabs}
+\usepackage{multirow}
+\renewcommand\thesubfigure{(\alph{subfigure})}
 \graphicspath{immagini/}
 
 % Bibliografia
@@ -48,7 +51,8 @@
 \section{Definizioni di Base}
 
 \chapter{Filtri di Bloom}
-
+\label{chap:FiltriBloom}
+\subfile{capitoli/3_FiltriBloom/3_FiltriBloom.tex}
 \chapter{Apprendimento automatico}
 \subfile{capitoli/4_ApprendimentoAutomatico/4_0_ApprendimentoAutomatico}
 \section{Classificazione e regressione}
@@ -58,52 +62,84 @@
 \subsection{Percettrone multistrato}
 \subfile{capitoli/4_ApprendimentoAutomatico/4_2_1_PercettroneMultiStrato.tex}
 \subsection{Reti Neurali Ricorrenti}
+\label{sec:retiRicorrenti}
 \subfile{capitoli/4_ApprendimentoAutomatico/4_2_2_RetiRicorrenti.tex}
 \subsection{Overfitting e Underfitting}
+\label{sec:overfitting}
 \subfile{capitoli/4_ApprendimentoAutomatico/4_2_3_SceltaIperparametri.tex}
 
 \chapter{Filtri di Bloom appresi}
-    \section{Learned Bloom Filters (LBF)}
-    \section{Sandwitched Learned Bloom Filters (SLBF)}
+\label{chap:filtriAppresi}
+\subfile{capitoli/5_LearnedFilters/5_0_Introduzione.tex}
+\section{Learned Bloom Filters (LBF)}
+\subfile{capitoli/5_LearnedFilters/5_1_0_LBF.tex}
+\subsection{Probabilità di falsi positivi}
+\label{sec:falseProbLBF}
+\subfile{capitoli/5_LearnedFilters/5_1_1_LBFFalsiPositivi.tex}
+\subsection{Dimensioni della struttura}
+\subfile{capitoli/5_LearnedFilters/5_1_2_LBFGrandezza.tex}
+\section{Sandwitched Learned Bloom Filters (SLBF)}
+\subfile{capitoli/5_LearnedFilters/5_2_0_SLBF.tex}
+\subsection{Probabilità di falsi positivi}
+\subfile{capitoli/5_LearnedFilters/5_2_1_SLBFFalsiPositivi.tex}
+\subsection{Dimensioni della struttura}
+\subfile{capitoli/5_LearnedFilters/5_2_2_SLBFGrandezza.tex}
 
 % Titolo da cambiare
 \chapter{Esperimenti}
+\label{chap:Esperimenti}
+\subfile{capitoli/6_Esperimenti/6_0_Introduzione.tex}
 
 % Spiego scopo degli esperimenti: rapporto tra classificatori e filtri, capire se è veramente necessario una rete complessa come la RNN o se una rete FFNN è sufficiente per migliorare le prestazioni
-\section{Valutazione del ruolo dei classificatori nei filtri di Bloom appresi}
 
 % Illustro i dataset utilizzati, eventualmente confrontando con quelli utilizzati nell'articolo ed eventualmente spiego la suddivisione del dataset usata per il testing dei filtri spiegandone la motivazione
 \section{Dati}
+\label{sec:dataset}
+\subfile{capitoli/6_Esperimenti/6_2_Dati.tex}
 
 % Spiegazione teorica delle tecinche utilizzate per l'analisi delle prestazioni dei classificatori e l'ottimizzazione dei parametri
-\section{Metriche di valutazione}
-\subsection{Convalida incrociata} % Nome?
+\section{Tecniche di valutazione e selezione dei modelli}
+\label{sec:metrichevalutazione}
+\subfile{capitoli/6_Esperimenti/6_3_0_Introduzione.tex}
+\subsection{Metriche di valutazione}
+\subfile{capitoli/6_Esperimenti/6_3_1_MetricheValutazione.tex}
+\subsection{Valutazione del modello} % Nome?
+\subfile{capitoli/6_Esperimenti/6_3_2_ValutazioneModello.tex}
 \subsection{Selezione del modello} % Gridsearch e nested CV
+\subfile{capitoli/6_Esperimenti/6_3_3_SelezioneModello.tex}
 
 % Illustro la struttura RNN e FFNN utilizzate
 \section{Struttura dei classificatori utilizzati}
+\subfile{capitoli/6_Esperimenti/6_4_0_Introduzione.tex}
 \subsection{Percettrone multistrato}
+\label{sec:strutturaPercettrone}
+\subfile{capitoli/6_Esperimenti/6_4_1_StrutturaPercettrone.tex}
 \subsection{Rete ricorrente}
+\label{sec:strutturaRNN}
+\subfile{capitoli/6_Esperimenti/6_4_2_StrutturaGRU.tex}
 
 
 % Spiegazione delle codifiche utilizzate, con eventuale spiegazione del perchè non posso utilizzare per entrambe le reti la stessa codifica
 % + eventuale codifica binaria ancora da testare
 % Spiegazione delle tecniche utilizzate per la serializzazione dei modelli ed il perchè della scelte: pickle vs funzioni di libreria, menziono inoltre le differenze ottenute sopratutto utilizzando pytorch nelle dimensioni del modello prima e dopo l'addestramento
 \section{Implementazione}
+\subfile{capitoli/6_Esperimenti/6_5_Implementazione.tex}
 
 \chapter{Risultati}
 
 % Esperimenti al fine di valutare la bontà della rete ricorrente: voglio ottimizzare la rete ricorrente sul mio dataset e poi valutare le prestazioni sui filtri di bloom
 % Esperimenti per valutare prestazioni della rete feedforward sul dataset + ottimizzazione dei parametri e del modello tramite funzioni di keras
 \section{Valutazione dei classificatori}
+\label{sec:valutazioneClassificatori}
+\subfile{capitoli/7_Risultati/7_1_ValutazioneClassificatori.tex}
 
 
 % Confronto risultati riguardanti le prestazioni dei classificatori e le relative differenze nelle prestazioni dei filtri appresi 
 % Traggo le conclusioni degli esperimenti: è necessario utilizzare una rete complessa come quella ricorrente o posso utilizzare anche reti più "semplici" come una feed forward?
 \section{Valutazione sull'impatto dei classificatori nei filtri di Bloom appresi}
+\label{sec:confrontoFiltri}
 
 \chapter{Conclusioni}
-
 
 \printbibliography
 

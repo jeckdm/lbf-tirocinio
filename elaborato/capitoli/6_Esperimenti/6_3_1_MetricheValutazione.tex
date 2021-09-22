@@ -1,0 +1,58 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+    Come introdotto nel precedente paragrafo, esistono diverse tecniche per fare model evaluation e model selection. In ognuna di queste tecniche vengono ovviamente utilizzate delle metriche per quantificare la bontà del modello/i su cui si sta lavorando.
+
+    In ognuno dei nostri esperimenti sui modelli le metriche utilizzate sono le stesse, queste vengono brevemente introdotte di seguito, insieme ai relativi vantaggi e svantaggi.
+
+    \subsubsection{Accuratezza}
+    Metrica che quantifica la bontà di un modello tramite il rapporto tra il numero di predizioni corrette ed il numero totale di predizioni. Nel contesto dei nostri esperimenti, in cui trattiamo un problema di classificazione binaria, questa può essere formalmente espressa come: 
+
+    \begin{equation}
+        \mathrm{Accuratezza} = \frac{VP + VN}{VP + VN + FP + FN},
+    \end{equation}
+
+    dove $VP$ e $VN$ rappresentano rispettivamente il numero di `veri positivi' e `veri negativi': esempi etichettati correttamente dal classificatore, viceversa, $FP$ e $FN$ rappresentano i `falsi positivi' ed i `falsi negativi': esempi etichettati in modo errato dal classificatore.
+
+    L'accuratezza, seppur sia una delle metriche più comuni, può spesso fornire una visione della bontà del modello molto diversa da quella reale: per mostrare perché questa affermazione sia vera è utile introdurre un esempio di classificatore con la matrice di confusione\footnote{Matrice che pone sulle righe i valori reali, mentre sulle colonne i valori predetti, ogni elemento $(i,j)$ quantifica il numero di volte in cui il classificatore ha predetto l'etichetta $i$ come $j$.} riportata in tabella \ref{tab:matriceConfusione}.
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{l|ll}
+                            & \textbf{Positivo} & \textbf{Negativo} \\ \hline
+        \textbf{Positivo} & 0                 & 10                 \\
+        \textbf{Negativo} & 0                 & 1000             
+        \end{tabular}
+        \caption{}  
+        \label{tab:matriceConfusione}    
+    \end{table}
+
+    Noto come il classificatore semplicemente etichetti ogni esempio come negativo, di conseguenza non è sicuramente considerabile buono. Calcolando l'accuratezza otteniamo però un valore pari a $1000/1010 \approx 0.99$, che invece sembra indicare un ottimo classificatore. Questa debolezza della metrica risulta più evidente in casi in cui, come in quello dell'esempio (o del nostro dataset, seppur in scala minore), il dataset è sbilanciato.
+
+    \subsubsection{Precisione}
+    Nel contesto della classificazione binaria questa metrica viene calcolata in modo differente per le due etichette presenti: 
+    \begin{flalign}
+        \mathrm{Precisione}_1 &= \frac{VP}{VP + FP} \ \ \text{per i positivi},\\
+        \mathrm{Precisione}_0 &= \frac{VN}{VN + FN} \ \ \text{per i negativi},
+    \end{flalign}
+    intuitivamente questa metrica quantifica, appunto, la precisione del modello nel predire una determinata etichetta. Ad esempio, avere una precisione alta per la classe dei positivi indica che il modello molto probabilmente non sbaglierà quando etichetta un elemento come positivo.
+
+    \subsubsection{Recupero}
+    Nel contesto della classificazione binaria questa metrica viene calcolata in modo differente per le due etichette presenti: :
+    \begin{flalign}
+        \mathrm{Recupero_1} &= \frac{VP}{VP + FN} \ \ \text{per i positivi},\\
+        \mathrm{Recupero_0} &= \frac{VN}{VN + FP} \ \ \text{per i negativi},
+    \end{flalign}
+    intuitivamente questa metrica quantifica la capacità del modello di riconoscere una determinata etichetta. Ad esempio, un recupero alto per i positivi implica un elevato numero di falsi negativi.
+
+    \subsubsection{F1 Score}
+    Metrica che combina precisione e recupero tramite la media armonica di queste due quantità, fornendo quindi un valore che contiene informazioni in entrambi i sensi. Formalmente, può essere espressa come: 
+    \begin{equation}
+        \text{F1-score} = 2\frac{\mathrm{precisione} \cdot \mathrm{recupero}}{\mathrm{precisione} + \mathrm{recupero}},
+    \end{equation}
+    è facile notare che se una tra precisione e recupero equivale a 0, anche l'F1-score sarà 0; al contrario, l'F1-score può assumere valore 1 solo se entrambe le metriche hanno valore 1.
+
+
+\end{document}

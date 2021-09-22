@@ -1,0 +1,25 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+    
+    Una delle problematiche degli LBF deriva proprio dalla sua caratteristica principale, ovvero l'utilizzo di un classificatore: ricordo infatti che nei filtri di Bloom è dimostrabile che in applicazioni reali la probabilità di falsi positivi è molto concentrata attorno al suo valore atteso (equazione \ref{eqn:bloomfpr}), questa proprietà nei filtri appresi può essere garantita solo sotto determinate assunzioni.
+
+    A causa del classificatore infatti il tasso di falsi positivi in un LBF è dipendente dalla distribuzione delle query $\mathcal{Q}$ che gli vengono presentate. Per dimostrare a livello pratico la precedente affermazione è utile riportare l'esempio presentato in \cite{10.5555/3326943.3326986}: supponiamo di avere un insieme universo di elementi compresi tra $[0, 10000)$ e di volere un filtro che salvi 50 elementi estratti casualmente dall'intervallo $[200,300]$ e 50 elementi estratti casualmente dagli intervalli restanti, assumiamo ora che il classificatore $g$, dopo l'addestramento, ritorni un valore $g(x) \approx \frac{1}{2}$ per gli elementi nell'intervallo $[200,300]$, ed un valore vicino a 0 per tutti gli altri; è facile notare che presentando al filtro query con elementi estratti uniformemente dall'intervallo $[200,300]$ la probabilità di ottenere falsi positivi sarà molto più alta rispetto a query in cui gli elementi vengono estratti uniformemente dall'intervallo $[0, 10000)$.
+
+    Nonostante la dipendenza dalla distribuzione dei dati presentati, è comunque possibile definire il tasso di falsi positivi di un LBF: dato un classificatore addestrato $g$, una soglia $\tau$ ed una query di elementi estratti secondo la distribuzione $\mathcal{D}$ dall'insieme $\mathcal{X} - \mathcal{K}$, con $\mathcal{X}$ insieme universo, il tasso di falsi positivi $f$ del filtro appreso è espresso dalla seguente equazione:
+    \begin{equation}
+        f = \underset{x \sim \mathcal{D}}{\mathbb{P}}(g(x) \geq \tau) + (1 - \underset{x \sim \mathcal{D}}{\mathbb{P}}(g(x) \geq \tau))f_b,
+        \label{eqn:LBFFalsiPositivi}
+    \end{equation} 
+    dove $f_b$ rappresenta il tasso di falsi positivi del filtro di backup, tale quantità è una variabile aleatoria, tuttavia, per quanto detto nel capitolo \ref{chap:FiltriBloom} questa risulta nella pratica concentrata attorno al suo valore atteso.
+
+    Infine, supponendo di avere un test set $\mathcal{G}$ tale per cui $\mathcal{G} \cap \mathcal{K} = \emptyset$ ed assumendo che questo abbia una distribuzione equivalente a quella di tutte le query $\mathcal{Q}$ che verranno poi presentate al filtro, è possibile determinare in modo empirico il tasso di falsi positivi della struttura semplicemente come rapporto tra i falsi positivi in $\mathcal{G}$ e la sua cardinalità $|\mathcal{G}|$; viene dimostrato in \cite{10.5555/3326943.3326986} che il tasso empirico di $\mathcal{G}$ calcolato sotto queste assunzioni risulta molto simile al tasso empirico di falsi positivi delle query $\mathcal{Q}$.
+
+    Formalmente, dato un LBF $(g, \tau, B)$, un test set $\mathcal{G}$ e delle query $\mathcal{Q}$ entrambi con elementi estratti secondo la stessa distribuzione $\mathcal{D}$, chiamando $X$ il tasso empirico di falsi positivi di $\mathcal{G}$ ed $Y$ quello di $\mathcal{Q}$, è dimostrabile che vale la seguente relazione per qualsiasi $\epsilon > 0$:
+    \begin{equation}
+        \mathbb{P}(|X - Y| \geq \epsilon) \leq e^{-\Omega(\epsilon^2 \cdot min(|\mathcal{G}|, |\mathcal{Q}|))},
+    \end{equation}
+    questo risultato permette di introdurre una possibile strategia per la scelta della soglia $\tau$: per la relazione appena riportata infatti indipendente dalla scelta di $\tau$ il tasso empirico sarà sempre vicino al suo valore atteso, di conseguenza un possibile approccio consiste semplicemente nel scegliere un insieme finito di possibili valori per $\tau$ e, una volta testati, scegliere quello che fornisce il tradeoff migliore tra spazio della struttura e tasso di falsi positivi.
+\end{document}
