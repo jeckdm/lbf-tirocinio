@@ -9,7 +9,7 @@
     
     ``Data una classe di problemi $T$ ed un metodo di misura delle prestazioni $P$ si dice che un generico programma apprende dall'esperienza accumulata in $T$ se le sue prestazioni, misurate tramite $P$, migliorano all'aumentare dell'esperienza $E$.'' 
 
-    Nel contesto dei nostri esperimenti, ad esempio, il problema $T$ è quello di classificare correttamente, come phishing o legittimi, degli URL forniti in ingresso; il programma migliorerà le proprie prestazioni $P$, misurate come abilità di discernere correttamente URL, grazie all'esperienza  $E$ guadagnata tramite l'osservazione di un elevato numero di URL di entrambe le categorie, imparando poi a generalizzare le caratteristiche principali di entrambe le tipologie di indirizzi e riuscendo infine a classificare correttamente  URL mai osservati in precedenza.
+    Nel contesto dei nostri esperimenti, ad esempio, il problema $T$ è quello di classificare correttamente, come phishing o legittimi, degli URL forniti in ingresso. Il programma migliorerà le proprie prestazioni $P$, misurate come abilità di discernere correttamente URL, grazie all'esperienza  $E$ guadagnata tramite l'osservazione di un elevato numero di URL di entrambe le categorie, imparando poi a generalizzare le caratteristiche principali di entrambe le tipologie di indirizzi e riuscendo infine a classificare correttamente  URL mai osservati in precedenza.
 
     In generale quindi possiamo definire un problema di apprendimento identificando tre proprietà: la classe del problema, la metrica per le prestazioni e la fonte dell'esperienza.
 
@@ -20,11 +20,11 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width =\textwidth]{immagini/4_0/learning_agent.png}
-        \caption{Schema di un learning agent \cite{russel2010}.}
+        \caption{Schema di un learning agent.}
         \label{fig:learning_agent}
     \end{figure}
 
-    Nello specifico, la tipologia di agente utilizzata nell'ambito dell'apprendimento automatico è quella che prende il nome di \textit{learning agent} (Figura \ref{fig:learning_agent}). Agenti di questo tipo possono essere suddivisi in quattro componenti principali, di cui i due più importanti sono il \textit{learning element}, il cui compito è di migliorare le prestazioni dell'agente, e il \textit{performance element}, il cui compito è di scegliere le azioni da compiere sulla base delle percezioni dall'ambiente; il learning element quindi migliora l'agente, sulla base del feedback ricevuto dal componente \textit{critic}, modificando il comportamento del performance element.
+    Nello specifico, la tipologia di agente utilizzata nell'ambito dell'apprendimento automatico è quella che prende il nome di \textit{learning agent} (Figura \ref{fig:learning_agent}). Agenti di questo tipo possono essere suddivisi in quattro componenti principali, di cui i due più importanti sono il componente d'apprendimento, il cui compito è di migliorare le prestazioni dell'agente, e l'elemento esecutivo, il cui compito è di scegliere le azioni da compiere sulla base delle percezioni dall'ambiente. Il componente d'apprendimento quindi migliora l'agente, sulla base del feedback ricevuto dall'elemento critico, modificando il comportamento dell'elemento esecutivo.
 
     Si dice quindi che un agente apprende se le sue performance vanno a migliorare grazie a ripetute interazioni con l'ambiente in cui è inserito.
     È importante notare come il concetto di agente sia applicabile in generale a tutti i campi dell'intelligenza artificiale (\cite{russel2010}), non solo a quello del machine learning, trattato in questo capitolo.
