@@ -15,7 +15,7 @@
     \end{itemize}
     Considerando il classificatore, ogni chiave avrà una probabilità $F_n$ di essere erroneamente etichettata come non-chiave, generando un falso negativo. Viceversa ogni non-chiave avrà una probabilità $F_p$ di essere etichetta come chiave, generando un falso positivo. Definiamo  la grandezza del filtro di backup $n = m \cdot b$, tale filtro dovrà contenere solamente i falsi negativi generati dal classificatore, quindi un totale di $F_n \cdot m$ elementi.
 
-    Fissiamo ora un tasso di falsi positivi $\epsilon$ desiderato ed impongo che il tasso di falsi positivi $f$ della struttura sia minore di tale valore: 
+    Fissiamo ora un tasso di falsi positivi $\epsilon$ desiderato ed imponiamo che il tasso di falsi positivi $f$ della struttura sia minore di tale valore: 
     \[f < \epsilon,\]
     riprendendo l'equazione \ref{eqn:LBFFalsiPositivi} questa può essere riscritta come:
     \begin{equation}
@@ -39,13 +39,4 @@
         \label{eqn:LBFBackupFalsePositive}
     \end{equation}
     Importante notare che affinché l'equazione \ref{eqn:LBFBackupFalsePositive} non generi un tasso negativo è necessario che valga $\epsilon > f_\tau$.
-
-    \subsubsection{Relazione tra grandezza di un LBF e un filtro di Bloom}
-    In \cite{10.5555/3326943.3326986} viene calcolato un limite superiore per il numero di bit per chiave del modello $g$, il limite è il seguente: 
-    \begin{equation}
-        \zeta/m \leq \log_a \left(F_p + (1 - F_p)\alpha^{b/F_n}\right) - b,
-    \end{equation}
-    dove $\zeta$ quantifica il numero di bit a disposizione per il classificatore. Questo limite può essere ricavato ragionando ancora sull'equazione \ref{eqn:LBFFalsiPositivi}: assumendo in questo caso di avere a disposizione un numero fissato di bit $n = m \cdot b$  per il filtro di backup ed un numero fissato di bit $\zeta$ per il classificatore, per ottenere un LBF con un tasso di falsi positivi inferiore rispetto ad un filtro di Bloom classico costruito con lo stesso numero di bit a disposizione $n + \zeta$ dovrà valere (assumendo $k$ ottimo): 
-    \[F_p + (1 - F_p)\alpha^{b/F_n} < \alpha^{b + \zeta/m},\]
-    risolvendo questa disequazione in funzione di $\zeta$, ottengo il limite riportato poco sopra.
 \end{document}

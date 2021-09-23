@@ -8,10 +8,10 @@
     La procedura di convalida incrociata può essere riassunta nei seguenti passaggi: 
     \begin{itemize}
         \item \textsc{passo 1}: il dataset viene suddiviso in $k$ sottoinsiemi, tutti di egual dimensione,
-        \item \textsc{passo 2}: seleziono uno dei $k$ sottoinsiemi, questo verrà utilizzato come test set,
-        \item \textsc{passo 3}: addestro il modello sul training set composto dai $k-1$ sottoinsiemi rimasti,
-        \item \textsc{passo 4}: valuto le prestazioni del modello addestrato sul test set (tramite una o più metriche a scelta),
-        \item \textsc{passo 5}: ricomincio dal passo 2 selezionando un nuovo sottoinsieme $k$ ancora non utilizzato come test test. Il processo terminerà una volta che tutti i sottoinsiemi saranno stati utilizzati come test set in una iterazione. Saranno quindi necessarie un totale di $k$ iterazioni.
+        \item \textsc{passo 2}: viene selezionato uno dei $k$ sottoinsiemi, questo verrà utilizzato come test set,
+        \item \textsc{passo 3}: il modello viene addestrato sul training set composto dai $k-1$ sottoinsiemi rimasti,
+        \item \textsc{passo 4}: le prestazioni del modello addestrato vengono valutate sul test set (tramite una o più metriche a scelta),
+        \item \textsc{passo 5}: si ricomincia dal passo 2 selezionando un nuovo sottoinsieme $k$ ancora non utilizzato come test test. Il processo terminerà una volta che tutti i sottoinsiemi saranno stati utilizzati come test set in una iterazione. Saranno quindi necessarie un totale di $k$ iterazioni.
     \end{itemize}
 
     Al termine della procedura di convalida viene fornita una valutazione delle prestazioni del modello calcolando la media aritmetica dei valori delle metriche calcolati ad ogni iterazione.

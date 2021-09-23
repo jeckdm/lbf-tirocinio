@@ -8,9 +8,9 @@
         n_b^* = m_b \cdot \log_{\alpha}\left(\frac{F_p}{(1-F_p)(\frac{m}{m_b} - 1)}\right),
         \label{eqn:SLBFGrandezzaOttima}
     \end{equation}
-    questa può essere ricavata come segue: assumiamo di avere a disposizione un totale di $n = bm$ bit da dividere tra filtro iniziale $n_{b_0} = b_1 m$ e il filtro di backup $n_{b} = b_2 m$, e che i due filtri rispettino la condizione di ottimalità per $k$, sotto queste condizioni posso riscrivere l'equazione \ref{eqn:SLBFFalsiPositivi} come: 
+    questa può essere ricavata come segue: assumiamo di avere a disposizione un totale di $n = bm$ bit da dividere tra filtro iniziale $n_{b_0} = b_1 m$ e il filtro di backup $n_{b} = b_2 m$, e che i due filtri rispettino la condizione di ottimalità per $k$, sotto queste condizioni possiamo riscrivere l'equazione \ref{eqn:SLBFFalsiPositivi} come: 
     \[f = \alpha^{b_1}\left(F_p + (1 - F_p)\alpha^{b_2/F_n}\right), \]
-    essendo $\alpha$, $F_p$, $F_n$ e $b$ delle costanti posso, partendo da questa equazione, trovare il valore ottimo per $n_b$ calcolando la derivata e ponendola uguale a 0.
+    essendo $\alpha$, $F_p$, $F_n$ e $b$ delle costanti è possibile trovare il valore ottimo per $n_b$ calcolando la derivata e ponendola uguale a 0.
     
     Partendo dalla seguente equazione: 
     \[f = \alpha^{b_1}F_p + (1 - F_p)\alpha^{b_1(1 - 1/F_n)} \alpha^{b/F_n}, \]
@@ -29,7 +29,7 @@
     \end{equation}
     Assumendo di avere un filtro di backup con dimensione ottima $n_b^*$, il cui tasso di falsi positivi può essere di conseguenza calcolato tramite l'equazione \ref{eqn:SLBFfBOttimo}, possiamo ricavare delle equazioni per il tasso di falsi positivi del filtro iniziale e la sua grandezza.
 
-    Sostituisco per prima cosa il valore di $f_b$ nell'equazione \ref{eqn:SLBFFalsiPositivi}, e risolvo in funzione di $f_{b0}$: 
+    È necessario prima di tutto sostituire il valore di $f_b$ nell'equazione \ref{eqn:SLBFFalsiPositivi}, per poi risolvere in funzione di $f_{b0}$: 
 
     \begin{flalign*}
         &f = f_{b0}\left(F_p + (1 - F_p) \cdot \left(\frac{F_p}{(1 - F_p)(\frac{1}{F_n} - 1)}\right)\right),\\

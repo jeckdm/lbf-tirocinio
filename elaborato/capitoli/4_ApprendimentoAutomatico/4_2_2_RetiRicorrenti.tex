@@ -97,7 +97,7 @@ Per il calcolo del gradiente viene sfruttata una variante della  backpropagation
 Supponiamo quindi che la funzione di attivazione utilizzata sia una tangente iperbolica (tanh, figura \ref{fig:tanh}) e che il vettore dei risultati in un generico istante $\boldsymbol{\hat{y}}^{(t)}$ sia ottenuto applicando una funzione softmax (figura \ref{fig:softmax}) ai risultati della rete, di fatto ottenendo un vettore di probabilità; $\boldsymbol{a}^{(t)}$ e $\boldsymbol{o^{(t)}}$ rappresentano rispettivamente il vettore delle attivazioni dei neuroni dello strato nascosto e il vettore delle uscite, entrambi al tempo $t$. Infine, i parametri $\boldsymbol{U}$, $\boldsymbol{V}$ e $\boldsymbol{W}$ rappresentano le matrici di pesi rispettivamente tra livello d'ingresso e nascosto, livello nascosto e output e livello nascosto e livello nascosto all'istante successivo, $\boldsymbol{b}$ e $\boldsymbol{c}$ rappresentano invece i vettori di bias.
 
 In questo caso utilizziamo la funzione di log-verosimiglianza come misura dell'errore commesso dal modello, in un generico istante $t$ quindi la perdita viene misurata come:
-\[L^{(t)} = -\log(\boldsymbol{y}^{(t)}) = -\log(softmax(\boldsymbol{o}^{(t)})),\]
+\[L^{(t)} = -\log(\boldsymbol{y}^{(t)}) = -\log(\mathrm{softmax}(\boldsymbol{o}^{(t)})),\]
 mentre la perdita totale per una data sequenza di $\boldsymbol{x}$ con i relativi vettori $\boldsymbol{y}$ è data dalla somma delle perdite nei singoli istanti:
 \[L(\{x^{(1)}, \dots, x^{(\mathcal{T})}\}, \{y^{(1)}, \dots, y^{(\mathcal{T})}\}) = \sum_t L^{(t)},\]
 dove $\mathcal{T}$ indica l'ultimo timestamp.
@@ -121,7 +121,13 @@ Il primo passo consiste nel calcolare i gradienti $\nabla_{\boldsymbol{N}}L$ dei
     \end{align}
 \end{fleqn}
 Dove il risultato dell'equazione \ref{eqn:BPTT} viene giustificato ricordando come la funzione di perdita è definita e applicando la regola della catena:
-\[- \frac{\partial}{\partial o_i^{(t)}} \log(\hat{y}^{(t)}) = - \left(\frac{\partial \log(\hat{y}_i^{(t)})}{\partial \hat{y}_i^{(t)}} \cdot\frac{\partial softmax(o_i^{(t)})}{\partial o_i^{(t)}}\right) = \cdots = \hat{y_i}^{(t)} - 1_{i,y^{(t)}}.\]
+
+\begin{flalign*}
+    \frac{\partial}{\partial o_i^{(t)}} \log\left(\hat{y}^{(t)}\right) &= \left(\frac{\partial \log\left(\hat{y}_i^{(t)}\right)}{\partial \hat{y}_i^{(t)}} \cdot\frac{\partial \mathrm{softmax}\left(o_i^{(t)}\right)}{\partial o_i^{(t)}}\right),\\
+    &= -\frac{1}{\hat{y_i}^{(t)}} \cdot \frac{e^{o_i^{(t)}} \left(\sum_j e^{o_j^{(t)}} - e^{o_i^{(t)}}\right)}{\left(\sum_j e^{o_j^{(t)}}\right)^2},\\
+    & = -\frac{1}{\hat{y_i}^{(t)}} \cdot \left(\frac{e^{o_i^{(t)}}}{\sum_j e^{o_j^{(t)}}} \cdot \left(1 - \frac{e^{o_i^{(t)}}}{\sum_j e^{o_j^{(t)}}}\right)\right),\\
+    & = -\frac{1}{\hat{y_i}^{(t)}} \cdot (\hat{y_i}^{(t)} (1 - \hat{y_i}^{(t)})) = (\hat{y_i}^{(t)} - 1).
+\end{flalign*}
 Sfruttando ancora una volta la regola della catena ed i risultati appena ottenuti possiamo ricavare i gradienti dei parametri del grafo:
 
 \begin{fleqn}[0cm]

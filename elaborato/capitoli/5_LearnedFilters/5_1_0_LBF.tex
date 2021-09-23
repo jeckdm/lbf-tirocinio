@@ -22,24 +22,22 @@
 
     Infine, è utile per riassumere riportare la definizione di LBF data in \cite{10.5555/3326943.3326986}: 
 
-    `Un LBF $(g, \tau, B)$, definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$ è composto da una funzione $g : \mathcal{X} \rightarrow [0,1]$ legata ad una soglia $\tau$, dove $\mathcal{X}$ è l'insieme universo che contiene chiavi e non chiavi, e da un filtro di Bloom $B$, chiamato filtro di backup, il cui compito è salvare tutti gli elementi dell'insieme $\mathcal{K}_{\tau}^- = \{x \in \mathcal{K} | g(x) < \tau\}$, ovvero l'insieme di falsi negativi generati da $g$. Data un qualsiasi elemento $y$, l'LBF ritornerà $y \in \mathcal{K}$ se $g(y) > \tau$, o se $g(y) < \tau$ ed il filtro di backup ritorna $y \in \mathcal{K}$. In tutti gli altri casi l'LBF ritornerà $y \notin \mathcal{K}$.'
+    ``Un LBF $(g, \tau, B)$, definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$ è composto da una funzione $g : \mathcal{X} \rightarrow [0,1]$ legata ad una soglia $\tau$, dove $\mathcal{X}$ è l'insieme universo che contiene chiavi e non chiavi, e da un filtro di Bloom $B$, chiamato filtro di backup, il cui compito è salvare tutti gli elementi dell'insieme $\mathcal{K}_{\tau}^- = \{x \in \mathcal{K} | g(x) < \tau\}$, ovvero l'insieme di falsi negativi generati da $g$. Data un qualsiasi elemento $y$, l'LBF ritornerà $y \in \mathcal{K}$ se $g(y) > \tau$, o se $g(y) < \tau$ ed il filtro di backup ritorna $y \in \mathcal{K}$. In tutti gli altri casi l'LBF ritornerà $y \notin \mathcal{K}$.''
 
     La figura \ref{fig:confrontoInserimento} mette a confronto la procedura di inizializzazione per le due tipologie di filtro presentate, nello specifico viene riportata nella figura \ref{fig:BFInizializzazione} l'inizializzazione per un filtro di Bloom, mentre in figura \ref{fig:LBFInizializzazione} quella di un LBF.
-    
-
 
     \begin{figure}[H]
         \centering
-        \begin{subfigure}[t]{0.65\textwidth}
-            \includegraphics[width=\textwidth]{immagini/5_1/BFInizializzazione.png}
-            \caption{Procedura di inizializzazione di un filtro di Bloom: tutti gli elementi dell'insieme $\mathcal{K}$ vengono passati attraverso le funzioni di hash $k$, i bit presenti nelle posizioni corrispondenti ai risultati delle funzioni di hash vengono posti ad 1.}
-            \label{fig:BFInizializzazione}
-        \end{subfigure}
-        \begin{subfigure}[t]{0.34\textwidth}
-            \includegraphics[width=\textwidth]{immagini/5_1/LBFInizializzazione.png}
-            \caption{Procedura di inizializzazione di un LBF: tutti gli elementi dell'insieme $\mathcal{K}$ vengono passati attraverso il modello addestrato sul dataset $\mathcal{T}$, se un elemento viene etichettato come negativo viene inserito nel filtro di backup.}
-            \label{fig:LBFInizializzazione}
-        \end{subfigure}
+        \includegraphics[width=\textwidth]{immagini/5_1/BFInizializzazione.png}
+        \caption{Procedura di inizializzazione di un filtro di Bloom: tutti gli elementi dell'insieme $\mathcal{K}$ vengono passati attraverso le funzioni di hash $k$, i bit presenti nelle posizioni corrispondenti ai risultati delle funzioni di hash vengono posti ad 1.}
+        \label{fig:BFInizializzazione}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth/2]{immagini/5_1/LBFInizializzazione.png}
+        \caption{Procedura di inizializzazione di un LBF: tutti gli elementi dell'insieme $\mathcal{K}$ vengono passati attraverso il modello addestrato sul dataset $\mathcal{T}$, se un elemento viene etichettato come negativo viene inserito nel filtro di backup.}
+        \label{fig:LBFInizializzazione}
         \caption{}
         \label{fig:confrontoInserimento}
     \end{figure}
