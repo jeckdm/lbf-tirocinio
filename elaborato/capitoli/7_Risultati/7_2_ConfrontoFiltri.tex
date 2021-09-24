@@ -1,0 +1,23 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+    Vengono ora presentati i risultati ottenuti inserendo le due categorie di classificatore all'interno dei filtri appresi. Come brevemente spiegato nel paragrafo \ref{sec:Esperimenti}, i risultati del precedente paragrafo posso essere utilizzati solamente per fornire un'idea dell'efficacia dei classificatori nel problema di riconoscimento degli URL; in questo secondo blocco di esperimenti, infatti, l'obiettivo è trovare il classificatore che porti alla maggiore diminuzione in termini di spazio dei filtri. Di fatto vogliamo quindi cercare un tradeoff tra prestazioni e spazio occupato.
+
+    Il classificatore migliore in questo caso non può essere trovato tramite una classica model selection: nessuna metrica, infatti, risulta adatta a quantificare la bontà di un modello in termini di spazio occupato. Una model selection risulterebbe di conseguenza inadatta perché non avremmo nessuna metrica da massimizzare.
+
+    Il numero di neuroni del percettrone viene quindi scelto in modo da ottenere un modello con una taglia molto vicina a quella della GRU a 16 dimensioni. Inoltre, dai risultati dello scorso paragrafo è possibile notare come, aumentando di molto il numero di neuroni, l'aumento delle prestazioni non sia altrettanto significativo. Per questo motivo viene testato un ulteriore modello con un numero inferiore di neuroni, scelto arbitrariamente, al fine di evidenziare eventuali miglioramenti nella dei taglia filtri appresi dovuti ad una dimensione minore del modello.
+    
+    \subsubsection{Scelta della soglia $\tau$}
+    Una volta fissato il tasso di positivi desiderato $f$, 
+
+    \subsubsection{Risultati filtro di Bloom}
+
+    \subsubsection{Risultati LBF}
+
+    \subsubsection{Risultati SLBF}
+
+    \subsubsection{Tempi}
+
+\end{document}
