@@ -4,7 +4,7 @@
 
 \begin{document}
     \subsubsection{Filtri appresi}
-    L'implementazione di filtro di Bloom e delle due varianti apprese riprende quella fornita in \cite{ma2020}, il codice utilizzato è pressoché equivalente, fatto salvo per alcune modifiche utili a permettere l'utilizzo dei filtri appresi anche con il percettrone.
+    L'implementazione del filtro di Bloom e delle due varianti apprese riprende quella fornita in \cite{ma2020}, il codice utilizzato è pressoché equivalente, fatto salvo per alcune modifiche utili a permettere l'utilizzo dei filtri appresi anche con il percettrone.
 
     \subsubsection{Suddivisione del dataset}
     Per la parte di esperimenti dedicata al confronto delle performance dei classificatori la suddivisione viene fatta coerentemente con la tecnica utilizzata: nel caso della convalida incrociata, ad esempio, il dataset viene suddiviso in $k$ sottoinsiemi, come descritto nel paragrafo \ref{sec:metrichevalutazione}.
@@ -19,21 +19,21 @@
     Per il percettrone multistrato invece gli URL vengono codificati sfruttando la classe \texttt{CountVectorizer} della libreria Scikit Learn, ogni URL viene quindi mappato ad un vettore contenente le frequenze assolute di ognuno dei caratteri presenti nel training set. Supponendo ad esempio di considerare la codifica dell'url `google.com' in un dataset in cui compaiono anche i caratteri `a' e `f', il relativo vettore dell'URL sarà $[1 \ 0 \ 1 \ 1 \ 0 \ 2 \ 1 \ 1 \ 3]$.
 
     La scelta di utilizzare due codifiche differenti deriva da due principali motivi: in primo luogo, gli esperimenti iniziali mostravano che l'utilizzo della prima codifica anche per il percettrone portava ad avere reti troppo grandi per le prestazioni fornite, e di conseguenza a filtri meno efficienti rispetto a quelli del sopracitato articolo.\\
-    In secondo luogo, l'alternativa di utilizzare questa seconda codifica anche per la rete ricorrente non era praticabile, infatti nella suddetta rete è presente anche uno strato di embedding, che lavora associando ad ognuno dei caratteri un vettore di 5 elementi, utilizzando la seconda codifica ognuno degli elementi del vettore non avrebbe più rappresentato un carattere, ma una frequenza, cambiando di fatto le informazioni fornite dallo strato di embedding; viceversa, eliminare lo strato di embedding per adattare la rete alla nuova codifica avrebbe rappresentato una contraddizione rispetto agli scopi degli esperimenti, che sono invece quelli di confrontare nuovi classificatori con la stessa GRU dell'articolo.
+    In secondo luogo, l'alternativa di utilizzare questa seconda codifica anche per la rete ricorrente non era praticabile, infatti nella suddetta rete è presente anche uno strato di embedding, che lavora associando ad ognuno dei caratteri un vettore di 5 elementi, utilizzando la seconda codifica ognuno degli elementi del vettore non avrebbe più rappresentato un carattere, ma una frequenza, cambiando di fatto le informazioni fornite dallo strato di embedding. Viceversa, eliminare lo strato di embedding per adattare la rete alla nuova codifica avrebbe rappresentato una contraddizione rispetto agli scopi degli esperimenti, che sono invece quelli di confrontare nuovi classificatori con la stessa GRU dell'articolo.
 
     Importante notare come la seconda codifica perda le informazioni legate alla posizione dei caratteri nell'URL, come evidenziato dai risultati, però, l'assenza di queste informazioni non comporta grosse perdite nelle performance dei percettroni.
 
     Una terza codifica per i percettroni viene inoltre introdotta solamente nella seconda parte di esperimenti: ogni carattere viene mappato con gli stessi criteri della prima codifica, ma l'URL codificato sarà composto dalla concatenazione delle rappresentazione binarie di ognuno degli interi associati ai caratteri. Il numero di bit utilizzato per ogni intero è il minimo per permettere una rappresentazione di ognuno dei caratteri. Anche in questo caso ogni ad ogni URL verrà applicato un padding, o verrà troncato, per avere vettori della stessa dimensione.
 
-    In ultimo, è importante sottolineare che, per evitare un eventuale introduzione di bias, nel caso della prima e terza codifica i dizionari che vengono utilizzati per il mapping dei caratteri vengono calcolati solamente sull'insieme d'addestramento. In realtà, calcolare i dizionari su tutto il dataset non dovrebbe portare all'introduzione di informazioni aggiuntive (ciò viene anche confermato da risultati riportati nel prossimo capitoli), le codifiche infatti semplicemente mappano i caratteri di ogni URL in interi, in questo caso scelti a seconda delle frequenze dei caratteri scelti.
+    In ultimo, è importante sottolineare che, per evitare un eventuale introduzione di bias, nel caso della prima e terza codifica i dizionari che vengono utilizzati per il mapping dei caratteri vengono calcolati solamente sull'insieme d'addestramento. In realtà, calcolare i dizionari su tutto il dataset non dovrebbe portare all'introduzione di informazioni aggiuntive, le codifiche infatti semplicemente mappano i caratteri di ogni URL in interi, in questo caso scelti a seconda delle frequenze dei caratteri scelti.
 
 
     \subsubsection{Classificatori}
-    Come già accennato, il codice utilizzato per la GRU è equivalente a quello fornito in \cite{ma2020}, l'implementazione della rete neurale quindi è fatta sfruttando la libreria PyTorch. Il percettrone, invece, viene implementato sfruttando la libreria Keras.
+    Come già accennato, il codice utilizzato per la GRU è equivalente a quello fornito in \cite{ma2020}, l'implementazione della rete ricorrente quindi è fatta sfruttando la libreria PyTorch. Il percettrone, invece, viene implementato sfruttando la libreria Keras.
 
     \subsubsection{Serializzazione dei modelli}
     Dato che molti degli esperimenti comprendono lo spazio come unità di misura delle prestazioni di un filtro appreso, è utile ragionare sul come serializzare i modelli utilizzati per permettere un confronto che non sia influenzato da possibili compressioni effettuate dalle funzioni di libreria.
 
-    Per assicuraci di avere dei modelli confrontabili, la soluzione scelta è stata quella di utilizzare pickle per serializzare entrambi i modelli (e di conseguenza anche per ricaricarli), nello specifico verranno salvati solamente i parametri di ognuno dei modelli, mentre la loro architettura verrà ricreata ad ogni caricamento.
+    Per assicuraci di avere dei modelli confrontabili, la soluzione è utilizzare pickle per serializzare entrambi i modelli (e di conseguenza anche per ricaricarli). Nello specifico, verranno salvati solamente i parametri di ognuno dei modelli, mentre la loro architettura verrà ricreata ad ogni caricamento.
     
 \end{document}

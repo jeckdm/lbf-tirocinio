@@ -5,6 +5,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[titletoc,title]{appendix}
 
+\usepackage[table]{xcolor}
+
 % Subfiles
 \usepackage{subfiles}
 
@@ -41,6 +43,8 @@
 \algnewcommand\algorithmicforeach{\textbf{for each}}
 \algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
 
+% Tabelle
+\usepackage{arydshln}
 \begin{document}
 
 \tableofcontents
@@ -124,6 +128,7 @@
 % + eventuale codifica binaria ancora da testare
 % Spiegazione delle tecniche utilizzate per la serializzazione dei modelli ed il perchè della scelte: pickle vs funzioni di libreria, menziono inoltre le differenze ottenute sopratutto utilizzando pytorch nelle dimensioni del modello prima e dopo l'addestramento
 \section{Implementazione}
+\label{sec:implementazione}
 \subfile{capitoli/6_Esperimenti/6_5_Implementazione.tex}
 
 \chapter{Risultati}
@@ -139,9 +144,9 @@
 % Traggo le conclusioni degli esperimenti: è necessario utilizzare una rete complessa come quella ricorrente o posso utilizzare anche reti più "semplici" come una feed forward?
 \section{Valutazione sull'impatto dei classificatori nei filtri di Bloom appresi}
 \label{sec:confrontoFiltri}
+\subfile{capitoli/7_Risultati/7_2_ConfrontoFiltri.tex}
 
 \chapter{Conclusioni}
 
 \printbibliography
-
 \end{document}

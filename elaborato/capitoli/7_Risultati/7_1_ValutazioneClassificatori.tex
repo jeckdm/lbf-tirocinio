@@ -188,7 +188,7 @@
 
     È facile notare come tutti i modelli di percettrone abbiano performance migliori rispetto alle GRU. Inoltre, come era intuibile, all'aumentare del numero di neuroni le performance del percettrone migliorano. Se il problema fosse solamente quello di risolvere il problema di classificazione, il modello a 64 neuroni sarebbe il migliore tra le tre configurazioni. Tuttavia, il nostro obiettivo è inserire questi classificatori in un filtro appreso, di conseguenza lo spazio occupato è importante tanto quanto le prestazioni. Il modello a 64 neuroni risulta quindi troppo grande rispetto alla prestazioni offerte.
     
-    L'obiettivo è ora trovare, tramite una model selection, la configurazione di parametri migliore per un percettrone, cercando di mantenere delle dimensioni che non siano di troppo superiori a quella della GRU a 16 dimensioni. Dalla tabella \ref{tab:FFNNModelSelection}, infatti, si nota che il miglioramento delle performance passando dalla configurazione a 16 neuroni a quella a 64 non è così significativo da giustificare una dimensione circa quattro volte superiore.
+    L'obiettivo è ora trovare, tramite una model selection, la configurazione di parametri migliore per un percettrone, cercando di mantenere una dimensione che non superi quella della GRU a 16 dimensioni. Dalla tabella \ref{tab:FFNNModelSelection}, infatti, si nota che il miglioramento delle performance passando dalla configurazione a 16 neuroni a quella a 64 non è così significativo da giustificare una dimensione circa quattro volte superiore.
 
     \subsubsection{Model selection}
 
@@ -204,7 +204,7 @@
     Per i motivi presentati nei paragrafi precedenti, l'obiettivo della model selection è massimizzare l'F1-score. Essendo il nostro dataset lievemente sbilanciato l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello.
     
 
-    La tabella \ref{tab:modelSelection} presenta i risultati della model selection. 
+    La tabella \ref{tab:modelSelection} presenta i risultati della model selection. Confrontando questi risultati con quelli della tabella \ref{tab:GRUModelSelection}, si notano delle performance migliori da parte del percettrone. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri migliori, in termini di taglia, rispetto a quelli ottenuti utilizzando le GRU.
     \begin{table}[H]
         \centering                  
         \begin{tabular}{lccc}
