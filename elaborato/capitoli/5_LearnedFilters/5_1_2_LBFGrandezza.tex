@@ -13,7 +13,7 @@
         \item un modello $g$, addestrato su un dataset $\mathcal{T}$ come descritto nell'introduzione di questo paragrafo,
         \item un filtro di backup $B$.
     \end{itemize}
-    Considerando il classificatore, ogni chiave avrà una probabilità $F_n$ di essere erroneamente etichettata come non-chiave, generando un falso negativo. Viceversa ogni non-chiave avrà una probabilità $F_p$ di essere etichetta come chiave, generando un falso positivo. Definiamo  la grandezza del filtro di backup $n = m \cdot b$, tale filtro dovrà contenere solamente i falsi negativi generati dal classificatore, quindi un totale di $F_n \cdot m$ elementi.
+    Considerando il classificatore, ogni chiave avrà una probabilità $F_n$ di essere erroneamente etichettata come non-chiave, generando un falso negativo. Viceversa ogni non-chiave avrà una probabilità $F_p$, che equivale a $\underset{x \sim \mathcal{D}}{\mathbb{P}}(g(x) \geq \tau)$, di essere etichetta come chiave, generando un falso positivo. Definiamo  la grandezza del filtro di backup $n = m \cdot b$, tale filtro dovrà contenere solamente i falsi negativi generati dal classificatore, quindi un totale di $F_n \cdot m$ elementi.
 
     Fissiamo ora un tasso di falsi positivi $\epsilon$ desiderato ed imponiamo che il tasso di falsi positivi $f$ della struttura sia minore di tale valore: 
     \[f < \epsilon,\]

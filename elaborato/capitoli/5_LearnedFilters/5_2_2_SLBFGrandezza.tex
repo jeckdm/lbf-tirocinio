@@ -24,7 +24,7 @@
     \[\underbrace{b_2 m}_{n_b^*} = m_b \log_\alpha \left(\frac{F_p}{(1-F_p)(\frac{m}{m_b} - 1)}\right).\]
     Una volta trovato il valore ottimo per la dimensione del filtro di backup è facile ricavare il relativo valore del tasso di falsi positivi $f_b$, ricordando infatti che vale la relazione $f_b = \alpha^{n_b^*/m_b}$ sostituisco $n_b^*$: 
     \begin{equation}
-        f_b = \frac{f_\tau}{(1 - f_\tau)(\frac{m}{m_b} - 1)}.
+        f_b = \frac{F_p}{(1 - F_p)(\frac{m}{m_b} - 1)}.
         \label{eqn:SLBFfBOttimo}
     \end{equation}
     Assumendo di avere un filtro di backup con dimensione ottima $n_b^*$, il cui tasso di falsi positivi può essere di conseguenza calcolato tramite l'equazione \ref{eqn:SLBFfBOttimo}, possiamo ricavare delle equazioni per il tasso di falsi positivi del filtro iniziale e la sua grandezza.
@@ -38,13 +38,13 @@
     \end{flalign*}
     ottenendo (sostituendo $F_n$):
     \begin{equation}
-        f_{b0} = \frac{f}{F_p} \left(1 - \frac{m_b}{m}\right) =  \frac{f}{f_\tau} \left(1 - \frac{m_b}{m}\right),
+        f_{b0} = \frac{f}{F_p} \left(1 - \frac{m_b}{m}\right),
     \end{equation}
     da cui, infine, possiamo ricavare il valore ottimo per $n_{b0}^*$: 
     \begin{equation}
-        n_{b0}^* = m \log_\alpha\left(\frac{f}{f_\tau} \left(1 - \frac{m_b}{m}\right)\right).
+        n_{b0}^* = m \log_\alpha\left(\frac{f}{F_p} \left(1 - \frac{m_b}{m}\right)\right).
     \end{equation}
 
-    È importante notare come l'equazione \ref{eqn:SLBFGrandezzaOttima} riveli che la grandezza ottima per il filtro di backup è una costante, e non dipende dal nè dal numero $b$ di bit a disposizione nè dal tasso di falsi positivi desiderato; ne consegue che, assumendo di avere un filtro di backup di taglia $n_b^*$, all'aumentare del numero di bit a disposizione l'azione migliore è quella di aumentare la taglia del filtro iniziale.
+    È importante notare come l'equazione \ref{eqn:SLBFGrandezzaOttima} riveli che la grandezza ottima per il filtro di backup è una costante, e non dipende nè dal numero $b$ di bit a disposizione nè dal tasso di falsi positivi desiderato; ne consegue che, assumendo di avere un filtro di backup di taglia $n_b^*$, all'aumentare del numero di bit a disposizione l'azione migliore è quella di aumentare la taglia del filtro iniziale.
     
 \end{document}
