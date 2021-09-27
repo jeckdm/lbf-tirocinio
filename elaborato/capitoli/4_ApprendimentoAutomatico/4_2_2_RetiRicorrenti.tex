@@ -4,14 +4,14 @@
 
 \begin{document}
 
-Le architetture di reti introdotte negli scorsi paragrafi risultano limitate in contesti in cui lavoro su insiemi di dati i cui esempi sono formati da elementi che non sono indipendenti tra loro: prendiamo come esempio un dataset in cui ogni esempio è un frase di lunghezza fissata, ovviamente con un dataset del genere potrebbero essere presenti frasi con lo stesso significato ma formulate in modo differente, e dunque con una sequenza di parole diversa; una rete feedforward avendo parametri diversi per ognuna delle posizioni della frase faticherebbe a riconoscere esempi con significati uguali, ma formulazioni differenti: ogni parola verrebbe essenzialmente considerata come indipendente rispetto alle parole precedenti e successive.
+Le architetture di reti introdotte nei precedenti paragrafi risultano limitate in contesti in cui lavoro su insiemi di dati i cui esempi sono formati da elementi che non sono indipendenti tra loro: prendiamo come esempio un dataset in cui ogni esempio è un frase di lunghezza fissata, ovviamente con un dataset del genere potrebbero essere presenti frasi con lo stesso significato ma formulate in modo differente, e dunque con una sequenza di parole diversa; una rete feedforward, avendo parametri diversi per ognuna delle posizioni della frase, faticherebbe a riconoscere esempi con significati uguali, ma formulazioni differenti: ogni parola verrebbe essenzialmente considerata come indipendente rispetto alle parole precedenti e successive.
 
-Quando ci si trova a lavorare con dataset di questo tipo spesso si preferisce utilizzare le \textit{reti ricorrenti} (RNN), \cite{rumelhart:errorpropnonote}. Caratteristica fondamentale di questa famiglia di reti è il fatto che gli strati del modello condividono gli stessi parametri, questo, oltre a portare ad un numero di parametri prefissato e non dipendente dalla lunghezze della sequenza, permette anche di dare importanza alla posizione, spesso chiamata timestamp, di un elemento. La condivisione dei parametri viene concretizzata in questo modo: ogni risultato in uscita alla rete è funzione dei risultato prodotti in uscita negli istanti precedenti, e ogni risultato viene calcolato utilizzando la stessa regola di aggiornamento applicata ai precedenti risultati.
+Quando ci si trova a lavorare con dataset di questo tipo spesso si preferisce utilizzare le \textit{reti ricorrenti} (RNN), \cite{rumelhart:errorpropnonote}. Caratteristica fondamentale di questa famiglia di reti è il fatto che gli strati del modello condividono gli stessi parametri, questo, oltre a portare ad un numero di parametri prefissato e non dipendente dalla lunghezze della sequenza, permette anche di dare importanza alla posizione, spesso chiamata timestamp, di un elemento. La condivisione dei parametri viene concretizzata in questo modo: ogni risultato in uscita alla rete è funzione dei risultati prodotti in uscita negli istanti precedenti, e ogni risultato viene calcolato utilizzando la stessa regola di aggiornamento applicata ai precedenti risultati.
 
 L'esempio del dataset presentato poco sopra permette di mostrare un'altra caratteristica delle RNN: il fatto di condividere gli stessi parametri nei vari strati permette di avere lavorare su testi di lunghezza variabile, di fatto la rete mantiene in memoria una sola matrice di pesi che viene aggiornata ad ogni timestamp, di conseguenza può ricevere in ingresso testi con un numero di parole arbitrario (tutte le parole saranno però vettori aventi la stessa grandezza).\\
 In linea teorica possiamo quindi avere reti ricorrenti che accettano in ingresso sequenze $(\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)}, \dots)$ di lunghezza arbitraria, nella pratica però molte librerie che forniscono implementazioni di questa tipologia di reti permettono di avere solamente un numero fissato di strati, questa scelta viene giustificata dal fatto che in un dataset posso facilmente ricavare la lunghezza massima tra gli esempi, e nel caso di esempi di lunghezza inferiore posso semplicemente renderli più lunghi tramite il padding.
 
-Per rappresentare una rete ricorrente è utile introdurre il concetto di \textit{grafo computazionale}: in un grafo di questo tipo ogni nodo indica una variabile, che può essere una scalare, un vettore o una matrice, mentre un arco $(x,y)$ indica l'utilizzo della variabile $x$ in una operazione che ha come risultato $y$.
+Per rappresentare una rete ricorrente è utile introdurre il concetto di \textit{grafo computazionale}: in un grafo di questo tipo ogni nodo indica una variabile, che può essere uno scalare, un vettore o una matrice, mentre un arco $(x,y)$ indica l'utilizzo della variabile $x$ in un'operazione che ha come risultato $y$.
 
 Un grafo computazionale viene definito con una serie di operazioni base, operazioni più complesse vengono rappresentate come combinazioni di quelle base.
 
@@ -26,12 +26,12 @@ Posso rappresentare questa funzione ricorsiva tramite il grafo computazionale in
     \label{fig:computationgraph}
 \end{figure}
 
-Definite le caratteristiche base di una rete ricorrente, possiamo combinare gli elementi a disposizione per andare a creare diverse architetture, alcune delle più frequenti sono:
+Definite le caratteristiche base di una rete ricorrente, possiamo combinare gli elementi a disposizione per andare a creare diverse architetture, alcune delle più frequenti sono riportate di seguito.
 
 \begin{itemize}
-    \item reti ricorrenti che producono un risultato ad ogni istante di tempo ed hanno connessioni ricorrenti tra strati nascosti (figura \ref{fig:RNNArch1}).
-    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo ed hanno connessioni tra il risultato al tempo $t-1$ e lo strato nascosto al tempo $t$ (figura \ref{fig:RNNArch2}).
-    \item Reti ricorrenti con connessioni tra strati nascosti e che producono un solo risultato al termine della sequenza (figura \ref{fig:RNNArch3}).
+    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo ed hanno connessioni ricorrenti tra strati nascosti (Figura \ref{fig:RNNArch1}).
+    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo ed hanno connessioni tra il risultato al tempo $t-1$ e lo strato nascosto al tempo $t$ (Figura \ref{fig:RNNArch2}).
+    \item Reti ricorrenti con connessioni tra strati nascosti e che producono un solo risultato al termine della sequenza (Figura \ref{fig:RNNArch3}).
 \end{itemize}
 
 \begin{figure}[H]
@@ -85,13 +85,13 @@ Per il calcolo del gradiente viene sfruttata una variante della  backpropagation
         \boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W h}^{t-1} + \boldsymbol{U x}^{(t)},
     \end{equation}
     \begin{equation}
-        \boldsymbol{h}^{(t)} = tanh(\boldsymbol{a}^{(t)}),
+        \boldsymbol{h}^{(t)} = \mathrm{tanh}(\boldsymbol{a}^{(t)}),
     \end{equation}
     \begin{equation}
         \boldsymbol{o}^{(t)} = \boldsymbol{c} + \boldsymbol{V h}^{(t)},
     \end{equation}
     \begin{equation}
-        \boldsymbol{\hat{y}}^{(t)} = softmax(\boldsymbol{o}^{(t)}).
+        \boldsymbol{\hat{y}}^{(t)} = \mathrm{softmax}(\boldsymbol{o}^{(t)}).
     \end{equation}
 \end{fleqn}
 Supponiamo quindi che la funzione di attivazione utilizzata sia una tangente iperbolica (tanh, figura \ref{fig:tanh}) e che il vettore dei risultati in un generico istante $\boldsymbol{\hat{y}}^{(t)}$ sia ottenuto applicando una funzione softmax (figura \ref{fig:softmax}) ai risultati della rete, di fatto ottenendo un vettore di probabilità; $\boldsymbol{a}^{(t)}$ e $\boldsymbol{o^{(t)}}$ rappresentano rispettivamente il vettore delle attivazioni dei neuroni dello strato nascosto e il vettore delle uscite, entrambi al tempo $t$. Infine, i parametri $\boldsymbol{U}$, $\boldsymbol{V}$ e $\boldsymbol{W}$ rappresentano le matrici di pesi rispettivamente tra livello d'ingresso e nascosto, livello nascosto e output e livello nascosto e livello nascosto all'istante successivo, $\boldsymbol{b}$ e $\boldsymbol{c}$ rappresentano invece i vettori di bias.
@@ -102,12 +102,12 @@ mentre la perdita totale per una data sequenza di $\boldsymbol{x}$ con i relativ
 \[L(\{x^{(1)}, \dots, x^{(\mathcal{T})}\}, \{y^{(1)}, \dots, y^{(\mathcal{T})}\}) = \sum_t L^{(t)},\]
 dove $\mathcal{T}$ indica l'ultimo timestamp.
 
-Per il calcolo del gradiente (sfruttato poi per l'aggiornamento dei pesi) si ricorre anche in questo caso alla backpropagation, la caratteristica delle reti ricorrenti di avere pesi condivisi obbliga però a variare leggermente l'approccio base, adottato nei percettroni multistrato, questa variante dell'algoritmo, come già accennato, prende il nome di backpropagation through time.
+Per il calcolo del gradiente (sfruttato poi per l'aggiornamento dei pesi) si ricorre anche in questo caso alla backpropagation. La caratteristica delle reti ricorrenti di avere pesi condivisi obbliga però a variare leggermente l'approccio base, adottato nei percettroni multistrato. Questa variante dell'algoritmo, come già accennato, prende il nome di backpropagation through time.
  
 Il primo passo consiste nel calcolare i gradienti $\nabla_{\boldsymbol{N}}L$ dei nodi $\boldsymbol{N}$ interni del grafo computazionale:
 \begin{fleqn}[0cm]
     \begin{align}
-        \frac{\partial L}{\partial L ^ {(t)}} = \frac{\partial}{\partial L ^{(t)}} \sum_t L^{(t)} = 1,
+        \frac{\partial L}{\partial L ^ {(t)}} = \frac{\partial}{\partial L ^{(t)}} \sum_i L^{(t)} = 1,
     \end{align}
     \begin{align}
         (\nabla_{\boldsymbol{o}^{(t)}}L)_i = \frac{\partial L}{\partial o^{(t)}_i} = \frac{\partial L}{\partial L^{(t)}} \frac{\partial L^{(t)}}{\partial o^{(t)}_i} = 1 \cdot (\hat{y_i}^{(t)} - 1_{i,y^{(t)}}),
@@ -120,7 +120,7 @@ Il primo passo consiste nel calcolare i gradienti $\nabla_{\boldsymbol{N}}L$ dei
         \nabla_{\boldsymbol{h}^{(\mathcal{T})}}L = \boldsymbol{V}^\top \nabla_{\boldsymbol{o}^{(\mathcal{T})}} L .
     \end{align}
 \end{fleqn}
-Dove il risultato dell'equazione \ref{eqn:BPTT} viene giustificato ricordando come la funzione di perdita è definita e applicando la regola della catena:
+Il risultato di \eqref{eqn:BPTT} viene giustificato ricordando come la funzione di perdita è definita e applicando la regola della catena:
 
 \begin{flalign*}
     \frac{\partial}{\partial o_i^{(t)}} \log\left(\hat{y}^{(t)}\right) &= \left(\frac{\partial \log\left(\hat{y}_i^{(t)}\right)}{\partial \hat{y}_i^{(t)}} \cdot\frac{\partial \mathrm{softmax}\left(o_i^{(t)}\right)}{\partial o_i^{(t)}}\right),\\

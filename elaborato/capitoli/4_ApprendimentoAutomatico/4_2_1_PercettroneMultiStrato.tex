@@ -15,15 +15,15 @@ La chiave per l'apprendimento risiede anche in questo caso nell'aggiornamento de
 
 L'algoritmo più utilizzato in questo senso è la discesa del gradiente (vedi algoritmo \ref{alg:gradient_desc}); il principale problema è il fatto che, avendo a che fare con una rete composta da molteplici livelli, non esiste a prima vista un metodo diretto per derivare la funzione di perdita rispetto ai pesi dei livelli nascosti in cui, a differenza di ciò che accade nel livello di uscita, non ho un vettore di etichette con cui confrontare l'attivazione dei neuroni.
 
-La soluzione viene fornita da una tecnica nota come backpropagation: intuitivamente la tecnica consiste nel calcolare il gradiente partendo dallo strato finale della rete per poi propagare l'errore a ritroso fino ad arrivare al primo livello nascosto; una volta risolto il problema del calcolo dei gradienti, la regola per l'aggiornamento dei pesi rimarrà equivalente all'equazione già descritta nei paragrafi precedenti:
+La soluzione viene fornita da una tecnica nota come backpropagation \cite{Rumelhart1986LearningRB}. La tecnica consiste nel calcolare il gradiente partendo dallo strato finale della rete per poi propagare l'errore a ritroso fino ad arrivare al primo livello nascosto; una volta risolto il problema del calcolo dei gradienti, la regola per l'aggiornamento dei pesi rimarrà equivalente all'equazione già descritta nei paragrafi precedenti:
 \begin{equation}
-    w_{i,j} \leftarrow w_{i,j} - \alpha \frac{\partial}{\partial w_{i,j}}\mathrm{Loss}(\boldsymbol{w}),
+    w_{i,j} \leftarrow w_{i,j} - \alpha \frac{\partial}{\partial w_{i,j}}\mathrm{Loss}(\boldsymbol{w}).
     \label{eqn:mlpgradientdesc}
 \end{equation}
-supponendo di avere una rete composta da 3 livelli e con un solo neurone d'uscita, chiamiamo $o$ il neurone d'uscita, $\mathcal{H}$ l'insieme di neuroni del livello nascosto e $\mathcal{I}$ l'insieme di neuroni d'ingresso. Infine, definiamo la funzione di perdita $\mathrm{Loss}(\boldsymbol{w}) = \frac{1}{2} (y - a_o)^2$. Le derivate parziali per il livello d'uscita e nascosto sono le seguenti:
+Supponendo di avere una rete composta da 3 livelli e con un solo neurone d'uscita, chiamiamo $o$ il neurone d'uscita, $\mathcal{H}$ l'insieme di neuroni del livello nascosto e $\mathcal{I}$ l'insieme di neuroni d'ingresso. Infine, definiamo la funzione di perdita $\mathrm{Loss}(\boldsymbol{w}) = \frac{1}{2} (y - a_o)^2$. Le derivate parziali per i livelli d'uscita e nascosto sono le seguenti:
 \begin{equation*}
     \begin{dcases}
-        \frac{\partial}{\partial w_{h,o}} \mathrm{Loss}(\boldsymbol{w}) = - (y - a_{o}) \cdot g'(in_o) \cdot a_h\\
+        \frac{\partial}{\partial w_{h,o}} \mathrm{Loss}(\boldsymbol{w}) = - (y - a_{o}) \cdot g'(in_o) \cdot a_h,\\
         \frac{\partial}{\partial w_{i,h}} \mathrm{Loss}(\boldsymbol{w}) =  - (y - a_{o}) \cdot g'(in_o) \cdot w_{h,o} \cdot g'(in_h) \cdot a_i
     \end{dcases}
 \end{equation*}
@@ -43,9 +43,9 @@ dove $\Delta_o$ e $\Delta_h$ rappresentano gli errori commessi dai rispettivi ne
 \end{dcases}    
 \]
 
-L'idea è che il generico neurone intermedio $h \in \mathcal{H}$ sia responsabile solamente di una frazione dell'errore finale $\Delta_o$, frazione che è tanto maggiore quanto maggiore è il peso $w_{h,o}$ dell'arco che collega i due.
+L'idea è che il generico neurone intermedio $h \in \mathcal{H}$ sia responsabile solamente di una frazione dell'errore finale $\Delta_o$, frazione che è tanto maggiore quanto maggiore è il peso $w_{h,o}$ dell'arco che collega i due neuroni.
 
-Una volta calcolati i gradienti (sistema \ref{eqn:backpropgradient}) l'aggiornamento avviene semplicemente utilizzando l'equazione \ref{eqn:mlpgradientdesc}, dividendo l'aggiornamento nel caso per i neuroni d'uscita e quelli nascosti:
+Una volta calcolati i gradienti in \eqref{eqn:backpropgradient} l'aggiornamento avviene semplicemente utilizzando \eqref{eqn:mlpgradientdesc}. Dividendo l'aggiornamento nel caso per i neuroni d'uscita e quelli nascosti:
 \begin{equation}
     \begin{cases}
         w_{h,o} \leftarrow w_{h,o} + \alpha \Delta_o a_h & \text{per il neurone d'uscita } o,\\
@@ -73,18 +73,18 @@ Similmente possiamo ricavare il gradiente della perdita in funzione di uno dei p
 \end{equation}
 Il termine $\Delta_o$ appare durante il processo di derivazione della perdita  del neurone $h$, in questo senso l'errore si propaga dallo strato finale a risalire fino al primo strato nascosto.
 
-In entrambi i casi è stata utilizzata una regola di derivazione che prende il nome di regola della catena: regola di derivazione che permette di calcolare la derivata di una funzione composta da due funzioni derivabili.
+In entrambi i casi è stata utilizzata una regola di derivazione che prende il nome di regola della catena, che permette di calcolare la derivata di una funzione composta da due funzioni derivabili.
 
 Dato $x \in \mathbb{R}$, e $f$ e $g$ funzioni definite come $\mathbb{R} \rightarrow \mathbb{R}$ suppongo che $y = g(x)$ e $z = f(g(x)) = f(y)$. La regola della catena dice che:
-\[\frac{dz}{dx} = \frac{dz}{dy} \frac{dy}{dx},\]
-possiamo generalizzare questo risultato anche a casi non scalari: dati $\boldsymbol{x} \in \mathbb{R}^m$, $\boldsymbol{y} \in \mathbb{R}^n$ e due funzioni $g: \mathbb{R}^m \rightarrow \mathbb{R}^n$ e $f: \mathbb{R}^n \rightarrow \mathbb{R}$, se $\boldsymbol{y} = g(\boldsymbol{x})$ e $z = f(\boldsymbol{y})$ allora
+\[\frac{dz}{dx} = \frac{dz}{dy} \frac{dy}{dx}.\]
+Possiamo generalizzare questo risultato anche a casi non scalari: dati $\boldsymbol{x} \in \mathbb{R}^m$, $\boldsymbol{y} \in \mathbb{R}^n$ e due funzioni $g: \mathbb{R}^m \rightarrow \mathbb{R}^n$ e $f: \mathbb{R}^n \rightarrow \mathbb{R}$, se $\boldsymbol{y} = g(\boldsymbol{x})$ e $z = f(\boldsymbol{y})$ allora
 \[\frac{\partial z}{\partial x_i} = \sum_j \frac{\partial z}{\partial y_j} \frac{\partial y_j}{\partial x_i},\]
 in notazione vettoriale:
-\[\nabla_{\boldsymbol{x}} z = \left(\frac{\partial \boldsymbol{y}}{\partial \boldsymbol{x}}\right)^T \nabla_{\boldsymbol{y}} z.\]
+\[\nabla_{\boldsymbol{x}} z = \left(\frac{\partial \boldsymbol{y}}{\partial \boldsymbol{x}}\right)^\top \nabla_{\boldsymbol{y}} z.\]
 
 Applicando la regola appena descritta in modo ricorsivo possiamo calcolare i gradienti dei nodi di output della rete, che andrò poi a sfruttare per aggiornare i pesi. 
 
 Noto infine come nelle derivazioni mostrate abbiamo ragionato assumendo che la rete avesse un solo neurone d'uscita, nei casi in cui questa assunzione non vale il calcolo dei gradienti rimane comunque equivalente a patto che la funzione di perdita sia additiva, supponendo di avere una rete con un insieme $\mathcal{O}$ di neuroni d'uscita:
-\[\frac{\partial}{\partial w} \mathrm{Loss}(\boldsymbol{w}) = \frac{\partial}{\partial w} (\boldsymbol{y} - h(\boldsymbol{w}))^2 = \frac{\partial}{\partial w} \sum_{o \in \mathcal{O}} (y_o - a_o) ^ 2 = \sum_{o \in \mathcal{O}} \frac{\partial}{\partial w} (y_o - a_o) ^ 2.\]
+\[\frac{\partial}{\partial \boldsymbol{w}} \mathrm{Loss}(\boldsymbol{w}) = \frac{\partial}{\partial \boldsymbol{w}} (\boldsymbol{y} - h(\boldsymbol{w}))^2 = \frac{\partial}{\partial \boldsymbol{w}} \sum_{o \in \mathcal{O}} (y_o - a_o) ^ 2 = \sum_{o \in \mathcal{O}} \frac{\partial}{\partial \boldsymbol{w}} (y_o - a_o) ^ 2.\]
 
 \end{document}
