@@ -20,7 +20,7 @@
         &\frac{F_p}{(1-F_p)(\frac{1}{F_n} - 1)} = \alpha^{(b-b_1)/F_n} =  \alpha^{b_2/F_n},\\
         &b_2 = F_n \log_\alpha \left(\frac{F_p}{(1-F_p)(\frac{1}{F_n} - 1)}\right).
     \end{flalign*}
-    Ricordando che $F_n$ può essere calcolato come rapporto tra chiavi etichettate erroneamente come non chiavi e chiavi totali $m_b/m$, sostituendo ritroviamo l'equazione \ref{eqn:SLBFGrandezzaOttima}:
+    Ricordando che $F_n$ può essere calcolato come rapporto tra chiavi etichettate erroneamente come non chiavi e chiavi totali $m_b/m$, sostituendo ritroviamo l'Equazione \eqref{eqn:SLBFGrandezzaOttima}:
     \[\underbrace{b_2 m}_{n_b^*} = m_b \log_\alpha \left(\frac{F_p}{(1-F_p)(\frac{m}{m_b} - 1)}\right).\]
     Una volta trovato il valore ottimo per la dimensione del filtro di backup è facile ricavare il relativo valore del tasso di falsi positivi $f_b$, ricordando infatti che vale la relazione $f_b = \alpha^{n_b^*/m_b}$ e sostituendo $n_b^*$: 
     \begin{equation}
@@ -29,7 +29,7 @@
     \end{equation}
     Assumendo di avere un filtro di backup con dimensione ottima $n_b^*$, il cui tasso di falsi positivi può essere di conseguenza calcolato tramite \eqref{eqn:SLBFfBOttimo}, possiamo ricavare delle equazioni per il tasso di falsi positivi del filtro iniziale e la sua grandezza.
 
-    È necessario prima di tutto sostituire il valore di $f_b$ nell'equazione \ref{eqn:SLBFFalsiPositivi}, per poi risolvere in funzione di $f_{b0}$: 
+    È necessario prima di tutto sostituire il valore di $f_b$ in \eqref{eqn:SLBFFalsiPositivi}, per poi risolvere in funzione di $f_{b0}$: 
 
     \begin{flalign*}
         &f = f_{b0}\left(F_p + (1 - F_p) \cdot \left(\frac{F_p}{(1 - F_p)(\frac{1}{F_n} - 1)}\right)\right),\\

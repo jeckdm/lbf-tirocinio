@@ -13,7 +13,7 @@
 
     Formalmente, un SLBF può quindi essere definito come segue: 
 
-    ``Un SLBF $(B_0, g, \tau, B)$ definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$ è un LBF a cui viene aggiunto un ulteriore filtro di Bloom $B_0$, che prende il nome di filtro iniziale; questo filtro conterrà tutti gli elementi dell'insieme $\mathcal{K}$. Dato un qualsiasi elemento $x$, se il filtro iniziale ritorna $x \notin \mathcal{K}$ l'SLBF ritornerà lo stesso risultato, viceversa, se il filtro iniziale ritorna $x \in \mathcal{K}$, il risultato dipenderà dall'LBF $(g, \tau, B)$ rimanente.''
+    ``Un SLBF $(B_0, g, \tau, B)$ definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$ è un LBF a cui viene aggiunto un ulteriore filtro di Bloom $B_0$, che prende il nome di filtro iniziale; questo filtro conterrà tutti gli elementi dell'insieme $\mathcal{K}$. Dato un qualsiasi elemento $x$, se il filtro iniziale ritorna $x \notin \mathcal{K}$ l'SLBF ritornerà lo stesso risultato; viceversa, se il filtro iniziale ritorna $x \in \mathcal{K}$, il risultato dipenderà dall'LBF $(g, \tau, B)$ rimanente.''
 
     La Figura \ref{fig:DifferenzeFiltri} riassume il processo di verifica dell'appartenenza all'insieme delle chiavi di un generico elemento $x$ per le tre tipologie di filtro presentate.
     
@@ -34,7 +34,7 @@
             \caption{}
             \label{fig:appartenenzaSLBF}
         \end{subfigure}
-        \caption{}
+        \caption{Processo di verifica dell'appartenenza per le tre diverse tipologie di filtro: in (a) nel caso di un filtro di Bloom, in (b) nel caso di un LBF, e in (c) nel caso di un SLBF.}
         \label{fig:DifferenzeFiltri}
     \end{figure}
 \end{document}
