@@ -7,7 +7,7 @@
     
     Intuitivamente, il vantaggio principale delle LSTM (e di conseguenza delle GRU) è la capacità di lavorare su dipendenze a lungo termine, cosa molto difficile nelle RNN, a causa del problema della scomparsa del gradiente. Questa capacità è data dall'aggiunta di un vettore, chiamato cell state $\boldsymbol{C}^{(t)}$, che ad ogni istante di tempo contiene informazioni generate dagli stati precedenti. Ad ogni istante di tempo le informazioni da inserire all'interno del cell state vengono regolate tramite dei `cancelli', o gate.
 
-    In realtà, nelle GRU la funzione del cell state viene inglobata nel vettore $\boldsymbol{n}^{(t)}$ e sono presenti meno gate rispetto ad un LSTM. La figura \ref{fig:strutturaGRU} mostra più nel dettaglio la struttura di una GRU, vengono inoltre riportate di seguito le relative equazioni:
+    In realtà, nelle GRU la funzione del cell state viene inglobata nel vettore $\boldsymbol{n}^{(t)}$ e sono presenti meno gate rispetto ad un LSTM. La Figura \ref{fig:strutturaGRU} mostra più nel dettaglio la struttura di una GRU, vengono inoltre riportate di seguito le relative equazioni:
 
     \begin{flalign}
         \boldsymbol{u}^{(t)} &= \sigma\left(\boldsymbol{W} \boldsymbol{x}^{(t)} + \boldsymbol{U} \boldsymbol{n}^{(t-1)}\right)& \text{gate di aggiornamento,}\\
@@ -23,7 +23,7 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{immagini/6_4/gruSchema.drawio.png}
-        \caption{}
+        \caption{Struttura della GRU.}
         \label{fig:strutturaGRU}
     \end{figure}
 \end{document}

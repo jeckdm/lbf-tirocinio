@@ -3,7 +3,7 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    Negli esperimenti del capitolo \ref{sec:valutazioneClassificatori} tutti i risultati presentati, per quanto riguarda la model evaluation, sono stati ottenuti utilizzando una tecnica che prende il nome di convalida incrociata, o cross validation. Scopo di questo paragrafo è di presentare una breve introduzione a questa tecnica.
+    Negli esperimenti del Capitolo \ref{chap:Risultati} tutti i risultati presentati, per quanto riguarda la model evaluation, sono stati ottenuti utilizzando una tecnica che prende il nome di convalida incrociata, o cross validation. Scopo di questo paragrafo è presentare una breve introduzione a questa tecnica.
 
     La procedura di convalida incrociata può essere riassunta nei seguenti passaggi: 
     \begin{itemize}
@@ -19,11 +19,11 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{immagini/6_3/cross_validation.drawio.png}
-        \caption{}
+        \caption{Schema del funzionamento di una procedura di convalida incrociata.}
         \label{fig:crossvalidation}
     \end{figure}
 
     L'idea di questo approccio è di utilizzare ognuno degli esempi del dataset come elemento dell'insieme di test, e contemporaneamente di avere un training set ad ogni iterazione sufficiente ampio, in modo da eliminare un eventuale bias in negativo derivante da un training set troppo piccolo.
 
-    La figura \ref{fig:crossvalidation} riassume il processo di model evaluation tramite convalida incrociata.
+    La Figura \ref{fig:crossvalidation} riassume il processo di model evaluation tramite convalida incrociata.
 \end{document}

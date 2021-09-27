@@ -22,9 +22,9 @@
 
     Infine, è utile per riassumere riportare la definizione di LBF data in \cite{10.5555/3326943.3326986}: 
 
-    ``Un LBF $(g, \tau, B)$, definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$, è una struttura composta da una funzione $g : \mathcal{X} \rightarrow [0,1]$, dove $\mathcal{X}$ è l'insieme universo, una soglia $\tau$, e da un filtro di Bloom $B$, chiamato filtro di backup, il cui compito è salvare tutti gli elementi dell'insieme $\mathcal{K}_{\tau}^- = \{x \in \mathcal{K} | g(x) < \tau\}$, ovvero l'insieme di falsi negativi generati da $g$. Dato un qualsiasi elemento $y$, l'LBF ritorna $y \in \mathcal{K}$ se $g(y) > \tau$ o se $g(y) < \tau$ e il filtro di backup ritorna $y \in \mathcal{K}$. In tutti gli altri casi l'LBF ritorna $y \notin \mathcal{K}$.''
+    ``Un LBF $(g, \tau, B)$, definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$, è una struttura composta da una funzione $g : \mathcal{X} \rightarrow [0,1]$, dove $\mathcal{X}$ è l'insieme universo, una soglia $\tau$, e da un filtro di Bloom $B$, chiamato filtro di backup, il cui compito è salvare tutti gli elementi dell'insieme $\mathcal{K}_{\tau}^- = \{x \in \mathcal{K} | g(x) < \tau\}$, ovvero l'insieme di falsi negativi generati da $g$. Dato un qualsiasi elemento $x$, l'LBF ritorna $x \in \mathcal{K}$ se $g(x) > \tau$ o se $g(x) < \tau$ e il filtro di backup ritorna $x \in \mathcal{K}$. In tutti gli altri casi l'LBF ritorna $x\notin \mathcal{K}$.''
 
-    La figura \ref{fig:confrontoInserimento} mette a confronto la procedura di inizializzazione per le due tipologie di filtro presentate, nello specifico viene riportata nella figura \ref{fig:BFInizializzazione} l'inizializzazione per un filtro di Bloom, mentre in figura \ref{fig:LBFInizializzazione} quella di un LBF.
+    La Figura \ref{fig:confrontoInserimento} mette a confronto la procedura di inizializzazione per le due tipologie di filtro presentate. Nello specifico, la Figura \ref{fig:BFInizializzazione} mostra l'inizializzazione per un filtro di Bloom, mentre la Figura \ref{fig:LBFInizializzazione} quella di un LBF.
 
     \begin{figure}[H]
         \centering

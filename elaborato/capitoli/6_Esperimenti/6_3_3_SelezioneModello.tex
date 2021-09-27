@@ -9,9 +9,9 @@
 
     In contesti come questo si preferisce quindi utilizzare una variante delle cross validation: la convalida incrociata annidata, o nested cross validation. Intuitivamente, questa tecnica consiste nell'annidare due cicli di cross validation: il ciclo più interno è responsabile per la model selection, mentre quello esterno permette di valutare le performance di generalizzazione.
 
-    Più formalmente, la nested cross validation è composta da due cicli annidati con finalità differenti: 
+    Più formalmente, la nested cross validation è composta da due cicli annidati con finalità differenti, descritti più del dettaglio di seguito.
     \begin{itemize}
-        \item il ciclo esterno è una normale cross validation: suddivide il dataset in $k$ insiemi di ugual dimensione. Ognuno di questi $k$ insiemi viene utilizzato una volta come test set, mentre i rimanenti insiemi compongono il training set. Nel contesto della convalida annidata la peculiarità sta nel modello addestrato: questo infatti avrà una configurazione di iperparametri che corrisponde alla migliore secondo quanto decretato dal ciclo interno.
+        \item Il ciclo esterno è una normale cross validation: suddivide il dataset in $k$ insiemi di ugual dimensione. Ognuno di questi $k$ insiemi viene utilizzato una volta come test set, mentre i rimanenti insiemi compongono il training set. Nel contesto della convalida annidata la peculiarità sta nel modello addestrato: questo infatti avrà una configurazione di iperparametri che corrisponde alla migliore secondo quanto decretato dal ciclo interno.
         \item Il ciclo interno è responsabile per la model selection: un algoritmo di ottimizzazione sceglie diverse configurazioni di iperparametri che vengono testate tramite una cross validation. In questo caso il dataset su cui la convalida incrociata lavora è il training set del ciclo esterno, e l'insieme che viene usato per il testing prende il nome di validation set.
     \end{itemize}
     In questo modo i $k$ punteggi che vengono ritornati dalla procedura forniscono una stima non distorta delle performance del modello.
@@ -20,13 +20,12 @@
 
     Lo svantaggio principale di questa tecnica deriva dalla sua complessità computazionale: in ogni ciclo interno vengono infatti addestrati e valutati $n \cdot k_{in}$ modelli, dove $n$ è il numero di combinazioni di parametri testate e $k_{in}$ è il parametro $k$ della convalida incrociata interna. Questo processo viene poi eseguito per un numero $k_{est}$ di volte, in totale verranno quindi addestrati e testati $k_{est} \cdot n \cdot k_{in}$ modelli.
 
-    La figura \ref{fig:nestedCV} mostra uno schema del funzionamento della convalida incrociata annidata.
+    La Figura \ref{fig:nestedCV} mostra uno schema del funzionamento della convalida incrociata annidata.
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{immagini/6_3/nestedCV.drawio.png}
-        \caption{}
-        \label{fig:nestedCV}
         \caption{Schema del funzionamento della convalida annidata, in questo caso il ciclo esterno suddivide il dataset in $k=5$ sottoinsiemi, mentre nel ciclo interno $k = 2$.}
+        \label{fig:nestedCV}
     \end{figure}
 \end{document}

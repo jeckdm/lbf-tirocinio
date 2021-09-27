@@ -3,14 +3,14 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    Come già accennato nel paragrafo \ref{sec:overfitting}, non esistono a regole che permettano di trovare a priori il modello ed i relativi iperparametri migliori per il problema su cui si sta lavorando.
+    Come già accennato nel paragrafo \ref{sec:overfitting}, non esistono a regole che permettono di trovare a priori il modello ed i relativi iperparametri migliori per il problema su cui si sta lavorando.
 
     Per questo motivo esistono tecniche che, da un lato, permettono di valutare le capacità di generalizzazione di un modello (si parla in questo caso di \textit{model evaluation}), e dall'altro permettono di confrontare le prestazioni, su un dato training set, di diversi modelli generati con configurazioni di iperparametri differenti, scegliendo poi il migliore (si parla in questo caso di \textit{model selection}).
    
     È importante notare come il processo di valutazione delle performance e/o di confronto e scelta tra modelli con iperparametri diversi non siano compiti così semplici come a prima vista potrebbero sembrare. Ad esempio, uno degli approcci più semplici in questo contesto, sia concettualmente che computazionalmente, consiste nella suddivisione del dataset in due porzioni, training set e testing set, che vengono utilizzate rispettivamente per addestrare e valutare il modello.\\
     Questo approccio porta però con sé alcune problematiche: suddividere il dataset iniziale porta ad una riduzione del numero di esempi utilizzati per addestrare il modello e dato che, in generale, maggiori sono gli esempi a disposizione e migliori saranno le prestazioni del modello, una valutazione fatta in questo modo restituirà una valutazione del modello più pessimista rispetto alle sue reali potenzialità\footnote{Molte tecniche di model evaluation e model selection, con relativi vantaggi e svantaggi, vengono discusse nel dettaglio in \cite{raschka2020model}.}.
 
-    L'esempio appena mostrato è utile a comprendere perché in molti casi siano necessarie tecniche più complesse per la model evaluation e la model selection. Nei prossimi paragrafi verranno descritte quelle utilizzate da noi negli esperimenti.
+    L'esempio appena mostrato è utile a comprendere perché in molti casi siano necessarie tecniche più complesse per la model evaluation e la model selection. Nei prossimi paragrafi verranno descritte quelle utilizzate negli esperimenti.
 
     Infine, quando valutiamo le prestazioni di un modello queste vengono quantificate da una o più metriche di valutazione, scelte a priori. Una metrica comunemente utilizzata ad esempio è l'accuratezza. Anche in questo caso occorre scegliere con attenzione quali metriche utilizzare, in quanto a seconda del problema su cui si lavora una metrica potrebbe presentare stime delle performance migliori rispetto alla realtà.
 \end{document}

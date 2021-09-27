@@ -5,7 +5,7 @@
 \begin{document}
     Un possibile miglioramento dell'appena descritta struttura dell'LBF viene fornita dal \textit{sandwiched learned Bloom filter}, l'efficienza dell'LBF viene aumentata aggiungendo un nuovo filtro di Bloom che precede il modello.
 
-    In questa nuova tipologia di filtro il processo di verifica dell'appartenenza all'insieme delle chiavi avviene quindi in questo modo: un elemento $x$ viene passato in ingresso al filtro, se questo etichetta l'elemento come non-chiave allora $x$ non è una chiave (essendo un filtro classico non possono essere presenti falsi negativi), viceversa, se $x$ viene giudicato come appartenente all'insieme delle chiavi allora viene passato in ingresso al modello, da qui in poi il processo è equivalente a quello di un LBF.
+    In questa nuova tipologia di filtro il processo di verifica dell'appartenenza all'insieme delle chiavi avviene quindi in questo modo: un elemento $x$ viene passato in ingresso al filtro, se questo etichetta l'elemento come non-chiave allora $x$ non è una chiave (essendo un filtro classico non possono essere presenti falsi negativi); viceversa, se $x$ viene giudicato come appartenente all'insieme delle chiavi allora viene passato in ingresso al modello, da qui in poi il processo è equivalente a quello di un LBF.
 
     Intuitivamente l'efficienza di questa struttura è superiore rispetto ad un LBF perché il filtro iniziale fornisce subito una `scrematura' degli elementi delle query, questo permette di diminuire il numero di falsi positivi generati dal classificatore e, di conseguenza, permette di avere un filtro di backup con una dimensione inferiore, perché può permettersi di lasciar passare un numero maggiore di elementi rispetto alla controparte dell'LBF.
 
@@ -13,9 +13,9 @@
 
     Formalmente, un SLBF può quindi essere definito come segue: 
 
-    ``Un SLBF $(B_0, g, \tau, B)$ definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$ è un LBF a cui viene aggiunto un ulteriore filtro di Bloom $B_0$, che prende il nome di filtro iniziale; questo nuovo filtro conterrà tutti gli elementi dell'insieme $\mathcal{K}$. Dato un qualsiasi elemento $y$, se il filtro iniziale ritorna $y \notin \mathcal{K}$ l'SLBF ritornerà lo stesso risultato, viceversa, se il filtro iniziale ritorna $y \in \mathcal{K}$, il risultato dipenderà dall'LBF $(g, \tau, B)$ rimanente.''
+    ``Un SLBF $(B_0, g, \tau, B)$ definito su un insieme di chiavi $\mathcal{K}$ ed un insieme di non-chiavi $\mathcal{U}$ è un LBF a cui viene aggiunto un ulteriore filtro di Bloom $B_0$, che prende il nome di filtro iniziale; questo filtro conterrà tutti gli elementi dell'insieme $\mathcal{K}$. Dato un qualsiasi elemento $x$, se il filtro iniziale ritorna $x \notin \mathcal{K}$ l'SLBF ritornerà lo stesso risultato, viceversa, se il filtro iniziale ritorna $x \in \mathcal{K}$, il risultato dipenderà dall'LBF $(g, \tau, B)$ rimanente.''
 
-    La figura \ref{fig:DifferenzeFiltri} riassume il processo di verifica dell'appartenenza all'insieme delle chiavi di un generico elemento $x$ per le tre tipologie di filtro presentate.
+    La Figura \ref{fig:DifferenzeFiltri} riassume il processo di verifica dell'appartenenza all'insieme delle chiavi di un generico elemento $x$ per le tre tipologie di filtro presentate.
     
     \begin{figure}[H]
         \centering

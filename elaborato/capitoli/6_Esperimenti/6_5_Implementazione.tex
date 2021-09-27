@@ -4,7 +4,7 @@
 
 \begin{document}
     \subsubsection{Filtri appresi}
-    L'implementazione del filtro di Bloom e delle due varianti apprese riprende quella fornita in \cite{ma2020}, il codice utilizzato è pressoché equivalente, fatto salvo per alcune modifiche utili a permettere l'utilizzo dei filtri appresi anche con il percettrone.
+    L'implementazione del filtro di Bloom e delle due varianti apprese riprende quella fornita in \cite{ma2020}. Il codice utilizzato è pressoché equivalente, fatto salvo per alcune modifiche utili a permettere l'utilizzo dei filtri appresi anche con il percettrone.
 
     \subsubsection{Suddivisione del dataset}
     Per la parte di esperimenti dedicata al confronto delle performance dei classificatori la suddivisione viene fatta coerentemente con la tecnica utilizzata: nel caso della convalida incrociata, ad esempio, il dataset viene suddiviso in $k$ sottoinsiemi, come descritto nel paragrafo \ref{sec:metrichevalutazione}.
@@ -19,7 +19,7 @@
     Per il percettrone multistrato invece gli URL vengono codificati sfruttando la classe \texttt{CountVectorizer} della libreria Scikit Learn, ogni URL viene quindi mappato ad un vettore contenente le frequenze assolute di ognuno dei caratteri presenti nel training set. Supponendo ad esempio di considerare la codifica dell'url `google.com' in un dataset in cui compaiono anche i caratteri `a' e `f', il relativo vettore dell'URL sarà $[1 \ 0 \ 1 \ 1 \ 0 \ 2 \ 1 \ 1 \ 3]$.
 
     La scelta di utilizzare due codifiche differenti deriva da due principali motivi: in primo luogo, gli esperimenti iniziali mostravano che l'utilizzo della prima codifica anche per il percettrone portava ad avere reti troppo grandi per le prestazioni fornite, e di conseguenza a filtri meno efficienti rispetto a quelli del sopracitato articolo.\\
-    In secondo luogo, l'alternativa di utilizzare questa seconda codifica anche per la rete ricorrente non era praticabile, infatti nella suddetta rete è presente anche uno strato di embedding, che lavora associando ad ognuno dei caratteri un vettore di 5 elementi, utilizzando la seconda codifica ognuno degli elementi del vettore non avrebbe più rappresentato un carattere, ma una frequenza, cambiando di fatto le informazioni fornite dallo strato di embedding. Viceversa, eliminare lo strato di embedding per adattare la rete alla nuova codifica avrebbe rappresentato una contraddizione rispetto agli scopi degli esperimenti, che sono invece quelli di confrontare nuovi classificatori con la stessa GRU dell'articolo.
+    In secondo luogo, l'alternativa di utilizzare questa seconda codifica anche per la rete ricorrente non era praticabile, infatti nella suddetta rete è presente anche uno strato di embedding, che lavora associando ad ognuno dei caratteri un vettore di 5 elementi. Utilizzando la seconda codifica ognuno degli elementi del vettore non avrebbe più rappresentato un carattere, ma una frequenza, cambiando di fatto le informazioni fornite dallo strato di embedding. Viceversa, eliminare lo strato di embedding per adattare la rete alla nuova codifica avrebbe rappresentato una contraddizione rispetto agli scopi degli esperimenti, che sono invece quelli di confrontare nuovi classificatori con la stessa GRU dell'articolo.
 
     Importante notare come la seconda codifica perda le informazioni legate alla posizione dei caratteri nell'URL, come evidenziato dai risultati, però, l'assenza di queste informazioni non comporta grosse perdite nelle performance dei percettroni.
 
