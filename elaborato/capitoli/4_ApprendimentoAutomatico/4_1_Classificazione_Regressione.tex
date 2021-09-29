@@ -36,16 +36,16 @@
         \begin{subfigure}[t]{0.49\textwidth}
             \centering
             \includegraphics[width=\textwidth]{immagini/4_1/loss_function.png} 
-            \caption{Grafico di un generica funzione di perdita.}
+            \caption{}
             \label{fig:funzioneLoss}      
         \end{subfigure}
         \begin{subfigure}[t]{0.49\textwidth}
             \centering
             \includegraphics[width=\textwidth]{immagini/4_1/discesa_gradiente.png} 
-            \caption{Curve di livello della funzione di perdita rappresentata nella figura a sinistra. Le frecce verdi mostrano la direzione e la lunghezza del passo compiuto per l'aggiornamento dei pesi ad ogni iterazione.}
+            \caption{}
             \label{fig:curveLivello}      
         \end{subfigure}
-        \caption{Esempio del funzionamento dell'algoritmo del gradiente utilizzato per aggiornare il valore dei pesi: noto come il valore della funzione di perdita diminuisca all'aumentare del numero di iterazioni fino ad arrivare a convergenza}
+        \caption{Esempio di funzionamento dell'algoritmo del gradiente, nello specifico: (a) mostra il grafico di una generica funzione di perdita, (b) mostra le curve di livello della funzione di perdita in (a). Le frecce verdi mostrano la direzione e la lunghezza  del  passo  compiuto  per  l’aggiornamento dei pesi ad ogni iterazione. Si noti come il valore della funzione diminuisca ad ogni iterazione, fino ad arrivare a convergenza. }
         \label{fig:gradient_descent}
     \end{figure}
 
@@ -124,16 +124,16 @@
         \begin{subfigure}[]{0.49\textwidth}
             \centering
             \includegraphics[width=\textwidth]{immagini/4_1/class_linearly_separable.png} 
-            \caption{Esempio di dataset linearmente separabile}
+            \caption{}
             \label{fig:linearly_sep_classification}      
         \end{subfigure}
         \begin{subfigure}[]{0.49\textwidth}
             \centering
             \includegraphics[width=\textwidth]{immagini/4_1/class_non_linearly_separable.png}    
-            \caption{Esempio di dataset non linearmente separabile}
+            \caption{}
             \label{fig:non_linearly_sep_classification}    
         \end{subfigure}
-        \caption{}
+        \caption{Esempi di dataset contenenti elementi appartenenti a due etichette diverse, colorati in blu e verde. In (a) l'insieme di punti del dataset è linearmente separabile, in (b) l'insieme di punti non è linearmente separabile.}
     \end{figure}
 
     Un modello lineare può essere utilizzato anche nel contesto dei problemi di classificazione: in Figura \ref{fig:linearly_sep_classification}, ad esempio,  è rappresentato un insieme di punti appartenenti a due etichette differenti, rispettivamente colorati in blu e in verde. Fornito un dataset di questo tipo l'obiettivo in un problema di classificazione è apprendere una funzione d'ipotesi $h$ che, dato un nuovo punto $x$, fornisca in output una predizione per l'etichetta $y$, l'obiettivo è ovviamente quello di avere globalmente delle buone predizioni. 
@@ -163,16 +163,16 @@
         \begin{subfigure}{0.5\textwidth}
             \centering
             \includegraphics[width=\textwidth]{immagini/4_1/threshold.png} 
-            \caption{Funzione Soglia}
+            \caption{}
             \label{fig:threshold}
         \end{subfigure}
         \begin{subfigure}{0.5\textwidth}
             \centering
             \includegraphics[width=\textwidth]{immagini/4_1/logistic.png}
-            \caption{Funzione Logistica}
+            \caption{}
             \label{fig:logistic}
         \end{subfigure}
-        \caption{Grafici della funzioni soglia e logistica.}
+        \caption{(a) Grafico della funzione soglia. (b) Grafico della funzione logistica.}
     \end{figure}
 
     Come appena mostrato quindi utilizzare l'output di un modello lineare come input di una funzione soglia permette di adattare l'approccio già utilizzato per il problema della regressione al contesto della classificazione. il principale lato negativo di utilizzare una funzione di questo tipo deriva dal fatto che essa non è differenziabile, un classificatore basato su una funzione di questo tipo inoltre fornisce sempre valori binari, anche quando il risultato è molto vicino al valore della soglia. Nella maggior parte delle situazioni una funzione di questo tipo non è ciò di cui abbiamo bisogno.

@@ -5,10 +5,10 @@
 \begin{document}
 
 \section{Descrizione della struttura}
+\label{sec:BFStruttura}
+Un \textit{filtro di Bloom} \cite{Bloom1970SpacetimeTI} è una struttura dati probabilistica basata su funzioni di hash, il cui obiettivo è quello di rappresentare un insieme di elementi in un modo tale da permettere di verificare se un generico elemento appartenga o meno a tale insieme. Un filtro di Bloom può generare falsi positivi, ma non falsi negativi.
 
-Un \textit{Filtro di Bloom} \cite{Bloom1970SpacetimeTI} è una struttura dati probabilistica basata su funzioni di hash, il cui obiettivo è quello di rappresentare un insieme di elementi in un modo tale da permettere di verificare se un generico elemento appartenga o meno a tale insieme. Proprietà fondamentale di un filtro di Bloom è il fatto di poter generare falsi positivi, ma non falsi negativi.
-
-Questa struttura trova il suo principale utilizzo nei contesti in cui mantenere tutto l'insieme in memoria richiederebbe molto più spazio di quello a disposizione: il filtro infatti consiste semplicemente in un array di $n$ bit, inizializzati a $0$, e una serie di $k$ funzioni di hash, che mappano in modo uniforme sulle $n$ possibili posizioni. Ogni elemento appartenente all'insieme viene passato attraverso le $k$ funzioni ed i bit presenti nelle posizioni corrispondenti ai risultati vengono posti ad 1. Intuitivamente, fissata la dimensione $n$ del filtro, maggiori sono gli elementi da inserire, maggiore è la probabilità di ottenere falsi positivi.
+Questa struttura trova il suo principale utilizzo nei contesti in cui mantenere tutto l'insieme in memoria richiederebbe molto più spazio di quello a disposizione: il filtro infatti consiste semplicemente in un array di $n$ bit, inizializzati a $0$, e una serie di $k$ funzioni di hash\footnote{Una funzione di hash è una funzione non invertibile in grado di mappare elementi di grandezza arbitraria in elementi di un sottoinsieme di grandezza prefissata.}, che mappano in modo uniforme sulle $n$ possibili posizioni. Ogni elemento appartenente all'insieme viene passato attraverso le $k$ funzioni e i bit presenti nelle posizioni restituite vengono posti ad 1. Intuitivamente, fissata la dimensione $n$ del filtro, maggiori sono gli elementi da inserire, maggiore è la probabilità di ottenere falsi positivi.
 
 Formalmente quindi un Filtro di Bloom è formato da:
     \begin{itemize}
@@ -48,16 +48,16 @@ La probabilità $f$ di ottenere un falso positivo può essere quantificata dalla
     f = \left(1 - \left(1 - \frac{1}{n}\right)^{km}\right)^k \approx \left(1 - e^{-km/n}\right)^k,
     \label{eqn:bloomfpr}
 \end{equation}
-in quanto abbiamo supposto che ogni funzione di hash mappi con probabilità uniforme su ognuno degli $n$ bit  dell'array, di conseguenza dato un elemento $x$ da inserire nel filtro, la probabilità che uno specifico bit non venga impostato a 1 dopo che l'elemento è passato per tutte le $k$ funzioni di hash è
+in quanto abbiamo supposto che ogni funzione di hash mappi con probabilità uniforme su ognuno degli $n$ bit  dell'array. Di conseguenza, dato un elemento $x$ da inserire nel filtro, la probabilità che uno specifico bit non venga impostato a 1 dopo che l'elemento è passato per tutte le $k$ funzioni di hash è
 \[\left(1 - \frac{1}{n}\right)^k.\]
 L'inserimento deve inoltre essere effettuato per tutti gli $m \in \mathcal{S}$ elementi, supponendo ogni inserimento come un evento indipendente\footnote{Nella realtà l'indipendenza tra successivi inserimenti non vale: il fatto che un bit venga posto ad 1 influenza la probabilità degli altri bit di essere posti ad uno, di fatto quindi $e^{-km/n}$ rappresenta il valore atteso della frazione di bit a 0 dopo l'inserimento. In \cite{10.1145/383962.384004} viene però dimostrato che il valore reale di tale frazione risulta comunque altamente concentrata attorno al suo valore atteso. Nello specifico, indicata con $X$ variabile aleatoria che rappresenta il numero di bit a 0 dopo l'inserimento vale $\mathbb{P}\left(|X - m e^{-km/n}| > \epsilon m \right) < 2e^{(-\epsilon^2 n^2)/2mk}$ per ogni $\epsilon > 0$.} e $n$ sufficiente grande:
 \[\left(1 - \frac{1}{n}\right)^{km} = \left(\left(1 - \frac{1}{n}\right)^n\right)^{km/n} \approx e^{-km/n},\]
 di conseguenza la probabilità che un dato bit sia a 1 dopo l'inserimento di $n$ elementi è $\approx 1 - e^{-km/n}$. Nella fase di controllo dell'appartenenza di un generico elemento quindi la probabilità che tutte le $k$ funzioni restituiscano una posizione a cui è associato un bit posto a 1 è
 \[\approx \left(1 - e^{-km/n}\right)^k.\]
-Dall'equazione \ref{eqn:bloomfpr} si nota che, fissato $n$, all'aumentare del numero di elementi da inserire nel filtro la probabilità di falsi positivi aumenta, contemporaneamente il numero di funzioni di hash $k$ influisce su $f$ sia in positivo che negativo, si rende per questo necessario trovare un numero ottimale di funzioni di hash, come evidenziato nel prossimo paragrafo.
+Da \eqref{eqn:bloomfpr} si nota che, fissato $n$, all'aumentare del numero di elementi da inserire nel filtro la probabilità di falsi positivi aumenta, contemporaneamente il numero di funzioni di hash $k$ influisce su $f$ sia in positivo che negativo. Si rende per questo necessario trovare un numero ottimale di funzioni di hash, come evidenziato nel prossimo paragrafo.
 
 \section{Filtri di Bloom nel caso ottimo}
-Fissati $n$ ed $m$ risulta necessario trovare un numero $k$ di funzioni di hash che minimizzi il tasso di falsi positivi $f$; intuitivamente questo numero non può essere nè troppo alto nè troppo basso: da un lato infatti avere molte funzioni di hash porta ad avere una probabilità più alta di trovare uno 0 se l'elemento non appartiene al filtro, viceversa, un $k$ basso implica un numero minore di bit posti ad 1, e di conseguenza un numero maggiore di bit a 0. 
+Fissati $n$ ed $m$ risulta necessario trovare un numero $k$ di funzioni di hash che minimizzi il tasso di falsi positivi $f$; intuitivamente questo numero non può essere nè troppo alto nè troppo basso: da un lato, infatti, avere molte funzioni di hash porta ad avere una probabilità più alta di trovare uno 0 se l'elemento non appartiene al filtro; viceversa, un $k$ basso implica un numero minore di bit posti ad 1, e di conseguenza un numero maggiore di bit a 0. 
 
 La formula che quantifica il numero ottimale di funzioni di hash $k$ è:
 
@@ -66,7 +66,7 @@ La formula che quantifica il numero ottimale di funzioni di hash $k$ è:
     \label{eqn:bloomoptimalK}
 \end{equation}
 
-che può essere ricavata analiticamente lavorando sulla derivata di $f$ rispetto a $k$,  se infatti l'obiettivo è trovare il numero ottimale di funzioni di hash semplicemente basterà porre tale derivata a 0 e risolvere in rispetto a $k$.
+che può essere ricavata analiticamente lavorando sulla derivata di $f$ rispetto a $k$,  se infatti l'obiettivo è trovare il numero ottimale di funzioni di hash semplicemente basterà porre tale derivata a 0 e risolvere rispetto a $k$.
 
 Per rendere più semplice il calcolo della derivata è utile ragionare sul logaritmo di $f(k)$:
 \begin{align*}
@@ -101,6 +101,6 @@ la disequazione può essere ricavata ricordando che nel caso ottimo il tasso di 
     &= n \geq m \frac{\log_2(1/\epsilon)}{\ln2} = m \log_2(e) \log_2(1/\epsilon) .
 \end{align*}
 Infine, in \cite{Broder2005} viene calcolato un limite inferiore per il numero $n$ di bit necessari a rappresentare tutti gli insiemi di $m$ elementi estratti da un insieme universo di grandezza $u$, con la possibilità di includere falsi positivi con probabilità $\epsilon$:
-\[n \geq m \log_2(1/\epsilon),\]
+\[n \geq m \log_2(1/\epsilon).\]
 Confrontando quest'ultimo limite con quello di \eqref{eqn:nlowerbound} possiamo concludere che in termini di spazio un filtro di Bloom utilizza un numero di bit superiore per un fattore $\approx 1.44$ rispetto al limite inferiore.
 \end{document}

@@ -8,7 +8,7 @@
         f = f_{b_0}\left(\underset{x \sim \mathcal{D}}{\mathbb{P}}(g(x) \geq \tau) + (1 - \underset{x \sim \mathcal{D}}{\mathbb{P}}(g(x) \geq \tau))f_b\right),
         \label{eqn:SLBFFalsiPositivi}
     \end{equation}
-    qui la notazione è equivalente a quella utilizzata nel paragrafo precedente: $g$ indica il modello, $\tau$ la soglia, $f_b$ ed $f_{b0}$ indicano rispettivamente il tasso di falsi positivi del filtro di backup e del filtro iniziale.
+    qui la notazione è equivalente a quella utilizzata nel paragrafo precedente: $g$ indica il modello, $\tau$ la soglia, $f_b$ ed $f_{b_0}$ indicano rispettivamente il tasso di falsi positivi del filtro di backup e del filtro iniziale.
 
-    L'equazione può essere ricavata pensando a come avviene il processo di controllo dell'appartenenza per un $x \notin \mathcal{K}$: l'elemento ha una probabilità pari a $f_{b0}$ di essere erroneamente etichettato come positivo dal filtro, dopodiché il processo si svolge come già descritto per l'LBF. Per ricavare $f$ quindi basta semplicemente moltiplicare \eqref{eqn:LBFFalsiPositivi} per $f_{b0}$.
+    L'equazione può essere ricavata pensando a come avviene il processo di controllo dell'appartenenza per un $x \notin \mathcal{K}$: l'elemento ha una probabilità pari a $f_{b_0}$ di essere erroneamente etichettato come positivo dal filtro, dopodiché il processo si svolge come già descritto per l'LBF. Per ricavare $f$ quindi basta semplicemente moltiplicare \eqref{eqn:LBFFalsiPositivi} per $f_{b_0}$.
 \end{document}

@@ -3,22 +3,22 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    Come accade in un filtro di Bloom classico, anche l'obiettivo di un LBF è quello di salvare in modo efficiente in termini di spazio un dato insieme, in questo capitolo chiamato $\mathcal{K}$, di elementi, o chiavi, e di fornire la possibilità di controllare l'appartenenza di un generico elemento $x$ a tale insieme.
+    Come accade in un filtro di Bloom classico, anche l'obiettivo di un LBF è quello di memorizzare in modo efficiente in termini di spazio gli elementi, o chiavi, di un dato insieme, in questo capitolo chiamato $\mathcal{K}$, e di fornire la possibilità di controllare l'appartenenza di un generico elemento $x$ a tale insieme.
 
     La differenza rispetto al filtro base si trova nell'utilizzo di un classificatore per aiutare nel processo di controllo dell'appartenenza di un elemento all'insieme. Di fatto, il problema dell'appartenenza viene considerato come un problema di classificazione binaria in cui gli elementi appartenenti al filtro possiedono l'etichetta 1, mentre i rimanenti elementi possiedono etichetta 0.
 
-    Più formalmente, l'obiettivo è quello di apprendere un modello $g$ in grado di etichettare correttamente la maggior parte degli elementi appartenenti all'insieme; il classificatore viene quindi addestrato su un training set $\mathcal{T}$ definito come unione degli insiemi $\mathcal{K}$, insieme delle chiavi, ed $\mathcal{U}$, insieme delle non-chiavi:
+    Più formalmente, l'obiettivo è quello di apprendere un modello $g$ in grado di predire correttamente la maggior parte degli elementi appartenenti all'insieme; il classificatore viene quindi addestrato su un training set $\mathcal{T}$ definito come unione degli insiemi $\mathcal{K}$, insieme delle chiavi, ed $\mathcal{U}$, insieme delle non-chiavi:
     \begin{equation}
         \mathcal{T} = \{(x_i, y_i = 1) | x_i \in \mathcal{K}\} \cup \{(x_i, y_i = 0) | x_i \in \mathcal{U}\}.
     \end{equation}
-    Essendo in un problema di classificazione binaria, $g$ avrà una funzione logistica come funzione d'attivazione e verrà addestrato minimizzando la seguente funzione di perdita $L$, chiamata log-loss:
+    Siccome la classificazione è di tipo binario, i modelli $g$ presi in considerazione sono reti neurali multistrato, il cui strato di output contiene un solo neurone con attivazione sigmoidale. Inoltre, la funzione di perdita $L$ da minimizzare prende il nome di log loss, e viene riportata di seguito:
     \begin{equation}
         L = \sum_{(x,y) \in \mathcal{T}}\left(y \log g(x) + (1 - y) \log(1 - g(x))\right).
         \label{eqn:logloss}
     \end{equation}
-    Per come il modello $g$ è stato definito, il valore restituito da $g(x)$ rappresenta la probabilità che l'elemento $x$ appartenga al filtro, si rende di conseguenza necessaria l'introduzione di una soglia $\tau$. Un elemento verrà giudicato come appartenente al filtro se $g(x) > \tau$.
+    Il valore $g(x)$ restituito dal modello rappresenta quindi la probabilità che l'elemento $x$ appartenga al filtro, si rende di conseguenza necessaria l'introduzione, per potere emettere come predizione un valore binario, di una soglia $\tau$. Un elemento verrà giudicato come appartenente al filtro se $g(x) > \tau$.
     
-    Utilizzando solamente il classificatore però nasce la possibilità di ottenere dei falsi negativi: elementi $x \in \mathcal{K}$ per cui $g(x)$ risulta inferiore alla soglia, questo viola una delle caratteristiche fondamentali del filtro di Bloom, ovvero l'assenza di falsi negativi. Per eliminare i falsi negativi prodotti dal classificatore viene introdotto un filtro di backup, ovvero un filtro di Bloom incaricato di salvare tutti gli elementi appartenenti all'insieme $\mathcal{K}_{\tau}^- = \{x \in \mathcal{K} | g(x) < \tau\}$ dei falsi negativi.
+    Utilizzando solamente il classificatore però nasce la possibilità di ottenere dei falsi negativi: elementi $x \in \mathcal{K}$ per cui $g(x)$ risulta inferiore alla soglia, questo viola una delle caratteristiche fondamentali del filtro di Bloom, ovvero l'assenza di falsi negativi. Per eliminare i falsi negativi prodotti dal classificatore viene introdotto un filtro di backup, ovvero un filtro di Bloom incaricato di memorizzare tutti gli elementi appartenenti all'insieme $\mathcal{K}_{\tau}^- = \{x \in \mathcal{K} | g(x) < \tau\}$ dei falsi negativi.
 
     Infine, è utile per riassumere riportare la definizione di LBF data in \cite{10.5555/3326943.3326986}: 
 
@@ -29,7 +29,7 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{immagini/5_1/BFInizializzazione.png}
-        \caption{Procedura di inizializzazione di un filtro di Bloom: tutti gli elementi dell'insieme $\mathcal{K}$ vengono passati attraverso le funzioni di hash $k$, i bit presenti nelle posizioni corrispondenti ai risultati delle funzioni di hash vengono posti ad 1.}
+        \caption{Procedura di inizializzazione di un filtro di Bloom: tutti gli elementi dell'insieme $\mathcal{K}$ vengono passati attraverso le funzioni di hash $k$, e i bit presenti nelle posizioni corrispondenti ai risultati ottenuti vengono posti ad 1.}
         \label{fig:BFInizializzazione}
     \end{figure}
 

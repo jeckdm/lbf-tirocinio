@@ -52,19 +52,19 @@ Una volta definita la struttura di un neurone è utile analizzare come più neur
 Intuitivamente, tramite la composizione di molteplici $f$ è possibile creare funzioni d'ipotesi $h$ in grado di approssimare funzioni complesse; questa intuizione, oltre ad essere corretta, viene formalizzata nel \textit{teorema di approssimazione universale} \cite{journals/mcss/Cybenko89}, che dimostra un risultato ancora più forte: una rete feedforward composta da un singolo strato nascosto con un numero arbitrario e finito di neuroni e con una funzione logistica (Figura \ref{fig:activations}) come funzione d'attivazione è in grado di approssimare con precisione arbitraria una qualsiasi funzione continua.
 
 \begin{figure}[H]
-    \begin{subfigure}[]{0.48\textwidth}
+    \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/feed_forward.png}
-        \caption{Esempio di rete neurale con architettura feed forward}
+        \caption{}
         \label{fig:feedforward}        
     \end{subfigure}
-    \begin{subfigure}[]{0.48\textwidth}
+    \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/RNN.png}
-        \caption{Esempio di rete neurale ricorrente, in questo caso la ricorrenza è solamente diretta}
+        \caption{}
         \label{fig:RNN}
     \end{subfigure}
-    \caption{}
+    \caption{Esempi di architetture di reti neurali, nello specifico: (a) mostra un esempio di rete feed forward, (b) mostra un esempio di rete ricorrente, con ricorrenza solamente diretta.}
 \end{figure}
 
 Una \textit{rete feedforward} è composta da un livello d'ingresso, uno d'uscita e da uno o più livelli nascosti. Le connessioni in questa topologia sono permesse solo tra neuroni di livelli consecutivi. Dato un elemento del dataset $\boldsymbol{x}$ la relativa predizione viene generata passando al livello d'ingresso il vettore $\boldsymbol{x}$, il livello d'uscita conterrà quindi la predizione $h(\boldsymbol{x})$, risultato della composizione delle funzioni di ognuno degli strati. Se il numero di livelli nascosti è superiore a 3 si parla di reti profonde.

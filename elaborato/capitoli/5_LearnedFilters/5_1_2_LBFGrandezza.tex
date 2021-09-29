@@ -3,7 +3,7 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    Una volta introdotta l'Equazione \eqref{eqn:LBFFalsiPositivi} è possibile ricavare un limite inferiore sulla grandezza della struttura una volta definito il tasso di falsi positivi $\epsilon$ desiderato.
+    A partire da \eqref{eqn:LBFFalsiPositivi} è possibile ricavare un limite inferiore sulla grandezza della struttura una volta definito il tasso di falsi positivi $\epsilon$ desiderato.
 
     Il procedimento per ricavare tale limite è simile a quello già presentato nel Capitolo \ref{chap:FiltriBloom}, adattandolo però alle nuove componenti presenti nell'LBF.
 
@@ -15,15 +15,16 @@
     \end{itemize}
     Considerando il classificatore, ogni chiave avrà una probabilità $F_n$ di essere erroneamente etichettata come non-chiave, generando un falso negativo. Viceversa, ogni non-chiave avrà una probabilità $F_p$ di essere etichetta come chiave, generando un falso positivo. 
     
-    Definiamo  la grandezza del filtro di backup $n = m \cdot b$, tale filtro dovrà contenere solamente i falsi negativi generati dal classificatore, quindi un totale di $F_n \cdot m$ elementi.
+    Se definiamo  la grandezza del filtro di backup $n = m \cdot b$, tale filtro dovrà contenere solamente i falsi negativi generati dal classificatore, quindi un totale di $F_n \cdot m$ elementi.
 
     Fissiamo ora un tasso di falsi positivi $\epsilon$ desiderato ed imponiamo che il tasso di falsi positivi $f$ della struttura sia minore di tale valore: 
     \[f < \epsilon.\]
     Utilizzando le notazioni introdotte e sostituendo ad $f$ il suo valore, come definito in \eqref{eqn:LBFFalsiPositivi}, possiamo riscrivere la precedente disequazione come
     \begin{equation}
         F_p+ (1 - F_p)f_b < \epsilon,
+        \label{eqn:LBFDimension}
     \end{equation}
-    assumendo che il filtro di backup abbia un numero $k$ di funzioni di hash ottimo, per quanto detto nel Capitolo \ref{chap:FiltriBloom} vale $f_b = \alpha^{(bm)/(F_nm)} = \alpha^{b/F_n}$, con $\alpha \approx 0.6185$. Sostituendo il valore di $f_b$ nella disequazione e risolvendo rispetto a $b$: 
+    assumendo che il filtro di backup abbia un numero $k$ di funzioni di hash ottimo, per quanto detto nel paragrafo \ref{sec:BFStruttura} vale $f_b = \alpha^{(bm)/(F_nm)} = \alpha^{b/F_n}$, con $\alpha \approx 0.6185$. Sostituendo il valore di $f_b$ in \eqref{eqn:LBFDimension} e risolvendo rispetto a $b$ si ottiene: 
     \begin{flalign*}
         &F_p + (1 - F_p)\alpha^{b/F_n} < \epsilon,\\            
         &\alpha^{b/F_n} < \frac{\epsilon - F_p}{1 - F_p},\\
@@ -40,5 +41,5 @@
         f_b = \frac{\epsilon - F_p}{1 - F_p}.
         \label{eqn:LBFBackupFalsePositive}
     \end{equation}
-    Importante notare che affinché \eqref{eqn:LBFBackupFalsePositive} non generi un tasso negativo è necessario che valga $\epsilon > F_p$.
+    È importante notare che, affinché \eqref{eqn:LBFBackupFalsePositive} non generi un tasso negativo, è necessario che valga $\epsilon > F_p$.
 \end{document}

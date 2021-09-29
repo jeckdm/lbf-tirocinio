@@ -1,0 +1,24 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}    
+    Presentati per la prima volta in \cite{Bloom1970SpacetimeTI}, i filtri di Bloom vengono oggi utilizzati in molteplici contesti: database \cite{kraska2018case}, web caching \cite{Maggs15algorithmicnuggets}, controllo di indirizzi \cite{Dharmapurikar2006LongestPM}, e molti altri.
+
+    In breve, un filtro di Bloom è una struttura dati probabilistica ed efficiente in termini di spazio, utilizzata per verificare l'appartenenza di un elemento a un insieme; un filtro di Bloom può generare falsi positivi, ma non falsi negativi.
+
+    Nel corso degli anni sono state proposte diverse varianti del filtro di Bloom, che cercano di migliorare l'efficienza della struttura originale. Le varianti su cui questa tesi si concentra sono il filtro di Bloom appreso, o learned Bloom filter (LBF) \cite{kraska2018case}, e il sandwiched learned Bloom filter (SLBF) \cite{10.5555/3326943.3326986}. Entrambe si caratterizzano per l'utilizzo di classificatori al fine di ridurre lo spazio occupato dalla struttura.
+
+    Nello specifico, gli esperimenti che verranno presentati nei Capitoli \ref{chap:Esperimenti} e \ref{chap:Risultati} partono dal classificatore presentato in \cite{ma2020}, ovvero una GRU, e ne forniscono un'analisi dal punto di vista delle performance, e dei filtri con lui costruiti. Il classificatore e i relativi filtri vengono poi messi a confronto con un modello più semplice: il fine è quello di verificare se l'utilizzo di modelli meno complessi, e di conseguenza meno onerosi in termini di spazio, possa portare a filtri appresi più efficienti. Come verrà evidenziato dai risultati, il classificatore più semplice rappresenta, nel contesto presentato, la scelta migliore.
+    Il problema che viene preso in considerazione è un problema di classificazione di URL.
+
+    Riassumendo, questa tesi si propone principalmente di: 
+    \begin{itemize}
+        \item presentare un confronto tra le performance dei classificatori di \cite{ma2020} e una tipologia di modello più semplice,
+        \item presentare i risultati di analisi empiriche effettuate sui filtri appresi costruiti con i classificatori descritti,
+        \item presentare un confronto tra le taglie dei filtri ottenuti con i diversi classificatori, e un confronto tra le taglie delle due tipologie di filtri appresi.
+    \end{itemize}
+    In ultimo, seppur brevemente, vengono trattati i tempi di accesso di un filtro classico, confrontandoli con le due variante apprese. Come prevedibile, il filtro di Bloom si rivela più efficiente sotto questo punto di vista. 
+
+    Come già anticipato, i Capitoli \ref{chap:Esperimenti} e \ref{chap:Risultati} presentano strumenti, implementazione e risultati degli esperimenti. I Capitoli \ref{chap:FiltriBloom}, \ref{chap:ApprendimentoAutomatico} e \ref{chap:filtriAppresi} forniscono, invece, un'introduzione teorica agli aspetti legati agli esperimenti, rispettivamente descrivono filtri di Bloom, apprendimento automatico (con particolare attenzione a percettroni multistrato e reti ricorrenti) e filtri di Bloom appresi.
+\end{document}

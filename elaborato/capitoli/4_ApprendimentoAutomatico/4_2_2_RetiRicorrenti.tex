@@ -22,7 +22,7 @@ Posso rappresentare questa funzione ricorsiva tramite il grafo computazionale in
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.4]{immagini/4_2/computation_graph.png}
-    \caption{}
+    \caption{Esempio di grafo computazionale.}
     \label{fig:computationgraph}
 \end{figure}
 
@@ -39,22 +39,22 @@ Definite le caratteristiche base di una rete ricorrente, possiamo combinare gli 
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/recnet2.png}
-        \caption{RNN con uscita ad ogni istante di tempo}
+        \caption{}
         \label{fig:RNNArch1}
     \end{subfigure}
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/recnet.png}      
-        \caption{RNN in cui l'uscita di ogni istante di tempo influenza lo strato nascosto dell'istante successivo}  
+        \caption{}  
         \label{fig:RNNArch2}
     \end{subfigure}
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/recnet3.png}  
-        \caption{RNN con uscita solo all'ultimo istante di tempo} 
+        \caption{} 
         \label{fig:RNNArch3}  
     \end{subfigure}
-    \caption{}
+    \caption{Esempi di possibili architetture di rete ricorrente. (a) Mostra una RNN con uscita ad ogni istante di tempo. (b) Mostra una RNN in cui l'uscita in ogni istante di tempo influenza lo strato nascosto dell'istante successivo. (c) Mostra una RNN con uscita solo all'ultimo istante di tempo.}
 \end{figure}
 
 Nel corso del tempo sono state proposte diverse implementazioni di questo tipo di architetture, quella da noi utilizzata negli esperimenti prende il nome di \textit{Gated Recurrent Unit} (GRU), la cui struttura viene introdotta nel paragrafo \ref{sec:strutturaRNN}.
@@ -64,25 +64,25 @@ Anche le RNN rientrano nella tipologia di modelli parametrici, l'apprendimento q
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[t]{0.49\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/softmax.png}
-        \caption{Funzione softmax}
+        \caption{}
         \label{fig:softmax}
     \end{subfigure}
-    \begin{subfigure}[t]{0.49\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width = \textwidth]{immagini/4_2/tanh.png}      
-        \caption{Funzione tanh}  
+        \caption{}  
         \label{fig:tanh}
     \end{subfigure}
-    \caption{}
+    \caption{(a) Grafico della funzione softmax. (b) Grafico della funzione tanh.}
 \end{figure}
 
 Per il calcolo del gradiente viene sfruttata una variante della  backpropagation, chiamata \textit{backpropagation through time} (BPTT), usata per far fronte ai problemi che sorgono dalla condivisione dei parametri. Prima di introdurre la BPTT è utile definire le equazioni che descrivono la forward propagation degli elementi in ingresso alla rete: il primo passo è l'inizializzazione dello strato nascosto $\boldsymbol{h}^{(0)}$ al tempo 0 , successivamente ad ogni istante di tempo il risultato delle rete viene calcolato come:
 \begin{fleqn}[1cm]
     \begin{equation}
-        \boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W h}^{t-1} + \boldsymbol{U x}^{(t)},
+        \boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W h}^{(t-1)} + \boldsymbol{U x}^{(t)},
     \end{equation}
     \begin{equation}
         \boldsymbol{h}^{(t)} = \mathrm{tanh}(\boldsymbol{a}^{(t)}),

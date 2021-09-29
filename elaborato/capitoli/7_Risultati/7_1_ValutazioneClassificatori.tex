@@ -3,12 +3,12 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    \subsubsection{Proporzione training-testing}
-    Il primo esperimento viene effettuato sulle tre tipologie di GRU descritte, ed il fine è quello di esaminare le prestazioni del classificatore al variare della proporzione training set, testing set. 
+    \paragraph{Rapporto training-testing}
+    Il primo esperimento viene effettuato sulle tre tipologie di GRU descritte, ed il fine è quello di esaminare le prestazioni del classificatore al variare del numero di elementi destinati al training e al test set. 
     
-    Questo esperimento è utile ad evidenziare eventuali bias negativi dovuti ad un sottodimensionamento dell'insieme d'addestramento; intuitivamente, essendo il dataset utilizzato relativamente grande, non ci aspettiamo cambiamenti di performance significative nelle proporzioni testate: il training set dovrebbe avere in ogni caso una grandezza sufficiente per permettere al modello di apprendere il problema al meglio delle sue potenzialità.
+    Questo esperimento è utile ad evidenziare eventuali bias negativi dovuti ad un sottodimensionamento dell'insieme d'addestramento. In realtà, essendo il dataset utilizzato relativamente grande, non ci aspettiamo cambiamenti di performance significativi nelle proporzioni testate: il training set dovrebbe avere, in ognuno dei casi testati, una grandezza sufficiente per permettere al modello di apprendere il problema al meglio delle sue potenzialità.
 
-    Vengono testate tre proporzioni training-testing: $\frac{1}{2}$ $\frac{1}{2}$, $\frac{2}{3}$ $\frac{1}{3}$ e $\frac{4}{5}$ $\frac{1}{5}$, che corrispondono rispettivamente ad una 2 fold, 3 fold e 5 fold cross validation.
+    Vengono testati tre rapporti training-testing: $\frac{1}{2}$-$\frac{1}{2}$, $\frac{2}{3}$-$\frac{1}{3}$ e $\frac{4}{5}$-$\frac{1}{5}$, che corrispondono rispettivamente ad una 2 fold, 3 fold e 5 fold cross validation.
 
     \begin{table}[H]
         \centering
@@ -22,7 +22,7 @@
             \textbf{Accuratezza }   &      $0.932 \pm 0.004$ & $0.917 \pm 0.001$ & $0.914 \pm 0.015$\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati medi di una 2 fold cross validation, calcolati sulla classe dei phishing.}
+        \caption{Risultati medi di una 2-fold cross validation, calcolati sulla classe dei phishing.}
         \label{tab:2foldCV}
     \end{table}
 
@@ -38,7 +38,7 @@
             \textbf{Accuratezza }   &      $0.929 \pm 0.004$ & $0.921 \pm 0.009$ & $0.908 \pm 0.001$\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati medi di una 3 fold cross validation, calcolati sulla classe dei phishing.}
+        \caption{Risultati medi di una 3-fold cross validation, calcolati sulla classe dei phishing.}
         \label{tab:3foldCV}
     \end{table}
 
@@ -54,26 +54,30 @@
             \textbf{Accuratezza }      &      $0.933 \pm 0.006$ & $0.921 \pm 0.009$ & $0.903 \pm 0.005$\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati medi di una 5 fold cross validation, calcolati sulla classe dei phishing.}
+        \caption{Risultati medi di una 5-fold cross validation, calcolati sulla classe dei phishing.}
         \label{tab:5foldCV}
     \end{table}
 
-    Le tabelle \ref{tab:2foldCV}, \ref{tab:3foldCV}, \ref{tab:5foldCV} riportano i risultati al variare delle proporzioni. Come ci aspettavamo, le prestazioni non sembrano essere influenzate dalla variazione della grandezza del training set: la tabella \ref{tab:2foldCV}, ad esempio, presenta un F1-score sensibilmente maggiore rispetto alla \ref{tab:3foldCV} per la GRU a 16 dimensioni, mentre nell'ultima tabella la stessa metrica questo valore risale.
+    Le Tabelle \ref{tab:2foldCV}, \ref{tab:3foldCV}, \ref{tab:5foldCV} riportano i risultati delle valutazioni. Come previsto, le prestazioni non sembrano essere influenzate direttamente dalla variazione della grandezza del training set: nel caso della GRU a 16 dimensioni, ad esempio, la Tabella \ref{tab:2foldCV} presenta un F1-score sensibilmente maggiore rispetto alla \ref{tab:3foldCV}, mentre nell'ultima tabella la stessa metrica ha un valore superiore.
 
-    Dato che le prestazioni non sembrano essere influenzate dalla grandezza del training set, la scelta è di mantenere una proporzione $\frac{2}{3}$ $\frac{1}{3}$.
+    Dato che le prestazioni non sembrano essere dipendenti dai rapporti testati, la scelta è di mantenere un rapporto $\frac{2}{3}$-$\frac{1}{3}$.
 
-    \subsubsection{Sbilanciamento del dataset}
-    Come riportato nel paragrafo \ref{sec:dataset}, il nostro dataset contiene un numero significativamente superiore di esempi etichettati come URL legittimi, nello specifico per ogni URL di phishing sono presenti circa sette URL legittimi.
+    \paragraph{Sbilanciamento del dataset}
+    Come riportato nel paragrafo \ref{sec:dataset}, il dataset contiene un numero significativamente superiore di esempi etichettati come URL legittimi. Nello specifico, per ogni URL di phishing sono presenti circa sette URL legittimi.
 
-    L'idea di questo esperimento è quindi quella di verificare se una variazione della proporzione legittimi:phishing possa portare ad un aumento delle performance del classificatore. Queste variazione viene attuata eliminando  casualmente URL legittimi, fino ad ottenere la proporzione desiderata, questa tecnica prende il nome di random undersampling. Anche in questo caso l'esperimento viene effettuato solamente sulle tre GRU.
+    L'idea dell'esperimento è quindi verificare se lo sbilanciamento del dataset porti a una diminuzione delle performance dei classificatori nel riconoscere URL di phishing. Ciò viene fatto valutando i modelli addestrati su insiemi d'addestramento con proporzioni legittimi:phishing differenti. 
+    
+    La proporzione degli URL nel training set viene modificata con una tecnica chiamata random undersampling: questa semplicemente prevede l'eliminazione casuale di URL legittimi, fino al raggiungimento della proporzione desiderata. 
+    
+    Anche in questo caso l'esperimento viene effettuato solamente sulle tre GRU.
 
-    Le tabelle \ref{tab:5a1Undersampling}, \ref{tab:3a1Undersampling}, \ref{tab:2a1Undersampling} e \ref{tab:1a1Undersampling} mostrano i risultati di un 3-fold cross validation sulle proporzioni riportate.
+    Le Tabelle \ref{tab:5a1Undersampling}, \ref{tab:3a1Undersampling}, \ref{tab:2a1Undersampling} e \ref{tab:1a1Undersampling} mostrano i risultati di una 3-fold cross validation, rispettivamente sulle proporzioni legittimi:phishing pari a 5:1, 3:1, 2:1 e 1:1.
 
-    Confrontando questi risultati con quelli della tabella \ref{tab:3foldCV}, si notano dei miglioramenti significativi in quasi tutte le proporzioni testate: l'F1-score sembra in generale migliore lavorando su un dataset meno sbilanciato. È interessante notare però che, all'aumentare del numero di URL legittimi scartati, tale miglioramento diventi sempre minore, fino ad arrivare alla tabella \ref{tab:1a1Undersampling} in cui le performance in termini di F1-score sono peggiori rispetto alla tabella \ref{tab:3foldCV}.
+    Confrontando questi risultati con quelli della Tabella \ref{tab:3foldCV}, si notano dei miglioramenti significativi in quasi tutte le proporzioni testate: l'F1-score sembra in generale migliore lavorando su un dataset meno sbilanciato. È però interessante notare che, all'aumentare del numero di URL legittimi scartati, tale miglioramento diventi sempre minore, fino ad arrivare alla Tabella \ref{tab:1a1Undersampling} in cui le performance in termini di F1-score sono peggiori rispetto alla Tabella \ref{tab:3foldCV}.
 
-    Questo progressivo peggioramento potrebbe essere giustificato dalla progressiva diminuzione della grandezza del dataset: eliminando URL legittimi per bilanciare il dataset, infatti, contemporaneamente si perdono molti esempi che sarebbero stati utili al modello per apprendere meglio il problema.
+    Questo progressivo peggioramento potrebbe essere giustificato dalla progressiva diminuzione della grandezza del dataset: se da un lato eliminando URL legittimi il dataset viene bilanciato, dall'altro vengono persi molti esempi che sarebbero stati utili al modello per apprendere meglio il problema.
 
-    Questa supposizione viene confermata anche analizzando precisione e recupero: maggiori sono gli URL legittimi eliminati,e maggiore è il recupero, a scapito però della precisione. Ciò indica, da un lato, un miglioramento nelle capacità di riconoscimento degli URL di phishing (recupero alto, quindi basso numero di falsi negativi), ma contemporaneamente un notevole peggioramento nelle capacità di riconoscimento degli URL legittimi (precisione bassa, quindi alto numero di falsi positivi).
+    Questa supposizione viene confermata anche analizzando precisione e recupero: maggiori sono gli URL legittimi eliminati e maggiore è il recupero, a scapito però della precisione; ciò indica un miglioramento nelle capacità di riconoscimento degli URL di phishing (recupero alto, quindi basso numero di falsi negativi), ma contemporaneamente un notevole peggioramento nelle capacità di riconoscimento degli URL legittimi (precisione bassa, quindi alto numero di falsi positivi).
 
     Per i motivi appena spiegati, la scelta è di mantenere una proporzione 5:1, che sembra essere quella che garantisce l'F1-score migliore, mantenendo comunque un buon bilanciamento tra recupero e precisione.
 
@@ -142,10 +146,10 @@
         \label{tab:1a1Undersampling} 
     \end{table}
 
-    \subsubsection{Performance percettrone multistrato}
-    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-testing set utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti, le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con una proporzione legittimi:phishing pari a 5:1.
+    \paragraph{Performance percettrone multistrato}
+    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-testing set utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con una proporzione legittimi:phishing di 5:1.
 
-    Vengono testate in questo caso tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni testate sono state scelte arbitrariamente, negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance mantenendo uno spazio occupato simile a quello occupato dalle GRU. Anche il learning rate viene scelto arbitrariamente, in questo caso viene fissato a $0.001$.
+    Vengono valutati tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni testate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle GRU. Anche il learning rate viene scelto arbitrariamente, in questo caso viene fissato a $0.001$.
 
     \begin{table}[H]
         \centering
@@ -162,7 +166,7 @@
             \textbf{Accuratezza}    &      $0.962 \pm 0.001$ & $0.952 \pm 0.001$ & $0.946 \pm 0.001$\\
             \bottomrule            
         \end{tabular}
-        \caption{Risultati della model evaluation sul percettrone multistrato, effettuata con un 3-fold cross selection. Il dataset ha una proporzione URL legittimi URL phishing di 5 a 1.}
+        \caption{Risultati della valutazione del percettrone multistrato, effettuata con una 3-fold cross validation. Il dataset ha una proporzione legittimi:phishing di 5:1. Vengono presentate anche le taglie di ognuno dei modelli.}
         \label{tab:FFNNModelSelection}
     \end{table}
 
@@ -180,19 +184,19 @@
             \textbf{Accuratezza }   &      $0.925 \pm 0.003$ & $0.935 \pm 0.002$ & $0.916 \pm 0.009$\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati della model evaluation sulla GRU, effettuata con un 3-fold cross selection. Il dataset ha una proporzione URL legittimi URL phishing di 5 a 1.}
+        \caption{Risultati della valutazione della GRU, effettuata con una 3-fold cross validation. Il dataset ha una proporzione legittimi:phishing di 5:1. Vengono presentate anche le taglie di ognuno dei modelli.}
         \label{tab:GRUModelSelection}
     \end{table}
 
-    La tabella \ref{tab:FFNNModelSelection} riporta i risultati della model evaluation effettuata sulle tre configurazioni. La tabella \ref{tab:GRUModelSelection}, invece, riprende i risultati della tabella \ref{tab:5a1Undersampling}, aggiungendo però anche le informazioni sullo spazio occupato da ogni GRU.
+    La Tabella \ref{tab:FFNNModelSelection} riporta i risultati della model evaluation effettuata sulle tre configurazioni, vengono inoltre riportate le taglie di ognuno dei modelli. La Tabella \ref{tab:GRUModelSelection}, invece, riprende i risultati della Tabella \ref{tab:5a1Undersampling}, aggiungendo però anche in questo caso le informazioni sullo spazio occupato da ogni GRU.
 
-    È facile notare come tutti i modelli di percettrone abbiano performance migliori rispetto alle GRU. Inoltre, come era intuibile, all'aumentare del numero di neuroni le performance del percettrone migliorano. Se il problema fosse solamente quello di risolvere il problema di classificazione, il modello a 64 neuroni sarebbe il migliore tra le tre configurazioni. Tuttavia, il nostro obiettivo è inserire questi classificatori in un filtro appreso, di conseguenza lo spazio occupato è importante tanto quanto le prestazioni. Il modello a 64 neuroni risulta quindi troppo grande rispetto alla prestazioni offerte.
+    È facile notare come tutti i modelli di percettrone abbiano performance migliori rispetto alle GRU. Inoltre, come era intuibile, all'aumentare del numero di neuroni le performance del percettrone migliorano. Se il problema fosse solamente quello di risolvere il problema di classificazione, il modello a 64 neuroni sarebbe il migliore tra le tre configurazioni testate. Tuttavia, l'obiettivo è inserire questi classificatori in un filtro appreso, di conseguenza lo spazio occupato è importante tanto quanto le prestazioni. Il modello a 64 neuroni risulta quindi troppo grande rispetto alla prestazioni offerte.
     
-    L'obiettivo è ora trovare, tramite una model selection, la configurazione di parametri migliore per un percettrone, cercando di mantenere una dimensione che non superi quella della GRU a 16 dimensioni. Dalla tabella \ref{tab:FFNNModelSelection}, infatti, si nota che il miglioramento delle performance passando dalla configurazione a 16 neuroni a quella a 64 non è così significativo da giustificare una dimensione circa quattro volte superiore.
+    L'obiettivo è quindi massimizzare, tramite una selezione del modello, le performance del percettrone, cercando di mantenere una dimensione che non superi quella della GRU a 16 dimensioni. Dalla Tabella \ref{tab:FFNNModelSelection}, infatti, si nota che il miglioramento delle performance passando dalla configurazione a 16 neuroni a quella a 64 non è così significativo da giustificare una dimensione circa quattro volte superiore.
 
-    \subsubsection{Model selection}
+    \paragraph{Selezione del modello}
 
-    La model selection viene effettuata tramite una nested cross validation con k=3 sia per ciclo interno che per il ciclo esterno. La griglia di parametri testata è la seguente:
+    La selezione del modello viene effettuata tramite una nested cross validation con k=3 sia per ciclo interno che per il ciclo esterno. La griglia di parametri testata è la seguente:
     \[
     \begin{matrix*}[l]
         \text{numero neuroni}: & [8, 16, 20, 25, 30],\\
@@ -201,10 +205,11 @@
     \]
     Nel ciclo interno le combinazioni di parametri vengono create grazie all'algoritmo GridSearch.
 
-    Per i motivi presentati nei paragrafi precedenti, l'obiettivo della model selection è massimizzare l'F1-score. Essendo il nostro dataset lievemente sbilanciato l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello.
+    L'obiettivo della model selection è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello.
     
-
-    La tabella \ref{tab:modelSelection} presenta i risultati della model selection. Confrontando questi risultati con quelli della tabella \ref{tab:GRUModelSelection}, si notano delle performance migliori da parte del percettrone. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri migliori, in termini di taglia, rispetto a quelli ottenuti utilizzando le GRU.
+    La Tabella \ref{tab:modelSelection} presenta i risultati selezione del modello. Confrontando questi risultati con quelli della Tabella \ref{tab:GRUModelSelection}, si notano delle performance migliori da parte del percettrone. 
+    
+    Il percettrone quindi ha, a parità di taglia, delle performance migliori rispetto alle GRU. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le GRU.
     \begin{table}[H]
         \centering                  
         \begin{tabular}{lccc}
@@ -223,10 +228,7 @@
             \textbf{Fold 3} &   (30, 0.01)\\
             \bottomrule
         \end{tabular}
-        \caption{}
+        \caption{Risultati della nested cross validation. Vengono riportati anche i parametri `vincitori' in per ogni fold.}
         \label{tab:modelSelection}
     \end{table}
-
-
-    
 \end{document}

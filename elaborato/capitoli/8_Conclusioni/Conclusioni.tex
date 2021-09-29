@@ -1,0 +1,11 @@
+\documentclass[../../main.tex]{subfiles}
+
+\graphicspath{{\subfix{../../immagini/}}}
+
+\begin{document}
+    Lo scopo principale di questa tesi è stato l'analisi delle performance di due diverse tipologie di classificatore, e il successivo confronto tra l'efficienza, in termini di spazio, dei filtri di Bloom appresi ottenuti sfruttando i due modelli. 
+    
+    I risultati presentati hanno evidenziato, sul problema di classificazione considerato, delle prestazioni migliori del modello più semplice. Conseguentemente, anche le taglie dei filtri appresi ottenuti utilizzando tale modello sono risultate più basse rispetto a quelle ottenute sfruttando il classificatore complesso. Infine, un confronto tra le taglie delle due tipologie di filtro appreso ha confermato, come già mostrato in altri lavori, una maggiore efficienza del sandwiched learned Bloom filter a parità di tasso di falsi positivi.
+
+    Tuttavia, è anche emerso che le varianti apprese del filtro risultano più lente di 1-2 ordini di grandezza rispetto al filtro classico, aspetto che potrebbe risultare più o meno limitante a seconda del contesto in cui la struttura viene utilizzata. Futuri lavori potrebbero quindi concentrarsi sullo studio di filtri appresi con tipologie di classificatore diverse da quelle presentate negli esperimenti, al fine di cercare un miglior compromesso tra spazio risparmiato e tempi d'accesso.
+\end{document}
