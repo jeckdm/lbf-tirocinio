@@ -3,12 +3,12 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    \paragraph{Rapporto training-testing}
-    Il primo esperimento viene effettuato sulle tre tipologie di GRU descritte, ed il fine è quello di esaminare le prestazioni del classificatore al variare del numero di elementi destinati al training e al test set. 
+    \paragraph{Rapporto training-test}
+    Il primo esperimento viene effettuato sulle tre tipologie di GRU descritte, e il fine è quello di esaminare le prestazioni dei classificatori al variare del numero di elementi destinati al training e al test set. 
     
     Questo esperimento è utile ad evidenziare eventuali bias negativi dovuti ad un sottodimensionamento dell'insieme d'addestramento. In realtà, essendo il dataset utilizzato relativamente grande, non ci aspettiamo cambiamenti di performance significativi nelle proporzioni testate: il training set dovrebbe avere, in ognuno dei casi testati, una grandezza sufficiente per permettere al modello di apprendere il problema al meglio delle sue potenzialità.
 
-    Vengono testati tre rapporti training-testing: $\frac{1}{2}$-$\frac{1}{2}$, $\frac{2}{3}$-$\frac{1}{3}$ e $\frac{4}{5}$-$\frac{1}{5}$, che corrispondono rispettivamente ad una 2 fold, 3 fold e 5 fold cross validation.
+    Vengono testati tre rapporti training-test: $\frac{1}{2}$-$\frac{1}{2}$, $\frac{2}{3}$-$\frac{1}{3}$ e $\frac{4}{5}$-$\frac{1}{5}$, che corrispondono rispettivamente ad una 2 fold, 3 fold e 5 fold cross validation.
 
     \begin{table}[H]
         \centering
@@ -147,9 +147,9 @@
     \end{table}
 
     \paragraph{Performance percettrone multistrato}
-    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-testing set utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con una proporzione legittimi:phishing di 5:1.
+    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-test set utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con una proporzione legittimi:phishing di 5:1.
 
-    Vengono valutati tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni testate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle GRU. Anche il learning rate viene scelto arbitrariamente, in questo caso viene fissato a $0.001$.
+    Vengono valutati tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni valutate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle GRU. Anche il learning rate viene scelto arbitrariamente, in questo caso viene fissato a $0.001$.
 
     \begin{table}[H]
         \centering
@@ -205,11 +205,9 @@
     \]
     Nel ciclo interno le combinazioni di parametri vengono create grazie all'algoritmo GridSearch.
 
-    L'obiettivo della model selection è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello.
+    L'obiettivo della model selection è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello. La Tabella \ref{tab:modelSelection} presenta i risultati selezione del modello.
     
-    La Tabella \ref{tab:modelSelection} presenta i risultati selezione del modello. Confrontando questi risultati con quelli della Tabella \ref{tab:GRUModelSelection}, si notano delle performance migliori da parte del percettrone. 
-    
-    Il percettrone quindi ha, a parità di taglia, delle performance migliori rispetto alle GRU. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le GRU.
+    In definitiva, il percettrone ha, a parità di taglia, delle performance migliori rispetto alle GRU. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le GRU.
     \begin{table}[H]
         \centering                  
         \begin{tabular}{lccc}
