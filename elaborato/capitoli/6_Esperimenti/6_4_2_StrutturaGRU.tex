@@ -15,9 +15,9 @@
         \boldsymbol{\tilde{n}}^{(t)} &= \mathrm{tanh}\left(\boldsymbol{W} \boldsymbol{x}^{(t)} + \boldsymbol{r}^{(t)} \odot \boldsymbol{U} \boldsymbol{n}^{(t-1)}\right) & \text{output intermedio,}\\
         \boldsymbol{n}^{(t)} &= \boldsymbol{u}^{(t)} \odot \boldsymbol{n}^{(t-1)} + (1 - \boldsymbol{u}^{(t)}) \odot \boldsymbol{\tilde{n}}^{(t)} & \text{output finale.}
     \end{flalign}
-    Le notazioni qui riportate riprendono quelle del paragrafo \ref{sec:retiRicorrenti}. Inoltre, il simbolo $\odot$ indica l'operazione di prodotto elemento per elemento tra due vettori o matrici.
+    Le notazioni qui riportate riprendono quelle del Paragrafo \ref{sec:retiRicorrenti}. Inoltre, il simbolo $\odot$ indica l'operazione di prodotto elemento per elemento tra due vettori o matrici.
 
-    Nei nostri esperimenti utilizziamo tre GRU, con uno strato interno $\boldsymbol{n}$ rispettivamente di dimensioni pari a 16, 8 e 4; inoltre, ad ognuno dei caratteri dei vettori d'ingresso viene applicato un embedding a 5 dimensioni.
+    Nei nostri esperimenti utilizziamo tre GRU, con uno strato interno $\boldsymbol{n}$ rispettivamente di dimensioni pari a 16, 8 e 4; inoltre, a ognuno dei caratteri dei vettori d'ingresso viene applicato un embedding a 5 dimensioni.
 
 
     \begin{figure}[H]

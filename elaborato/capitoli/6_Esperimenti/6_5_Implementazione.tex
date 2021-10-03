@@ -4,7 +4,7 @@
 
 \begin{document}
     \paragraph{Filtri appresi}
-    L'implementazione del filtro di Bloom e delle due varianti apprese riprende quella fornita in \cite{ma2020}: Il codice utilizzato è pressoché equivalente, fatte salve alcune modifiche utili a permettere l'utilizzo dei filtri appresi anche con il percettrone.
+    L'implementazione del filtro di Bloom e delle due varianti apprese riprende quella fornita in \cite{ma2020}: il codice utilizzato è pressoché equivalente, fatte salve alcune modifiche utili a permettere l'utilizzo dei filtri appresi anche con il percettrone.
 
     \paragraph{Suddivisione del dataset}
     Per la parte di esperimenti dedicata al confronto delle performance dei classificatori la suddivisione viene fatta coerentemente con la tecnica utilizzata: nel caso della convalida incrociata, ad esempio, il dataset viene suddiviso in $k$ sottoinsiemi, come descritto nel Paragrafo \ref{sec:metrichevalutazione}.
@@ -29,7 +29,7 @@
 
 
     \paragraph{Classificatori}
-    Come già accennato, il codice utilizzato per la GRU è equivalente a quello fornito in \cite{ma2020}, l'implementazione della rete ricorrente quindi è fatta sfruttando la libreria PyTorch. Il percettrone, invece, viene implementato sfruttando la libreria Keras\footnote{Libreria Python per l'apprendimento automatico. Fornisce un'interfaccia ad alto livello di altre librerie simili, più a basso livello.}.
+    Come già accennato, il codice utilizzato per la GRU è equivalente a quello fornito in \cite{ma2020}, l'implementazione della rete ricorrente quindi è fatta sfruttando la libreria PyTorch\footnote{Framework di deep learning, sviluppato principalmente dal Facebook AI Research \cite{PyTorch}.}. Il percettrone, invece, viene implementato sfruttando la libreria Keras\footnote{Libreria Python per l'apprendimento automatico. Fornisce un'interfaccia ad alto livello di altre librerie simili, più a basso livello \cite{Keras}.}.
 
     \paragraph{Serializzazione dei modelli}
     Dato che molti degli esperimenti comprendono lo spazio come unità di misura delle prestazioni di un filtro appreso, è utile ragionare sulla serializzazione dei modelli utilizzati, per permettere un confronto che non sia influenzato da possibili compressioni effettuate dalle funzioni di libreria.

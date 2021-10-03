@@ -88,9 +88,9 @@
 
     \paragraph{Percettrone multistrato}
 
-    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel Paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-test utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con un rapporto legittimi phishing di 5:1.
+    Andiamo ora a effettuare un esperimento simile ai due precedenti, valutando però le performance di un percettrone. Tale percettrone avrà una struttura coerente con quella descritta nel Paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-test utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con un rapporto legittimi phishing di 5:1.
 
-    Vengono valutati tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni valutate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle RNN. Dopo alcune prove, per il learning rate si è scelto il valore $0.001$.
+    Vengono valutati tre modelli di percettrone diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni valutate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle RNN. Dopo alcune prove, per il learning rate si è scelto il valore $0.001$.
 
     La Tabella \ref{tab:FFNNModelSelection} riporta i risultati per le tre configurazioni, assieme alle taglie di ognuno dei modelli, in Tabella \ref{tab:spazioModelli}. È facile notare come tutti i modelli di percettrone abbiano performance migliori rispetto alle GRU. Inoltre, come era intuibile, all'aumentare del numero di neuroni le performance del percettrone migliorano. Se l'obiettivo fosse solamente quello di risolvere il problema di classificazione, il modello a 64 neuroni sarebbe il migliore tra le tre configurazioni testate. Tuttavia, l'obiettivo è inserire questi classificatori in un filtro di Bloom appreso, di conseguenza lo spazio occupato è importante tanto quanto le prestazioni. Il modello a 64 neuroni risulta quindi troppo grande rispetto alla prestazioni offerte.
     
@@ -142,7 +142,7 @@
 
     Nel ciclo interno le combinazioni di parametri vengono create grazie all'algoritmo GridSearch.
 
-    L'obiettivo della selezione del modello è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello. La Tabella \ref{tab:modelSelection} presenta i risultati ottenuti. In definitiva, il percettrone ha, a parità di spazio occupato, delle performance migliori rispetto alle GRU. I risultati del prossimo Paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le GRU.
+    L'obiettivo della selezione del modello è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello. La Tabella \ref{tab:modelSelection} presenta i risultati ottenuti. In definitiva, il percettrone ha, a parità di spazio occupato, delle performance migliori rispetto alle RNN. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le RNN.
     \begin{table}[H]
         \centering                  
         \begin{tabular}{lccc}
