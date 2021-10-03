@@ -3,14 +3,9 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    Il dataset utilizzato è composto da circa $350.000$ esempi di URL etichettati come legittimi o di phishing; nello specifico, circa $310.000$ degli URL sono etichettati come legittimi, i $40.000$ rimanenti come phishing.
+    Il dataset utilizzato è stato costruito unendo esempi ottenuti da tre fonti diverse. Nello specifico, 15.000 esempi per entrambe le etichette sono stati ricavati dal dataset fornito in \cite{article}, il dataset in questione contiene, oltre agli indirizzi, anche molte altre informazione relative ad ognuno dei siti web, per i nostri scopi tali informazioni non sono necessarie, e abbiamo quindi mantenuto solamente i semplici URL. Il secondo dataset utilizzato viene fornito dal Machine Learning Lab dell'Università di Trieste \cite{machinelearninglab}, $3637$ esempi per la classe dei legittimi e $38419$ esempi per classe dei phishing sono stati ottenuti da questo dataset; in questo caso, il dataset originale contiene anche esempi etichettati come "defacement", questi esempi sono stati scartati nel dataset utilizzato. In ultimo, $291753$ esempi per la classe dei legittimi sono stati prelevati dalla Web directory \cite{botw}, in questo caso l'assunzione è che ognuno degli URL sul sito non sia un indirizzo di phishing, assunzione sensata in quanto il processo di registrazione di un URL alla Web directory è piuttosto complesso.
 
-    Il dataset è stato costruito unendo i dati ricavati da tre fonti differenti: 
-    \begin{itemize}
-        \item $15.000$ esempi per entrambe le etichette sono stati ricavati dal dataset fornito in \cite{article},
-        \item $290.000$ esempi di URL legittimi sono stati estratti dalla web directory \cite{botw},
-        \item i rimanenti esempi sono stati ricavati dal dataset fornito dal Machine Learning Lab dell'Università di Trieste \cite{machinelearninglab}.
-    \end{itemize}
+    Dal dataset ottenuto in questo modo, vengono poi rimossi tutti i duplicati e vengono eliminate le stringhe "http://" e "www." da ognuno degli URL. In definitiva, il dataset dopo questo iniziale pre-processing contiene un totale di $310329$ esempi per la classe dei legittimi, e $43744$ esempi per la classe dei phishing.
 
     Nei nostri esperimenti l'insieme delle chiavi $\mathcal{K}$ comprende tutti gli URL di phishing, i rimanenti URL legittimi faranno invece parte dell'insieme delle non-chiavi $\mathcal{U}$.
 \end{document}

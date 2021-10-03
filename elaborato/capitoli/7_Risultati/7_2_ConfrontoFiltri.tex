@@ -5,24 +5,18 @@
 \begin{document}
     In questo paragrafo vengono presentati, e messi a confronto, i filtri appresi costruiti utilizzando le due tipologie di classificatore introdotte nel precedente paragrafo.
 
-    Il primo aspetto su cui ragionare è quale configurazione di iperparametri utilizzare per il percettrone: il classificatore migliore in questo caso non può essere trovato tramite una classica selezione del modello; nessuna metrica, infatti, risulta adatta a quantificare la bontà di un modello in termini di spazio occupato. Una model selection risulterebbe di conseguenza inadatta perché non avremmo nessuna metrica da massimizzare.
+    Il primo aspetto su cui ragionare riguarda quale configurazione di iperparametri utilizzare per il percettrone: il classificatore migliore in questo caso non può essere trovato tramite una classica selezione del modello; nessuna metrica, infatti, risulta adatta a quantificare la bontà di un modello in termini di spazio occupato. Una model selection risulterebbe di conseguenza inadatta perché non avremmo nessuna metrica da massimizzare.
 
-    Il numero di neuroni del percettrone viene quindi scelto in modo da ottenere un modello con una taglia molto vicina a quella della GRU a 16 dimensioni. Inoltre, dai risultati del precedente paragrafo è possibile notare come, aumentando di molto il numero di neuroni, l'aumento delle prestazioni non sia altrettanto significativo. Per questo motivo, viene testato un ulteriore modello con un numero inferiore di neuroni, scelto arbitrariamente, al fine di evidenziare eventuali miglioramenti nella taglia dei filtri appresi dovuti ad una dimensione minore del modello.
+    Il numero di neuroni del percettrone viene quindi scelto in modo da ottenere un modello con una taglia molto vicina a quella della RNN con GRU a 16 dimensioni. Inoltre, dai risultati del precedente paragrafo è possibile notare come, aumentando di molto il numero di neuroni, l'aumento delle prestazioni non sia altrettanto significativo. Per questo motivo, viene considerato un ulteriore modello con un numero inferiore di neuroni al fine di evidenziare eventuali miglioramenti nello spazio occupato dai filtri appresi dovuti ad una dimensione minore del modello.
 
-    Secondo questo ragionamento, viene testata una configurazione con 30 neuroni, che ha una grandezza molto simile alla GRU 16, e una configurazione con 20 neuroni. In entrambi casi il learning rate viene fissato a 0.001, dai risultati del precedente paragrafo sembra infatti la scelta migliore.
+    Secondo questo ragionamento, viene considerata una configurazione con 30 neuroni, che ha una grandezza molto simile alla GRU 16, e una configurazione con 20 neuroni. In entrambi casi il learning rate viene fissato a 0.001, in quanto i risultati ottenuti nel precedente paragrafo suggeriscono che questa sia la scelta migliore.
     
-    \paragraph{Scelta della soglia $\tau$}
-    Una volta scelti a priori il tasso di falsi positivi desiderato $f$ e il tasso di falsi positivi del classificatore, in questo paragrafo chiamato $f_{\tau}$, alla soglia $\tau$ viene assegnato un valore pari al quantile $100 \cdot (1 - f_{\tau})$ della distribuzione di probabilità, restituita dal classificatore, delle non-chiavi presenti nell'insieme d'addestramento.
+    \paragraph{Scelta della soglia}
+    Una volta scelti a priori il tasso di falsi positivi desiderato $f$ e il tasso di falsi positivi del classificatore, in questo paragrafo chiamato $f_{\tau}$, alla soglia $\tau$ viene assegnato un valore pari al quantile $100 \cdot (1 - f_{\tau})$ della distribuzione di valori predetti dal classificatore per le non-chiavi presenti nell'insieme d'addestramento.
 
-    Coerentemente con quanto detto nel paragrafo \ref{sec:falseProbLBF}, vengono testati diversi valori di $\tau$ variando il valore del rapporto $r_{\tau} = f_{\tau}/f$. Si noti che, a seconda  del filtro considerato, dovranno valere le condizioni su $f_{\tau}$ descritte nel Capitolo \ref{chap:filtriAppresi}.
+    Coerentemente con quanto detto nel Paragrafo \ref{sec:falseProbLBF}, vengono considerati diversi valori di $\tau$ variando il valore del rapporto $r_{\tau} = f_{\tau}/f$. Si noti che, a seconda  del filtro considerato, dovranno valere le condizioni su $f_{\tau}$ descritte nel Capitolo \ref{chap:filtriAppresi}.
 
-    \paragraph{Risultati filtro di Bloom}
-
-    Vengono riportate in Tabella \ref{tab:taglieFiltro} le taglie dei filtri di Bloom inizializzati sull'insieme $\mathcal{K}$ delle chiavi, che verranno utilizzate come base per confrontare le performance dei filtri appresi riportate successivamente.
-
-    Una volta fissato $f$, le taglie sono state calcolate secondo \eqref{eqn:nlowerbound}.
-    
-    \begin{table}[H]
+    \begin{table}[t]
         \centering
         \begin{tabular}{lcccc}
             \toprule
@@ -32,14 +26,20 @@
             \textbf{Dimensione (KByte)} & 76.774 & 58.887 & 51.212 & 43.479\\
             \bottomrule
         \end{tabular}
-        \caption{Taglie dei filtri di Bloom.}
+        \caption{Taglie dei filtri di Bloom per ogni tasso di falsi positivi $f$ considerato.}
         \label{tab:taglieFiltro}
     \end{table}
 
-    \paragraph{Risultati LBF}
-    Le Figure \ref{fig:LBFFNRPercettrone}, \ref{fig:LBFFPRPercettrone}, \ref{fig:GRU_LBFFNR} e \ref{fig:GRU_LBFFPR} mostrano graficamente i risultati delle analisi empiriche, al variare del rapporto $r_{\tau}$, effettuate sui filtri appresi costruiti con le due tipologie di classificatore. Le Figure \ref{fig:tagliePercettroniLBF} e \ref{fig:taglieGRULBF}, invece, mostrano le taglie dell'intero LBF. In questo caso deve valere $0 < r_{\tau} < 1$, il rapporto viene quindi fatto variare tra questi due valori.
+    \paragraph{Risultati del filtro di Bloom}
 
-    Nello specifico, le Figure \ref{fig:LBFFNRPercettrone20} e \ref{fig:LBFFNRPercettrone30} per il percettrone, e \ref{fig:LBFFNR_GRU16}, \ref{fig:LBFFNR_GRU8} e \ref{fig:LBFFNR_GRU4} per la GRU, mostrano il tasso di falsi negativi prodotti dal classificatore al variare del rapporto $r_{\tau}$. Si nota in tutte le figure una diminuzione del rapporto di falsi negativi all'aumentare di $r_{\tau}$, ciò è sensato: all'aumentare di $r_{\tau}$ il valore della soglia $\tau$ diminuisce, di conseguenza è più probabile che una chiave venga classificata come tale, generando un numero di falsi negativi progressivamente minore.
+    Vengono riportate in Tabella \ref{tab:taglieFiltro} le taglie dei filtri di Bloom, inizializzati sull'insieme $\mathcal{K}$ delle chiavi, che verranno utilizzate come base per confrontare le performance dei filtri appresi riportate successivamente.
+
+    Una volta fissato $f$, le taglie sono state calcolate secondo \eqref{eqn:nlowerbound}.
+
+    \paragraph{Risultati LBF}
+    Le \cref{fig:LBFFNRPercettrone,fig:LBFFPRPercettrone,fig:GRU_LBFFNR,fig:GRU_LBFFPR} mostrano graficamente i risultati delle analisi empiriche, al variare del rapporto $r_{\tau}$, effettuate sui filtri appresi costruiti con le due tipologie di classificatore (rete ricorrente e percettrone multistrato). Le Figure \ref{fig:tagliePercettroniLBF} e \ref{fig:taglieGRULBF}, invece, mostrano le taglie dell'intero LBF. In questo caso deve valere $0 < r_{\tau} < 1$, il rapporto viene quindi fatto variare tra questi due valori.
+
+    Nello specifico, le Figure \ref{fig:LBFFNRPercettrone20} e \ref{fig:LBFFNRPercettrone30} per il percettrone, e \ref{fig:LBFFNR_GRU16}, \ref{fig:LBFFNR_GRU8} e \ref{fig:LBFFNR_GRU4} per la rete ricorrente, mostrano il tasso di falsi negativi prodotti dal classificatore al variare del rapporto $r_{\tau}$. Si nota in tutte le figure una diminuzione del rapporto di falsi negativi all'aumentare di $r_{\tau}$, ciò è sensato: all'aumentare di $r_{\tau}$ il valore della soglia $\tau$ diminuisce, di conseguenza è più probabile che una chiave venga classificata come tale, generando un numero di falsi negativi progressivamente minore.
 
     \begin{figure}[H]
         \centering
@@ -55,7 +55,7 @@
             \caption{}
             \label{fig:LBFFNRPercettrone30}
         \end{subfigure}
-        \caption{Tasso di falsi negativi prodotti dal percettrone: (a) con configurazione (20, 0.001), (b) con configurazione (30, 0.001).}
+        \caption{Tasso di falsi negativi prodotti dall'LBF basato su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate).}
         \label{fig:LBFFNRPercettrone}
     \end{figure}
     \begin{figure}[H]
@@ -71,7 +71,7 @@
             \caption{}
             \label{fig:LBFFPRPercettrone30}
         \end{subfigure}
-        \caption{Tasso empirico di falsi positivi del percettrone: (a) con configurazione (20, 0.001), (b) con configurazione (30, 0.001).}
+        \caption{Tasso empirico di falsi positivi dell'LBF basato su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate).}
         \label{fig:LBFFPRPercettrone}
     \end{figure}
 
@@ -95,7 +95,7 @@
             \caption{}
             \label{fig:LBFFNR_GRU4}
         \end{subfigure}
-        \caption{Tasso di falsi negativi prodotti dalla GRU: (a) a 16 dimensioni, (b) a 8 dimensioni, (c) a 4 dimensioni.}
+        \caption{Tasso di falsi negativi prodotti dall'LBF basato su RNN. Il titolo di ogni grafico riporta la dimensione dello strato nascosto della GRU.}
         \label{fig:GRU_LBFFNR}
     \end{figure}
     \begin{figure}[H]
@@ -118,13 +118,13 @@
             \caption{}
             \label{fig:LBFFPR_GRU4}
         \end{subfigure}
-        \caption{Tasso empirico di falsi positivi della GRU: (a) a 16 dimensioni, (b) a 8 dimensioni, (c) a 4 dimensioni.}
+        \caption{Tasso empirico di falsi positivi dell'LBF basato su RNN. Il titolo di ogni grafico riporta la dimensione dello strato nascosto della GRU.}
         \label{fig:GRU_LBFFPR}
     \end{figure}
 
-    Le Figure \ref{fig:LBFFPRPercettrone20}, \ref{fig:LBFFPRPercettrone30}, \ref{fig:LBFFPR_GRU16}, \ref{fig:LBFFPR_GRU8} e \ref{fig:LBFFPR_GRU4}, invece, mostrano il tasso di falsi positivi $f$ dell'intero LBF, calcolato sull'insieme di test composto di soli URL legittimi. In questo caso, come previsto, il tasso empirico rimane sempre stabile attorno al tasso atteso.
+    Le \cref{fig:LBFFPRPercettrone20,fig:LBFFPRPercettrone30,fig:LBFFPR_GRU16,fig:LBFFPR_GRU8,fig:LBFFPR_GRU4}, invece, mostrano il tasso di falsi positivi $f$ dell'intero LBF, calcolato sull'insieme di test composto di soli URL legittimi. In questo caso, come previsto, il tasso empirico rimane sempre stabile attorno al tasso atteso.
 
-    Infine, le Figure \ref{fig:LBFTagliaPercettrone20}, \ref{fig:LBFTagliaPercettrone30}, \ref{fig:LBFTagliaGRU16}, \ref{fig:LBFTagliaGRU8} e \ref{fig:LBFTagliaGRU4} mostrano le taglie dei rispettivi classificatori al variare di $r_{\tau}$. Confrontando i risultati di percettrone e GRU si nota come, in tutti i casi, le due configurazioni di percettrone occupino uno spazio inferiore rispetto alle GRU. Inoltre, è facile notare che i filtri appresi con GRU non siano quasi mai migliori rispetto ai corrispettivi filtri di Bloom, al contrario, i percettroni sembrano occupare uno spazio minore rispetto ai relativi filtri. 
+    Infine, le \cref{fig:LBFTagliaPercettrone20,fig:LBFTagliaPercettrone30,fig:LBFTagliaGRU16,fig:LBFTagliaGRU8,fig:LBFTagliaGRU4} mostrano le taglie dei rispettivi classificatori al variare di $r_{\tau}$. Confrontando i risultati di percettrone e GRU si nota come, in tutti i casi, le due configurazioni di percettrone occupino uno spazio inferiore rispetto alle GRU. Inoltre, è facile notare che i filtri appresi con GRU non sono quasi mai migliori rispetto ai corrispettivi filtri di Bloom, al contrario, i percettroni sembrano occupare uno spazio minore rispetto ai relativi filtri. 
 
     Confrontando invece le taglie occupate dalle due configurazioni di percettrone, si nota come il modello a 20 neuroni sembri leggermente migliore rispetto a quello a 30. Questo conferma quanto supposto inizialmente: seppur il modello a 30 neuroni sia migliore in termini di performance, il modello con 20 neuroni risulta migliore se inserito all'interno di un filtro appreso. Le performance guadagnate dal percettrone a 30 neuroni non sono quindi sufficienti a giustificare l'aumento di spazio del modello.
 
@@ -142,7 +142,7 @@
             \caption{}
             \label{fig:LBFTagliaPercettrone30}
         \end{subfigure}
-        \caption{Taglie degli LBF con percettrone: (a) con configurazione (20, 0.001), (b) con configurazione (30, 0.001). Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
+        \caption{Taglie $n$ dei LBF basati su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate). Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
         \label{fig:tagliePercettroniLBF}
     \end{figure}
 
@@ -166,12 +166,12 @@
             \caption{}
             \label{fig:LBFTagliaGRU4}
         \end{subfigure}
-        \caption{Taglie degli LBF con GRU: (a) a 16 dimensioni, (b) a 8 dimensioni, (c) a 4 dimensioni. Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
+        \caption{Taglie $n$ dei LBF basati su RNN. Il titolo di ogni grafico riporta la dimensione dello strato nascosto della GRU. Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
         \label{fig:taglieGRULBF}
     \end{figure}
 
     \paragraph{Risultati SLBF}
-    Anche in questo caso, le Figure \ref{fig:SLBFFNRPercettrone}, \ref{fig:SLBFFPRPercettrone}, \ref{fig:SLBFFNR_GRU} e \ref{fig:SLBFFPR_GRU} presentano i risultati empirici sulle strutture, le Figure \ref{fig:tagliePercettroniSLBF} e \ref{fig:taglieGRUSLBF}, invece, le rispettive taglie. In questo caso la condizione su $r_{\tau}$ è $(1 - m_b/m) \leq r_{\tau} \leq 1/f \cdot \left(1 - m_b/m\right)$.
+    Anche in questo caso, le \cref{fig:SLBFFNRPercettrone,fig:SLBFFPRPercettrone,fig:SLBFFNR_GRU,fig:SLBFFPR_GRU}  presentano i risultati empirici sulla performance dei filtri costruiti e le Figure \ref{fig:tagliePercettroniSLBF} e \ref{fig:taglieGRUSLBF}, invece, le rispettive taglie. In questo $r_{\tau}$ deve rispettare la condizione $(1 - m_b/m) \leq r_{\tau} \leq 1/f \cdot \left(1 - m_b/m\right)$.
     \begin{figure}[H]
         \centering
         \begin{subfigure}[b]{0.49\textwidth}
@@ -186,7 +186,7 @@
             \caption{}
             \label{fig:SLBFFNRPercettrone30}
         \end{subfigure}
-        \caption{Tasso di falsi negativi prodotti dal percettrone: (a) con configurazione (20, 0.001), (b) con configurazione (30, 0.001).}
+        \caption{Tasso di falsi negativi prodotti dall'SLBF basato su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate).}
         \label{fig:SLBFFNRPercettrone}
     \end{figure}
     \begin{figure}[H]
@@ -202,7 +202,7 @@
             \caption{}
             \label{fig:SLBFFPRPercettrone30}
         \end{subfigure}
-        \caption{Tasso empirico di falsi positivi del percettrone: (a) con configurazione (20, 0.001), (b) con configurazione (30, 0.001).}
+        \caption{Tasso empirico di falsi positivi dell'SLBF basato su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate).}
         \label{fig:SLBFFPRPercettrone}
     \end{figure}
 
@@ -226,7 +226,7 @@
             \caption{}
             \label{fig:SLBFFNR_GRU4}
         \end{subfigure}
-        \caption{Tasso di falsi negativi prodotti dalla GRU: (a) a 16 dimensioni, (b) a 8 dimensioni, (c) a 4 dimensioni.}
+        \caption{Tasso di falsi negativi prodotti dall'SLBF basato su RNN. Il titolo di ogni grafico riporta la dimensione dello strato nascosto della GRU.}
         \label{fig:SLBFFNR_GRU}
     \end{figure}
     \begin{figure}[H]
@@ -249,15 +249,15 @@
             \caption{}
             \label{fig:SLBFFPR_GRU4}
         \end{subfigure}
-        \caption{Tasso empirico di falsi positivi della GRU: (a) a 16 dimensioni, (b) a 8 dimensioni, (c) a 4 dimensioni.}
+        \caption{Tasso empirico di falsi positivi dell'SLBF basato su RNN. Il titolo di ogni grafico riporta la dimensione dello strato nascosto della GRU.}
         \label{fig:SLBFFPR_GRU}
     \end{figure}
 
     Il ragionamento già fatto per gli LBF può essere ripetuto anche in questo caso: il tasso di falsi negativi del classificatore diminuisce all'aumentare di $r_{\tau}$, e il tasso di falsi positivi empirico è sempre molto vicino a quello atteso.
 
-    Nelle Figure \ref{fig:SLBFFNRPercettrone20}, \ref{fig:SLBFFNRPercettrone30}, \ref{fig:SLBFFNR_GRU16}, \ref{fig:SLBFFNR_GRU8} e \ref{fig:SLBFFNR_GRU4} si nota però una differenza rispetto ai risultati precedenti: per ogni $f$ il tasso di falsi negativi raggiunge in questo caso valori più bassi rispetto ai relativi LBF, in alcuni casi arrivando quasi a zero. Questo accade a causa di valori di $f_\tau$ testati più alti, che portano a valori di $\tau$ più bassi.
+    Nelle \cref{fig:SLBFFNRPercettrone20,fig:SLBFFNRPercettrone30,fig:SLBFFNR_GRU16,fig:SLBFFNR_GRU8,fig:SLBFFNR_GRU4} si nota però una differenza rispetto ai risultati precedenti: per ogni $f$ il tasso di falsi negativi raggiunge in questo caso valori più bassi rispetto ai relativi LBF, in alcuni casi arrivando quasi a zero. Questo accade a causa di valori di $f_\tau$ testati più alti, che portano a valori di $\tau$ più bassi.
 
-    Il tasso di falsi negativi molto basso è utile a spiegare l'andamento dei grafici \ref{fig:SLBFTagliaPercettrone20}, \ref{fig:SLBFTagliaPercettrone30}, \ref{fig:SLBFTagliaGRU16}, \ref{fig:SLBFTagliaGRU8} e \ref{fig:SLBFTagliaGRU4}, che mostrano le taglie delle strutture al variare di $r_\tau$. Nella Figura \ref{fig:SLBFTagliaPercettrone20}, ad esempio, l'andamento della curva $f = 0.02$ è crescente, ciò è giustificabile ricordando come vengono calcolate le taglie $n_{b_0}$ e $n_b$ (Equazioni \eqref{eqn:SLBFGrandezzaOttimaInit} e \eqref{eqn:SLBFGrandezzaOttima}). Se il numero di falsi negativi $m_b$ tende a 0, allora anche la grandezza del filtro di backup $n_b$ tenderà a 0; viceversa, la taglia del filtro $n_{b_0}$ continuerà a crescere, generando l'andamento crescente evidenziato dalla figura.
+    Il tasso di falsi negativi molto basso è utile a spiegare l'andamento dei grafici \cref{fig:SLBFTagliaPercettrone20,fig:SLBFTagliaPercettrone30,fig:SLBFTagliaGRU16,fig:SLBFTagliaGRU8,fig:SLBFTagliaGRU4}, che mostrano come variano le dimensioni dei filtri al variare di $r_\tau$. Nella Figura \ref{fig:SLBFTagliaPercettrone20}, ad esempio, l'andamento della curva relativa a $f = 0.02$ è crescente, e ciò è giustificabile ricordando come vengono calcolate le taglie $n_{b_0}$ e $n_b$ (si veda \eqref{eqn:SLBFGrandezzaOttimaInit} e \eqref{eqn:SLBFGrandezzaOttima}). Se il numero di falsi negativi $m_b$ tende a 0, allora anche la grandezza del filtro di backup $n_b$ tenderà a 0; viceversa, la taglia del filtro $n_{b_0}$ continuerà a crescere, generando l'andamento crescente evidenziato dalla figura.
 
     Anche in questo caso, confrontando le Figure \ref{fig:tagliePercettroniSLBF} e \ref{fig:taglieGRUSLBF}, sembra che il percettrone risulti migliore per ogni $f$ testato. Si noti però che, in questo caso, anche la GRU fornisce prestazioni migliori in termini di spazio rispetto al filtro base.
 
@@ -275,7 +275,7 @@
             \caption{}
             \label{fig:SLBFTagliaPercettrone30}
         \end{subfigure}
-        \caption{Taglie degli SLBF con percettrone: (a) con configurazione (20, 0.001), (b) con configurazione (30, 0.001). Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
+        \caption{Taglie $n$ dei SLBF basati su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate). Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
         \label{fig:tagliePercettroniSLBF}
     \end{figure}
 
@@ -299,14 +299,14 @@
             \caption{}
             \label{fig:SLBFTagliaGRU4}
         \end{subfigure}
-        \caption{Taglie degli SLBF con GRU: (a) a 16 dimensioni, (b) a 8 dimensioni, (c) a 4 dimensioni. Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
+        \caption{Taglie $n$ dei SLBF basati su RNN. Il titolo di ogni grafico riporta la dimensione dello strato nascosto della GRU. Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
         \label{fig:taglieGRUSLBF}
     \end{figure}
 
-    \paragraph{Confronto con codifica binaria}
-    Vengono ora presentati i risultati ottenuti utilizzando la codifica binaria presentata nel paragrafo \ref{sec:implementazione}. Da alcuni esperimenti è emerso che addestrare il percettrone utilizzando questa codifica porta, a parità di iperparametri, a delle performance migliori. 
+    \paragraph{Confronto con la codifica binaria}
+    Vengono ora presentati i risultati ottenuti utilizzando la codifica binaria presentata nel Paragrafo \ref{sec:implementazione}. Da alcuni esperimenti è emerso che addestrare il percettrone utilizzando questa codifica porta, a parità di iperparametri, a delle performance migliori. 
     
-    Il problema principale deriva dal fatto che utilizzando questa tipologia di codifica la dimensione dei vettori in ingresso aumenta notevolmente, aumentando di conseguenza la taglia del modello. Nel nostro dataset, ad esempio, la codifica con CountVectorizer porta a vettori di dimensione 82, mentre usando questa codifica (troncando a 30 caratteri), i vettori hanno dimensione 210. Per ovviare a questo problema la soluzione è ridurre il numero di neuroni nascosti, riducendo di conseguenza il numero totale di parametri del modello.
+    Il problema principale deriva dal fatto che, utilizzando questa tipologia di codifica, la dimensione dei vettori in ingresso aumenta notevolmente, aumentando di conseguenza la taglia del modello. Nel nostro dataset, ad esempio, la codifica con CountVectorizer porta a vettori di dimensione 82, mentre usando questa la codifica binaria (troncata a 30 caratteri), i vettori hanno dimensione 210. Per ovviare a questo problema la soluzione è ridurre il numero di neuroni nascosti, riducendo di conseguenza il numero totale di parametri del modello.
 
     Le Figure \ref{fig:tagliePercettroniBinLBF} e \ref{fig:tagliePercettroniBinSLBF} mostrano le taglie dei filtri ottenuti utilizzando la codifica binaria e 8 neuroni per lo strato nascosto, portando ad un numero totale di parametri simile a quello del modello a 20 neuroni.
 
@@ -322,7 +322,7 @@
             \includegraphics[width=\textwidth]{immagini/7/LBF/Percettrone(20, 0.001)_Taglia.png}
             \caption{}
         \end{subfigure}
-        \caption{Taglie degli LBF con percettroni: (a) con input con codifica binaria e 8 neuroni nello strato nascosto, (b) con input con codifica CountVectorizer e 20 neuroni nello strato nascosto.}
+        \caption{Confronto con la codifica binaria. Vengono riportate le taglie $n$ dei LBF basati su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate). Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
         \label{fig:tagliePercettroniBinLBF}
     \end{figure}
 
@@ -338,12 +338,11 @@
             \includegraphics[width=\textwidth]{immagini/7/SLBF/Percettrone(20, 0.001)_Taglia.png}
             \caption{}  
         \end{subfigure}
-        \caption{Taglie degli SLBF con percettroni: (a) con input con codifica binaria e 8 neuroni nello strato nascosto, (b) con input con codifica CountVectorizer e 20 neuroni nello strato nascosto.}
+        \caption{Confronto con la codifica binaria. Vengono riportate le taglie $n$ dei SLBF basati su percettrone. Il titolo di ogni grafico riporta la configurazione di iperparametri utilizzata, nella forma (Num. neuroni, Learning rate). Le rette tratteggiate rappresentano la taglia del relativo filtro di Bloom per il dato $f$.}
         \label{fig:tagliePercettroniBinSLBF}
     \end{figure}
 
-    Seppur il percettrone binario abbia performance migliori rispetto alle GRU presentate, il percettrone con la codifica utilizzata fino ad ora risulta comunque migliore. Per questo motivo nei confronti successivi verranno riportati solamente i risultati relativi codifica CountVectorizer.
-
+    Seppur il percettrone binario abbia performance migliori rispetto alle RNN presentate, il percettrone con la codifica utilizzata fino ad ora risulta comunque migliore. Per questo motivo nei confronti successivi verranno riportati solamente i risultati relativi codifica CountVectorizer.
 
     \paragraph{Confronto tra filtri di Bloom, LBF e SLBF}
     Le Tabelle \ref{tab:confrontoFinaleLBF} e \ref{tab:confrontoFinaleSLBF} mettono a confronto le taglie rispettivamente di LBF e SLBF nel caso migliore. In entrambe le tipologie di filtro il percettrone a 20 neuroni risulta essere la scelta migliore. Inoltre, per ogni $f$ testato, l'SLBF fornisce un miglioramento più ampio rispetto al relativo LBF.
@@ -444,7 +443,7 @@
         \end{figure}
 
     \paragraph{Tempi di accesso}
-    Un ultimo aspetto importante da considerare è il tempo di accesso ad ognuno delle tipologie di filtro proposte. Le Tabelle \ref{tab:tempiMediLBF} e \ref{tab:tempiMediSLBF} mostrano i tempi medi d'accesso per elemento, rispettivamente per LBF ed SLBF.
+    Un ultimo aspetto importante da considerare è il tempo di accesso per ognuna delle tipologie di filtro proposte. Le Tabelle \ref{tab:tempiMediLBF} e \ref{tab:tempiMediSLBF} mostrano i tempi medi d'accesso per elemento, rispettivamente per LBF ed SLBF.
 
     Dalle tabelle emerge che il filtro di Bloom classico risulta più veloce di circa 1-2 ordini di grandezza, a seconda del classificatore considerato, rispetto alle controparti apprese. La minore efficienza in termini di tempo dei filtri appresi è molto probabilmente dovuta alla maggiore complessità della struttura: nel filtro di Bloom, infatti, l'accesso consiste semplicemente nel calcolo delle funzioni di hash, mentre nelle strutture apprese è necessario anche interrogare il classificatore per ottenere i valori delle predizioni; più un classificatore è complesso, maggiore sarà il tempo necessario per questa operazione. Questo viene anche confermato dal fatto che i filtri che utilizzano la GRU 16 sono quelli con il tempo medio di accesso più alto.
 

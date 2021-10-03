@@ -11,12 +11,12 @@
 
     Più formalmente, la nested cross validation è composta da due cicli annidati con finalità differenti, descritti più del dettaglio di seguito.
     \begin{itemize}
-        \item Il ciclo esterno è una normale cross validation: suddivide il dataset in $k$ insiemi di ugual dimensione. Ognuno di questi $k$ insiemi viene utilizzato una volta come test set, mentre i rimanenti insiemi compongono il training set. Nel contesto della convalida annidata la peculiarità sta nel modello addestrato: questo infatti avrà una configurazione di iperparametri che corrisponde alla migliore secondo quanto decretato dal ciclo interno.
-        \item Il ciclo interno è responsabile per la model selection: un algoritmo di ottimizzazione sceglie diverse configurazioni di iperparametri che vengono testate tramite una cross validation. In questo caso il dataset su cui la convalida incrociata lavora è il training set del ciclo esterno, e l'insieme che viene usato per il testing prende il nome di validation set.
+        \item Il ciclo esterno è una normale cross validation: suddivide il dataset in $k$ insiemi di dimensione simile. Ognuno di questi $k$ insiemi viene utilizzato una volta come test set, mentre i rimanenti insiemi compongono il training set. Nel contesto della convalida annidata la peculiarità sta nel modello addestrato: questo infatti avrà una configurazione di iperparametri che corrisponde a quella migliore secondo quanto decretato dal ciclo interno.
+        \item Il ciclo interno testa diverse configurazioni di iperparametri tramite una cross validation. In questo caso il dataset su cui la convalida incrociata lavora è il training set del ciclo esterno, e l'insieme che viene usato per il testing prende il nome di validation set.
     \end{itemize}
-    In questo modo i $k$ punteggi che vengono ritornati dalla procedura forniscono una stima non distorta delle performance del modello.
+    In questo modo i $k$ punteggi che vengono restituiti dalla procedura forniscono una stima non distorta delle performance del modello.
 
-    L'algoritmo per la scelta degli iperparametri che utilizziamo negli esperimenti prende il nome di GridSearch: semplicemente data a priori una griglia di parametri l'algoritmo testa tutte le possibili combinazioni di tali parametri, decretando poi la migliore.
+    L'algoritmo per la scelta degli iperparametri che utilizziamo negli esperimenti prende il nome di GridSearch: semplicemente dato a priori un insieme di iperparametri, ognuno con un insieme di valori da testare, l'algoritmo testa tutte le possibili combinazioni dei valori di tali iperparametri, decretando poi la migliore.
 
     Lo svantaggio principale di questa tecnica deriva dalla sua complessità computazionale: in ogni ciclo interno vengono infatti addestrati e valutati $n \cdot k_{in}$ modelli, dove $n$ è il numero di combinazioni di parametri testate e $k_{in}$ è il parametro $k$ della convalida incrociata interna. Questo processo viene poi eseguito per un numero $k_{est}$ di volte, in totale verranno quindi addestrati e testati $k_{est} \cdot n \cdot k_{in}$ modelli.
 
@@ -25,7 +25,7 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{immagini/6_3/nestedCV.drawio.png}
-        \caption{Schema del funzionamento della convalida annidata, in questo caso il ciclo esterno suddivide il dataset in $k=5$ sottoinsiemi, mentre nel ciclo interno $k = 2$.}
+        \caption{Schema del funzionamento della convalida annidata, in questo caso con $k_{est} = 5$ e $k_{in} = 2$.}
         \label{fig:nestedCV}
     \end{figure}
 \end{document}

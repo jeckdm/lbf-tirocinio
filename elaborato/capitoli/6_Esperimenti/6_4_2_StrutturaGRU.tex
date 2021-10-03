@@ -3,11 +3,11 @@
 \graphicspath{{\subfix{../../immagini/}}}
 
 \begin{document}
-    Come già accennato, la struttura della rete ricorrente utilizzata negli esperimenti è identica a quella presentata in \cite{ma2020}. Nello specifico, la tipologia di rete ricorrente prende il nome di Gated Recurrent Unit (GRU), che a sua volta è una variante di una più ampia tipologia di RNN chiamata Long Short Term Memory (LSTM).
+    Come già accennato, la struttura della rete ricorrente utilizzata negli esperimenti è identica a quella presentata in \cite{ma2020}. Nello specifico, la tipologia di rete ricorrente considerata prende il nome di Gated Recurrent Unit (GRU), che a sua volta è una variante di una più ampia tipologia di RNN chiamata Long Short-Term Memory (LSTM).
     
-    Intuitivamente, il vantaggio principale delle LSTM (e di conseguenza delle GRU) è la capacità di lavorare su dipendenze a lungo termine, cosa molto difficile nelle RNN, a causa del problema della scomparsa del gradiente. Questa capacità è data dall'aggiunta di un vettore, chiamato cell state $\boldsymbol{C}^{(t)}$, che ad ogni istante di tempo contiene informazioni generate dagli stati precedenti. Ad ogni istante di tempo le informazioni da inserire all'interno del cell state vengono regolate tramite dei `cancelli', o gate.
+    Intuitivamente, il vantaggio principale delle LSTM (e di conseguenza delle GRU) è la capacità di lavorare su dipendenze a lungo termine, cosa molto difficile nelle RNN, a causa del problema del vanishing gradient\footnote{Fenomeno che crea difficoltà nell'addestramento delle reti neurali profonde che sfruttano la discesa del gradiente e la backpropagation per l'aggiornamento dei pesi. In reti con un elevato numero di strati, i gradienti dei primi livelli diventano, a causa delle moltiplicazioni, microscopici, ciò porta ad aggiornamenti dei pesi minimi a ogni iterazione, con conseguenti tempi molto elevati per la convergenza.}. Questa capacità è data dall'aggiunta di un vettore, chiamato cell state $\boldsymbol{C}^{(t)}$, che a ogni istante di tempo contiene informazioni generate dagli stati precedenti. A ogni istante di tempo le informazioni da inserire all'interno del cell state vengono regolate tramite dei gate.
 
-    In realtà, nelle GRU la funzione del cell state viene inglobata nel vettore $\boldsymbol{n}^{(t)}$ e sono presenti meno gate rispetto ad un LSTM. La Figura \ref{fig:strutturaGRU} mostra più nel dettaglio la struttura di una GRU, vengono inoltre riportate di seguito le relative equazioni:
+    In realtà, nelle GRU la funzione del cell state viene inglobata nel vettore $\boldsymbol{n}^{(t)}$ e sono presenti meno gate rispetto ad un LSTM. La Figura \ref{fig:strutturaGRU} mostra più nel dettaglio la struttura di una GRU, il cui comportamento è descritto in modo analitico dall'insieme di equazioni seguenti:
 
     \begin{flalign}
         \boldsymbol{u}^{(t)} &= \sigma\left(\boldsymbol{W} \boldsymbol{x}^{(t)} + \boldsymbol{U} \boldsymbol{n}^{(t-1)}\right)& \text{gate di aggiornamento,}\\
@@ -17,7 +17,7 @@
     \end{flalign}
     Le notazioni qui riportate riprendono quelle del paragrafo \ref{sec:retiRicorrenti}. Inoltre, il simbolo $\odot$ indica l'operazione di prodotto elemento per elemento tra due vettori o matrici.
 
-    Nei nostri esperimenti utilizziamo tre GRU, con uno strato interno $\boldsymbol{n}$ rispettivamente di dimensioni pari a 16,8 e 4; inoltre, ad ognuno dei caratteri dei vettori d'ingresso viene applicato un embedding a 5 dimensioni.
+    Nei nostri esperimenti utilizziamo tre GRU, con uno strato interno $\boldsymbol{n}$ rispettivamente di dimensioni pari a 16, 8 e 4; inoltre, ad ognuno dei caratteri dei vettori d'ingresso viene applicato un embedding a 5 dimensioni.
 
 
     \begin{figure}[H]

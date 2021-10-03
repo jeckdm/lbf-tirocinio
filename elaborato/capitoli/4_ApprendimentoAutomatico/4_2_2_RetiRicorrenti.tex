@@ -4,21 +4,19 @@
 
 \begin{document}
 
-Le architetture di reti introdotte nei precedenti paragrafi risultano limitate in contesti in cui lavoro su insiemi di dati i cui esempi sono formati da elementi che non sono indipendenti tra loro: prendiamo come esempio un dataset in cui ogni esempio è un frase di lunghezza fissata, ovviamente con un dataset del genere potrebbero essere presenti frasi con lo stesso significato ma formulate in modo differente, e dunque con una sequenza di parole diversa; una rete feedforward, avendo parametri diversi per ognuna delle posizioni della frase, faticherebbe a riconoscere esempi con significati uguali, ma formulazioni differenti: ogni parola verrebbe essenzialmente considerata come indipendente rispetto alle parole precedenti e successive.
+Le architetture di reti introdotte nei precedenti paragrafi risultano limitate in contesti in cui lavoriamo su insiemi di dati i cui esempi sono formati da elementi che non sono indipendenti tra loro. Prendiamo come esempio un dataset in cui ogni esempio è un frase di lunghezza fissata: in un dataset del genere potrebbero essere presenti frasi con lo stesso significato ma formulate in modo differente, e dunque con una sequenza di parole diversa. Una rete feedforward, avendo parametri diversi per ognuna delle posizioni della frase, faticherebbe a riconoscere esempi con significati uguali, ma formulazioni differenti: ogni parola verrebbe considerata come indipendente rispetto alle parole precedenti e successive.
 
-Quando ci si trova a lavorare con dataset di questo tipo spesso si preferisce utilizzare le \textit{reti ricorrenti} (RNN), \cite{rumelhart:errorpropnonote}. Caratteristica fondamentale di questa famiglia di reti è il fatto che gli strati del modello condividono gli stessi parametri, questo, oltre a portare ad un numero di parametri prefissato e non dipendente dalla lunghezze della sequenza, permette anche di dare importanza alla posizione, spesso chiamata timestamp, di un elemento. La condivisione dei parametri viene concretizzata in questo modo: ogni risultato in uscita alla rete è funzione dei risultati prodotti in uscita negli istanti precedenti, e ogni risultato viene calcolato utilizzando la stessa regola di aggiornamento applicata ai precedenti risultati.
+Quando ci si trova a lavorare con dataset di questo tipo spesso si preferisce utilizzare le \textit{reti ricorrenti} (RNN), \cite{rumelhart:errorpropnonote}. Caratteristica fondamentale di questa famiglia di reti è il fatto che gli strati del modello condividono gli stessi parametri; questo, oltre a portare a un numero di parametri prefissato e non dipendente dalla lunghezze della sequenza, permette anche di dare importanza alla posizione, spesso chiamata timestamp, di un elemento. La condivisione dei parametri viene concretizzata in questo modo: ogni risultato in uscita alla rete è funzione dei risultati prodotti in uscita negli istanti precedenti, e ogni risultato viene calcolato utilizzando la stessa regola di aggiornamento applicata ai precedenti risultati.
 
-L'esempio del dataset presentato poco sopra permette di mostrare un'altra caratteristica delle RNN: il fatto di condividere gli stessi parametri nei vari strati permette di avere lavorare su testi di lunghezza variabile, di fatto la rete mantiene in memoria una sola matrice di pesi che viene aggiornata ad ogni timestamp, di conseguenza può ricevere in ingresso testi con un numero di parole arbitrario (tutte le parole saranno però vettori aventi la stessa grandezza).\\
-In linea teorica possiamo quindi avere reti ricorrenti che accettano in ingresso sequenze $(\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)}, \dots)$ di lunghezza arbitraria, nella pratica però molte librerie che forniscono implementazioni di questa tipologia di reti permettono di avere solamente un numero fissato di strati, questa scelta viene giustificata dal fatto che in un dataset posso facilmente ricavare la lunghezza massima tra gli esempi, e nel caso di esempi di lunghezza inferiore posso semplicemente renderli più lunghi tramite il padding.
+L'esempio del dataset presentato poco sopra permette di mostrare un'altra caratteristica delle RNN: il fatto di condividere gli stessi parametri nei vari strati permette di avere lavorare su testi di lunghezza variabile, di fatto la rete mantiene in memoria una sola matrice di pesi che viene aggiornata ad ogni timestamp, di conseguenza può ricevere in ingresso testi con un numero di parole arbitrario (tutte le parole saranno però vettori aventi la stessa grandezza). In linea teorica possiamo quindi avere reti ricorrenti che accettano in ingresso sequenze $(\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)}, \dots)$ di lunghezza arbitraria, nella pratica però molte librerie che forniscono implementazioni di questa tipologia di reti permettono di avere solamente un numero fissato di strati. Questa scelta viene giustificata dal fatto che in un dataset è possibile ricavare in modo immediato lunghezza massima tra gli esempi, e nel caso di esempi di lunghezza inferiore è possibile allungarli tramite il padding.
 
 Per rappresentare una rete ricorrente è utile introdurre il concetto di \textit{grafo computazionale}: in un grafo di questo tipo ogni nodo indica una variabile, che può essere uno scalare, un vettore o una matrice, mentre un arco $(x,y)$ indica l'utilizzo della variabile $x$ in un'operazione che ha come risultato $y$.
 
 Un grafo computazionale viene definito con una serie di operazioni base, operazioni più complesse vengono rappresentate come combinazioni di quelle base.
 
-Formalmente posso rappresentare lo stato di un livello nascosto della rete ricorrente come:
+Formalmente, possiamo rappresentare lo stato di un livello nascosto della rete ricorrente come:
 \[\boldsymbol{n}^{(t)} = f(\boldsymbol{n}^{(t-1)}, \boldsymbol{x}^{(t)}, \boldsymbol{\Theta}),\]
-dove $\boldsymbol{n}$ rappresenta lo stato del livello al tempo $t$ .\\
-Posso rappresentare questa funzione ricorsiva tramite il grafo computazionale in Figura \ref{fig:computationgraph}.
+dove $\boldsymbol{n}$ indica lo stato del livello al tempo $t$, $\boldsymbol{x}$ il vettore dell'input presentato al tempo $t$, e $\boldsymbol{\Theta}$ la matrice dei pesi. Questa funzione ricorsiva può essere espressa graficamente tramite il grafo computazionale in Figura \ref{fig:computationgraph}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.4]{immagini/4_2/computation_graph.png}
@@ -29,8 +27,8 @@ Posso rappresentare questa funzione ricorsiva tramite il grafo computazionale in
 Definite le caratteristiche base di una rete ricorrente, possiamo combinare gli elementi a disposizione per andare a creare diverse architetture, alcune delle più frequenti sono riportate di seguito.
 
 \begin{itemize}
-    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo ed hanno connessioni ricorrenti tra strati nascosti (Figura \ref{fig:RNNArch1}).
-    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo ed hanno connessioni tra il risultato al tempo $t-1$ e lo strato nascosto al tempo $t$ (Figura \ref{fig:RNNArch2}).
+    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo e hanno connessioni ricorrenti tra strati nascosti (Figura \ref{fig:RNNArch1}).
+    \item Reti ricorrenti che producono un risultato ad ogni istante di tempo e hanno connessioni tra il risultato al tempo $t-1$ e lo strato nascosto al tempo $t$ (Figura \ref{fig:RNNArch2}).
     \item Reti ricorrenti con connessioni tra strati nascosti e che producono un solo risultato al termine della sequenza (Figura \ref{fig:RNNArch3}).
 \end{itemize}
 
@@ -57,10 +55,10 @@ Definite le caratteristiche base di una rete ricorrente, possiamo combinare gli 
     \caption{Esempi di possibili architetture di rete ricorrente. (a) Mostra una RNN con uscita ad ogni istante di tempo. (b) Mostra una RNN in cui l'uscita in ogni istante di tempo influenza lo strato nascosto dell'istante successivo. (c) Mostra una RNN con uscita solo all'ultimo istante di tempo.}
 \end{figure}
 
-Nel corso del tempo sono state proposte diverse implementazioni di questo tipo di architetture, quella da noi utilizzata negli esperimenti prende il nome di \textit{Gated Recurrent Unit} (GRU), la cui struttura viene introdotta nel paragrafo \ref{sec:strutturaRNN}.
+Nel corso del tempo sono state proposte diverse implementazioni di questo tipo di architetture, quella da noi utilizzata negli esperimenti prende il nome di \textit{Gated Recurrent Unit} (GRU), la cui struttura viene introdotta nel Paragrafo \ref{sec:strutturaRNN}.
 
-\subsubsection{Apprendimento nelle reti ricorrenti}
-Anche le RNN rientrano nella tipologia di modelli parametrici, l'apprendimento quindi avviene anche in questo caso cercando il miglior insieme di parametri sulla base degli elementi del training set; l'algoritmo più spesso utilizzato è ancora una volta la discesa del gradiente.
+\paragraph{Apprendimento nelle reti ricorrenti}
+Anche le RNN rientrano nella tipologia di modelli parametrici, l'apprendimento quindi avviene anche in questo caso cercando il miglior insieme di parametri sulla base degli elementi del training set. L'algoritmo più spesso utilizzato è ancora una volta la discesa del gradiente.
 
 \begin{figure}[H]
     \centering
@@ -79,7 +77,7 @@ Anche le RNN rientrano nella tipologia di modelli parametrici, l'apprendimento q
     \caption{(a) Grafico della funzione softmax. (b) Grafico della funzione tanh.}
 \end{figure}
 
-Per il calcolo del gradiente viene sfruttata una variante della  backpropagation, chiamata \textit{backpropagation through time} (BPTT), usata per far fronte ai problemi che sorgono dalla condivisione dei parametri. Prima di introdurre la BPTT è utile definire le equazioni che descrivono la forward propagation degli elementi in ingresso alla rete: il primo passo è l'inizializzazione dello strato nascosto $\boldsymbol{h}^{(0)}$ al tempo 0 , successivamente ad ogni istante di tempo il risultato delle rete viene calcolato come:
+Per il calcolo del gradiente viene sfruttata una variante della  backpropagation, chiamata \textit{backpropagation through time} (BPTT), usata per far fronte ai problemi che sorgono dalla condivisione dei parametri. Prima di introdurre la BPTT, è utile definire le equazioni che descrivono la forward propagation degli elementi in ingresso alla rete: il primo passo è l'inizializzazione dello strato nascosto $\boldsymbol{h}^{(0)}$ al tempo 0 , successivamente ad ogni istante di tempo il risultato delle rete viene calcolato come:
 \begin{fleqn}[1cm]
     \begin{equation}
         \boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W h}^{(t-1)} + \boldsymbol{U x}^{(t)},
@@ -94,13 +92,12 @@ Per il calcolo del gradiente viene sfruttata una variante della  backpropagation
         \boldsymbol{\hat{y}}^{(t)} = \mathrm{softmax}(\boldsymbol{o}^{(t)}).
     \end{equation}
 \end{fleqn}
-Supponiamo quindi che la funzione di attivazione utilizzata sia una tangente iperbolica (tanh, figura \ref{fig:tanh}) e che il vettore dei risultati in un generico istante $\boldsymbol{\hat{y}}^{(t)}$ sia ottenuto applicando una funzione softmax (figura \ref{fig:softmax}) ai risultati della rete, di fatto ottenendo un vettore di probabilità; $\boldsymbol{a}^{(t)}$ e $\boldsymbol{o^{(t)}}$ rappresentano rispettivamente il vettore delle attivazioni dei neuroni dello strato nascosto e il vettore delle uscite, entrambi al tempo $t$. Infine, i parametri $\boldsymbol{U}$, $\boldsymbol{V}$ e $\boldsymbol{W}$ rappresentano le matrici di pesi rispettivamente tra livello d'ingresso e nascosto, livello nascosto e output e livello nascosto e livello nascosto all'istante successivo, $\boldsymbol{b}$ e $\boldsymbol{c}$ rappresentano invece i vettori di bias.
+Supponiamo quindi che la funzione di attivazione utilizzata sia una tangente iperbolica (tanh, Figura \ref{fig:tanh}), e che il vettore dei risultati in un generico istante $\boldsymbol{\hat{y}}^{(t)}$ sia ottenuto applicando una funzione softmax (Figura \ref{fig:softmax}) ai risultati della rete, di fatto ottenendo un vettore di probabilità; $\boldsymbol{a}^{(t)}$ e $\boldsymbol{o^{(t)}}$ rappresentano rispettivamente il vettore delle attivazioni dei neuroni dello strato nascosto e il vettore delle uscite, entrambi al tempo $t$. Infine, i parametri $\boldsymbol{U}$, $\boldsymbol{V}$ e $\boldsymbol{W}$ rappresentano le matrici di pesi rispettivamente tra livello d'ingresso e nascosto, livello nascosto e output e livello nascosto e livello nascosto all'istante successivo, $\boldsymbol{b}$ e $\boldsymbol{c}$ rappresentano invece i vettori di bias.
 
-In questo caso utilizziamo la funzione di log-verosimiglianza come misura dell'errore commesso dal modello, in un generico istante $t$ quindi la perdita viene misurata come:
-\[L^{(t)} = -\log(\boldsymbol{y}^{(t)}) = -\log(\mathrm{softmax}(\boldsymbol{o}^{(t)})),\]
-mentre la perdita totale per una data sequenza di $\boldsymbol{x}$ con i relativi vettori $\boldsymbol{y}$ è data dalla somma delle perdite nei singoli istanti:
+Una volta scelta la funzione di perdita $L^{(t)}$, calcolata in un generico istante $t$, la perdita totale per una data sequenza di $\boldsymbol{x}$ con i relativi vettori $\boldsymbol{y}$ è data dalla somma delle perdite nei singoli istanti:
 \[L(\{x^{(1)}, \dots, x^{(\mathcal{T})}\}, \{y^{(1)}, \dots, y^{(\mathcal{T})}\}) = \sum_t L^{(t)},\]
-dove $\mathcal{T}$ indica l'ultimo timestamp.
+dove $\mathcal{T}$ indica l'ultimo timestamp. In questo caso viene considerata una funzione di perdita chiamata negative loss-likelihood: 
+\[L^{(t)} = -\log\left(\boldsymbol{\hat{y}}^{(t)}\right).\]
 
 Per il calcolo del gradiente (sfruttato poi per l'aggiornamento dei pesi) si ricorre anche in questo caso alla backpropagation. La caratteristica delle reti ricorrenti di avere pesi condivisi obbliga però a variare leggermente l'approccio base, adottato nei percettroni multistrato. Questa variante dell'algoritmo, come già accennato, prende il nome di backpropagation through time.
  

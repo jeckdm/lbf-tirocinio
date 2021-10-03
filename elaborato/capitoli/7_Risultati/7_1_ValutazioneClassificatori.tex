@@ -4,161 +4,104 @@
 
 \begin{document}
     \paragraph{Rapporto training-test}
-    Il primo esperimento viene effettuato sulle tre tipologie di GRU descritte, e il fine è quello di esaminare le prestazioni dei classificatori al variare del numero di elementi destinati al training e al test set. 
-    
-    Questo esperimento è utile ad evidenziare eventuali bias negativi dovuti ad un sottodimensionamento dell'insieme d'addestramento. In realtà, essendo il dataset utilizzato relativamente grande, non ci aspettiamo cambiamenti di performance significativi nelle proporzioni testate: il training set dovrebbe avere, in ognuno dei casi testati, una grandezza sufficiente per permettere al modello di apprendere il problema al meglio delle sue potenzialità.
+    Il primo esperimento viene effettuato su tre tipologie di reti ricorrenti, ognuna basata su uno dei tre tipi di GRU descritte nel Paragrafo \ref{sec:strutturaRNN}. Il fine è quello di esaminare le prestazioni dei classificatori al variare del numero di elementi destinati al training e al test set; ciò permette di evidenziare eventuali bias negativi dovuti a un sottodimensionamento dell'insieme d'addestramento. 
 
-    Vengono testati tre rapporti training-test: $\frac{1}{2}$-$\frac{1}{2}$, $\frac{2}{3}$-$\frac{1}{3}$ e $\frac{4}{5}$-$\frac{1}{5}$, che corrispondono rispettivamente ad una 2 fold, 3 fold e 5 fold cross validation.
+    Vengono considerati tre rapporti training-test: $\frac{1}{2}$-$\frac{1}{2}$, $\frac{2}{3}$-$\frac{1}{3}$ e $\frac{4}{5}$-$\frac{1}{5}$, che corrispondono rispettivamente a una 2-fold, 3-fold e 5-fold cross validation (CV).
 
-    \begin{table}[H]
+    La \cref{tab:traintestEsperimento} riporta i risultati delle valutazioni. Le prestazioni non sembrano essere influenzate direttamente dalla variazione della grandezza del training set: nel caso della GRU a 16 dimensioni, ad esempio, la 2-fold CV presenta un F1-score sensibilmente maggiore rispetto alla 3-fold CV, mentre nell'ultimo esperimento la stessa metrica ha un valore superiore. Questi risultati potrebbero essere giustificati dalla dimensione del dataset utilizzato: essendo questo relativamente grande, il training set ha, in ognuno dei casi considerati, una grandezza sufficiente per permettere al modello di apprendere il problema al meglio delle sue potenzialità.
+
+    Dato che le prestazioni non sembrano essere dipendenti dai rapporti testati, la scelta è stata quella di mantenere un rapporto $\frac{2}{3}$-$\frac{1}{3}$.
+
+    \begin{table}[ht]
         \centering
-        \begin{tabular}{lccc}
+        \begin{tabular}{llccc}
             \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            {} & &                      \textbf{16 Dim.} & \textbf{8 Dim.} & \textbf{4 Dim.} \\
             \midrule
-            \textbf{F1-score }      &      $0.720 \pm 0.038$ & $0.657 \pm 0.008$ & $0.563 \pm 0.136$\\
-            \textbf{Recupero   }    &      $0.720 \pm 0.096$ & $0.647 \pm 0.012$ & $0.485 \pm 0.183$\\
-            \textbf{Precisione}     &      $0.731 \pm 0.022$ & $0.668 \pm 0.002$ & $0.727 \pm 0.006$\\
-            \textbf{Accuratezza }   &      $0.932 \pm 0.004$ & $0.917 \pm 0.001$ & $0.914 \pm 0.015$\\
+            \multirow{4}{*}{\textbf{2-fold CV}} & \textbf{F1} & $0.720 \pm 0.038$ & $0.657 \pm 0.008$ & $0.563 \pm 0.136$\\
+            & \textbf{Rec.}    &      $0.720 \pm 0.096$ & $0.647 \pm 0.012$ & $0.485 \pm 0.183$\\
+            & \textbf{Prec.}     &      $0.731 \pm 0.022$ & $0.668 \pm 0.002$ & $0.727 \pm 0.006$\\
+            & \textbf{Acc.}   &      $0.932 \pm 0.004$ & $0.917 \pm 0.001$ & $0.914 \pm 0.015$\\
+            \hdashline
+            \multirow{4}{*}{\textbf{3-fold CV}} & \textbf{F1} & $0.694 \pm 0.029$ & $0.659 \pm 0.061$ & $0.592 \pm 0.040$\\
+            & \textbf{Rec.}    &      $0.659 \pm 0.077$ & $0.625 \pm 0.088$ & $0.545 \pm 0.079$\\
+            & \textbf{Prec.}     &      $0.744 \pm 0.044$ & $0.702 \pm 0.025$ & $0.660 \pm 0.028$\\
+            & \textbf{Acc.}   &      $0.929 \pm 0.004$ & $0.921 \pm 0.009$ & $0.908 \pm 0.001$\\
+            \hdashline
+            \multirow{4}{*}{\textbf{5-fold CV}} & \textbf{F1} & $0.745 \pm 0.011$ & $0.666 \pm 0.064$ & $0.569 \pm 0.051$\\
+            &\textbf{Rec.}    & $0.791 \pm 0.034$ & $0.655 \pm 0.114$ & $0.526 \pm 0.103$\\
+            &\textbf{Prec.}     & $0.707 \pm 0.045$ & $0.689 \pm 0.011$ & $0.641 \pm 0.055$\\
+            &\textbf{Acc.}   & $0.933 \pm 0.006$ & $0.921 \pm 0.009$ & $0.903 \pm 0.005$\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati medi di una 2-fold cross validation, calcolati sulla classe dei phishing.}
-        \label{tab:2foldCV}
+        \caption{Risultati dell'esperimento relativo al rapporto tra training e test set. Per ogni metrica, vengono riportate media e dev. standard dei valori ottenuti in ogni fold. Sulle colonne viene indicata la dimensione dello strato nascosto della GRU considerata.}
+        \label{tab:traintestEsperimento}
     \end{table}
-
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{lccc}
-            \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
-            \midrule
-            \textbf{F1-score }      &      $0.694 \pm 0.029$ & $0.659 \pm 0.061$ & $0.592 \pm 0.040$\\
-            \textbf{Recupero   }    &      $0.659 \pm 0.077$ & $0.625 \pm 0.088$ & $0.545 \pm 0.079$\\
-            \textbf{Precisione}     &      $0.744 \pm 0.044$ & $0.702 \pm 0.025$ & $0.660 \pm 0.028$\\
-            \textbf{Accuratezza }   &      $0.929 \pm 0.004$ & $0.921 \pm 0.009$ & $0.908 \pm 0.001$\\
-            \bottomrule
-        \end{tabular}
-        \caption{Risultati medi di una 3-fold cross validation, calcolati sulla classe dei phishing.}
-        \label{tab:3foldCV}
-    \end{table}
-
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{lccc}
-            \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
-            \midrule
-            \textbf{F1-score }      &      $0.745 \pm 0.011$ & $0.666 \pm 0.064$ & $0.569 \pm 0.051$\\
-            \textbf{Recupero   }    &      $0.791 \pm 0.034$ & $0.655 \pm 0.114$ & $0.526 \pm 0.103$\\
-            \textbf{Precisione}     &      $0.707 \pm 0.045$ & $0.689 \pm 0.011$ & $0.641 \pm 0.055$\\
-            \textbf{Accuratezza }      &      $0.933 \pm 0.006$ & $0.921 \pm 0.009$ & $0.903 \pm 0.005$\\
-            \bottomrule
-        \end{tabular}
-        \caption{Risultati medi di una 5-fold cross validation, calcolati sulla classe dei phishing.}
-        \label{tab:5foldCV}
-    \end{table}
-
-    Le Tabelle \ref{tab:2foldCV}, \ref{tab:3foldCV}, \ref{tab:5foldCV} riportano i risultati delle valutazioni. Come previsto, le prestazioni non sembrano essere influenzate direttamente dalla variazione della grandezza del training set: nel caso della GRU a 16 dimensioni, ad esempio, la Tabella \ref{tab:2foldCV} presenta un F1-score sensibilmente maggiore rispetto alla \ref{tab:3foldCV}, mentre nell'ultima tabella la stessa metrica ha un valore superiore.
-
-    Dato che le prestazioni non sembrano essere dipendenti dai rapporti testati, la scelta è di mantenere un rapporto $\frac{2}{3}$-$\frac{1}{3}$.
 
     \paragraph{Sbilanciamento del dataset}
-    Come riportato nel paragrafo \ref{sec:dataset}, il dataset contiene un numero significativamente superiore di esempi etichettati come URL legittimi. Nello specifico, per ogni URL di phishing sono presenti circa sette URL legittimi.
-
-    L'idea dell'esperimento è quindi verificare se lo sbilanciamento del dataset porti a una diminuzione delle performance dei classificatori nel riconoscere URL di phishing. Ciò viene fatto valutando i modelli addestrati su insiemi d'addestramento con proporzioni legittimi:phishing differenti. 
-    
-    La proporzione degli URL nel training set viene modificata con una tecnica chiamata random undersampling: questa semplicemente prevede l'eliminazione casuale di URL legittimi, fino al raggiungimento della proporzione desiderata. 
-    
-    Anche in questo caso l'esperimento viene effettuato solamente sulle tre GRU.
-
-    Le Tabelle \ref{tab:5a1Undersampling}, \ref{tab:3a1Undersampling}, \ref{tab:2a1Undersampling} e \ref{tab:1a1Undersampling} mostrano i risultati di una 3-fold cross validation, rispettivamente sulle proporzioni legittimi:phishing pari a 5:1, 3:1, 2:1 e 1:1.
-
-    Confrontando questi risultati con quelli della Tabella \ref{tab:3foldCV}, si notano dei miglioramenti significativi in quasi tutte le proporzioni testate: l'F1-score sembra in generale migliore lavorando su un dataset meno sbilanciato. È però interessante notare che, all'aumentare del numero di URL legittimi scartati, tale miglioramento diventi sempre minore, fino ad arrivare alla Tabella \ref{tab:1a1Undersampling} in cui le performance in termini di F1-score sono peggiori rispetto alla Tabella \ref{tab:3foldCV}.
-
-    Questo progressivo peggioramento potrebbe essere giustificato dalla progressiva diminuzione della grandezza del dataset: se da un lato eliminando URL legittimi il dataset viene bilanciato, dall'altro vengono persi molti esempi che sarebbero stati utili al modello per apprendere meglio il problema.
-
-    Questa supposizione viene confermata anche analizzando precisione e recupero: maggiori sono gli URL legittimi eliminati e maggiore è il recupero, a scapito però della precisione; ciò indica un miglioramento nelle capacità di riconoscimento degli URL di phishing (recupero alto, quindi basso numero di falsi negativi), ma contemporaneamente un notevole peggioramento nelle capacità di riconoscimento degli URL legittimi (precisione bassa, quindi alto numero di falsi positivi).
-
-    Per i motivi appena spiegati, la scelta è di mantenere una proporzione 5:1, che sembra essere quella che garantisce l'F1-score migliore, mantenendo comunque un buon bilanciamento tra recupero e precisione.
-
-
-    \begin{table}[H]
+    \begin{table}[ht]
         \centering
-        \begin{tabular}{lccc}
+        \begin{tabular}{llccc}
             \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            {} & &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
             \midrule
-            \textbf{F1-Score }      &      $0.733 \pm 0.010$ & $0.751 \pm 0.005$ & $0.677 \pm 0.035$\\
-            \textbf{Recupero   }    &      $0.834 \pm 0.026$ & $0.790 \pm 0.015$ & $0.711 \pm 0.063$\\
-            \textbf{Precisione}     &      $0.654 \pm 0.011$ & $0.717 \pm 0.017$ & $0.649 \pm 0.046$\\
-            \textbf{Accuratezza }   &      $0.925 \pm 0.003$ & $0.935 \pm 0.002$ & $0.916 \pm 0.009$\\
+            \multirow{4}{*}{\textbf{Rapp. 5:1}} & \textbf{F1}      &      $0.733 \pm 0.010$ & $0.751 \pm 0.005$ & $0.677 \pm 0.035$\\
+            &\textbf{Rec.}    &      $0.834 \pm 0.026$ & $0.790 \pm 0.015$ & $0.711 \pm 0.063$\\
+            &\textbf{Prec.}     &      $0.654 \pm 0.011$ & $0.717 \pm 0.017$ & $0.649 \pm 0.046$\\
+            &\textbf{Acc.}   &      $0.925 \pm 0.003$ & $0.935 \pm 0.002$ & $0.916 \pm 0.009$\\
+            \hdashline
+            \multirow{4}{*}{\textbf{Rapp. 3:1}} & \textbf{F1}      &      $0.734 \pm 0.012$ & $0.703 \pm 0.037$ & $0.706 \pm 0.027$\\
+            &\textbf{Rec.}    &      $0.872 \pm 0.004$ & $0.902 \pm 0.029$ & $0.884 \pm 0.022$\\
+            &\textbf{Prec.}     &      $0.633 \pm 0.019$ & $0.580 \pm 0.059$ & $0.590 \pm 0.047$\\
+            &\textbf{Acc.}   &      $0.922 \pm 0.005$ & $0.905 \pm 0.019$ & $0.908 \pm 0.013$\\
+            \hdashline
+            \multirow{4}{*}{\textbf{Rapp. 2:1}} & \textbf{F1}      &      $0.746 \pm 0.021$ & $0.698 \pm 0.018$ & $0.658 \pm 0.019$\\
+            &\textbf{Rec.}    &      $0.911 \pm 0.010$ & $0.906 \pm 0.014$ & $0.928 \pm 0.004$\\
+            &\textbf{Prec.}     &      $0.632 \pm 0.032$ & $0.568 \pm 0.030$ & $0.510 \pm 0.024$\\
+            &\textbf{Acc.}   &      $0.923 \pm 0.009$ & $0.903 \pm 0.010$ & $0.880 \pm 0.011$\\
+            \hdashline
+            \multirow{4}{*}{\textbf{Rapp. 1:1}} & \textbf{F1}      &      $0.612 \pm 0.003$ & $0.632 \pm 0.010$ & $0.642 \pm 0.043$\\
+            &\textbf{Rec.}    &      $0.986 \pm 0.004$ & $0.972 \pm 0.005$ & $0.957 \pm 0.021$\\
+            &\textbf{Prec.}     &      $0.444 \pm 0.004$ & $0.468 \pm 0.013$ & $0.486 \pm 0.053$\\
+            &\textbf{Acc.}   &      $0.846 \pm 0.002$ & $0.860 \pm 0.007$ & $0.866 \pm 0.028$\\
             \bottomrule
         \end{tabular}
-        \caption{Proporzioni legittimi phishing 5:1. Risultati medi di una 3 fold cross validation, calcolati sulla classe dei phishing.}
-        \label{tab:5a1Undersampling}
+        \caption{Risultati dell'esperimento relativo al rapporto tra URL legittimi e di phishing. Per ogni metrica, vengono riportate media e dev. standard dei valori ottenuti in ogni fold. Sulle colonne viene indicata la dimensione dello strato nascosto della GRU considerata.}
+        \label{tab:undersamplingEsperimento}
     \end{table}
 
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{lccc}
-            \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
-            \midrule
-            \textbf{F1-Score }      &      $0.734 \pm 0.012$ & $0.703 \pm 0.037$ & $0.706 \pm 0.027$\\
-            \textbf{Recupero   }    &      $0.872 \pm 0.004$ & $0.902 \pm 0.029$ & $0.884 \pm 0.022$\\
-            \textbf{Precisione}     &      $0.633 \pm 0.019$ & $0.580 \pm 0.059$ & $0.590 \pm 0.047$\\
-            \textbf{Accuratezza }   &      $0.922 \pm 0.005$ & $0.905 \pm 0.019$ & $0.908 \pm 0.013$\\
-            \bottomrule
-        \end{tabular}     
-        \caption{Proporzioni legittimi phishing 3:1. Risultati medi di una 3 fold cross validation, calcolati sulla classe dei phishing.}   
-        \label{tab:3a1Undersampling}
-    \end{table}
+    Come riportato nel Paragrafo \ref{sec:dataset}, il dataset contiene un numero significativamente superiore di URL etichettati come legittimi. Nello specifico, per ogni URL di phishing sono presenti circa sette URL legittimi.
 
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{lccc}
-            \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
-            \midrule
-            \textbf{F1-Score }      &      $0.746 \pm 0.021$ & $0.698 \pm 0.018$ & $0.658 \pm 0.019$\\
-            \textbf{Recupero   }    &      $0.911 \pm 0.010$ & $0.906 \pm 0.014$ & $0.928 \pm 0.004$\\
-            \textbf{Precisione}     &      $0.632 \pm 0.032$ & $0.568 \pm 0.030$ & $0.510 \pm 0.024$\\
-            \textbf{Accuratezza }   &      $0.923 \pm 0.009$ & $0.903 \pm 0.010$ & $0.880 \pm 0.011$\\
-            \bottomrule
-        \end{tabular}     
-        \caption{Proporzioni legittimi phishing 2:1. Risultati medi di una 3 fold cross validation, calcolati sulla classe dei phishing.} 
-        \label{tab:2a1Undersampling}  
-    \end{table}
+    L'idea dell'esperimento è quindi quella di verificare se lo sbilanciamento del dataset porti a una diminuzione delle performance dei classificatori nel riconoscere URL di phishing. Ciò viene fatto valutando i modelli addestrati su insiemi d'addestramento con rapporti legittimi phishing differenti. 
+    
+    La frazione degli URL nel training set viene modificata con una tecnica chiamata random undersampling: questa semplicemente prevede l'eliminazione casuale di URL legittimi, fino al raggiungimento del rapporto desiderato. 
+    
+    Anche in questo caso l'esperimento viene effettuato solamente sulle tre reti ricorrenti.
 
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{lccc}
-            \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
-            \midrule
-            \textbf{F1-Score }      &      $0.612 \pm 0.003$ & $0.632 \pm 0.010$ & $0.642 \pm 0.043$\\
-            \textbf{Recupero   }    &      $0.986 \pm 0.004$ & $0.972 \pm 0.005$ & $0.957 \pm 0.021$\\
-            \textbf{Precisione}     &      $0.444 \pm 0.004$ & $0.468 \pm 0.013$ & $0.486 \pm 0.053$\\
-            \textbf{Accuratezza }   &      $0.846 \pm 0.002$ & $0.860 \pm 0.007$ & $0.866 \pm 0.028$\\
-            \bottomrule
-        \end{tabular}     
-        \caption{Proporzioni legittimi phishing 1:1. Risultati medi di una 3 fold cross validation, calcolati sulla classe dei phishing.}  
-        \label{tab:1a1Undersampling} 
-    \end{table}
+    La Tabella \ref{tab:undersamplingEsperimento} mostra i risultati di una 3-fold CV sui rapporti legittimi phishing pari a 5:1, 3:1, 2:1 e 1:1. Confrontando questi risultati con quelli della Tabella \ref{tab:traintestEsperimento}, si notano dei miglioramenti significativi in quasi tutte le proporzioni considerate: l'F1-score sembra in generale migliore lavorando su un dataset meno sbilanciato. È però interessante notare che, all'aumentare del numero di URL legittimi scartati, tale miglioramento diventi sempre minore, fino ad arrivare al rapport 1:1 in cui le performance in termini di F1-score sono peggiori rispetto alla Tabella \ref{tab:traintestEsperimento}.
 
-    \paragraph{Performance percettrone multistrato}
-    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-test set utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con una proporzione legittimi:phishing di 5:1.
+    Il progressivo peggioramento potrebbe essere giustificato dalla progressiva diminuzione della grandezza del dataset: se da un lato eliminando URL legittimi il dataset viene bilanciato, dall'altro vengono persi molti esempi che sarebbero stati utili al modello per apprendere meglio il problema.
 
-    Vengono valutati tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni valutate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle GRU. Anche il learning rate viene scelto arbitrariamente, in questo caso viene fissato a $0.001$.
+    La supposizione viene confermata anche analizzando precisione e recupero: maggiori sono gli URL legittimi eliminati e maggiore è il recupero, a scapito però della precisione; ciò indica una tendenza a predire più URL di phishing, con conseguente aumento dei falsi positivi e riduzione dei falsi negativi, causando rispettivamente una riduzione della precisione e un aumento del recupero.
 
-    \begin{table}[H]
+    Per i motivi appena spiegati, la scelta effettuata è stata quella di utilizzare un rapporto 5:1, che sembra essere quello che garantisce l'F1-score migliore, mantenendo comunque un buon bilanciamento tra recupero e precisione.
+
+    \paragraph{Percettrone multistrato}
+
+    Andiamo ora a valutare le prestazioni del percettrone, questo avrà una struttura coerente con quella descritta nel Paragrafo \ref{sec:strutturaPercettrone}. Il rapporto training-test utilizzato e lo sbilanciamento del dataset rimangono uguali a quelli scelti nei due esperimenti precedenti. Le performance verranno quindi valutate tramite una 3-fold cross validation sul dataset con un rapporto legittimi phishing di 5:1.
+
+    Vengono valutati tre modelli diversi, differenti per il numero di neuroni dello strato interno. In questo primo esperimento le tre configurazioni valutate sono state scelte arbitrariamente, questo per avere un'idea delle prestazioni del modello sul problema su cui stiamo lavorando. Negli esperimenti successivi il numero di neuroni verrà scelto cercando di massimizzare le performance, e contemporaneamente mantenendo uno spazio occupato simile a quello occupato dalle RNN. Dopo alcune prove, per il learning rate si è scelto il valore $0.001$.
+
+    La Tabella \ref{tab:FFNNModelSelection} riporta i risultati per le tre configurazioni, assieme alle taglie di ognuno dei modelli, in Tabella \ref{tab:spazioModelli}. È facile notare come tutti i modelli di percettrone abbiano performance migliori rispetto alle GRU. Inoltre, come era intuibile, all'aumentare del numero di neuroni le performance del percettrone migliorano. Se l'obiettivo fosse solamente quello di risolvere il problema di classificazione, il modello a 64 neuroni sarebbe il migliore tra le tre configurazioni testate. Tuttavia, l'obiettivo è inserire questi classificatori in un filtro di Bloom appreso, di conseguenza lo spazio occupato è importante tanto quanto le prestazioni. Il modello a 64 neuroni risulta quindi troppo grande rispetto alla prestazioni offerte.
+    
+    L'obiettivo è quindi massimizzare, tramite una selezione del modello, le performance del percettrone, cercando di mantenere una dimensione che non superi quella della RNN con GRU a 16 dimensioni. Dalla Tabella \ref{tab:FFNNModelSelection}, infatti, si nota che il miglioramento delle performance passando dalla configurazione a 16 neuroni a quella a 64 non è così significativo da giustificare una dimensione circa quattro volte superiore.
+
+    \begin{table}[t]
         \centering
         \begin{tabular}{lccc}
             \toprule
             {} &                      \multicolumn{3}{c}{\textbf{(Numero neuroni, Learning rate)}}\\
             {} &                      \textbf{(64, 0.001)} & \textbf{(16, 0.001)} & \textbf{(8, 0.001)} \\
-            \midrule
-            \textbf{Spazio (Byte)}  &      $21762$ & $5628$ & $2940$\\
             \midrule
             \textbf{F1-score }      &      $0.846 \pm 0.002$ & $0.812 \pm 0.002$ & $0.789 \pm 0.003$\\
             \textbf{Recupero   }    &      $0.842 \pm 0.030$ & $0.830 \pm 0.008$ & $0.813 \pm 0.015$\\
@@ -170,44 +113,36 @@
         \label{tab:FFNNModelSelection}
     \end{table}
 
-    \begin{table}[H]
+    \begin{table}[ht]
         \centering
-        \begin{tabular}{lccc}
+        \begin{tabular}{llc}
             \toprule
-            {} &                      \textbf{16 Dimensioni} & \textbf{8 Dimensioni} & \textbf{4 Dimensioni} \\
+            \textbf{Modello} & \textbf{Configurazione} & \textbf{Spazio(Byte)}\\
             \midrule
-            \textbf{Spazio (Byte)}  &      $9452$ & $6390$ & $5515$\\
-            \midrule               
-            \textbf{F1-Score }      &      $0.733 \pm 0.010$ & $0.751 \pm 0.005$ & $0.677 \pm 0.035$\\
-            \textbf{Recupero   }    &      $0.834 \pm 0.026$ & $0.790 \pm 0.015$ & $0.711 \pm 0.063$\\
-            \textbf{Precisione}     &      $0.654 \pm 0.011$ & $0.717 \pm 0.017$ & $0.649 \pm 0.046$\\
-            \textbf{Accuratezza }   &      $0.925 \pm 0.003$ & $0.935 \pm 0.002$ & $0.916 \pm 0.009$\\
+            \multirow{3}{*}{\textbf{Percettr.}} & \textbf{(64, 0.001)} & 21762\\
+            & \textbf{(16, 0.001)} & 5628\\
+            & \textbf{(8, 0.001)} & 2940\\
+            \hdashline
+            \multirow{3}{*}{\textbf{RNN.}} & \textbf{16 Dim.} & 9452\\
+            & \textbf{8 Dim.} & 6390\\
+            & \textbf{4 Dim.} & 5515\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati della valutazione della GRU, effettuata con una 3-fold cross validation. Il dataset ha una proporzione legittimi:phishing di 5:1. Vengono presentate anche le taglie di ognuno dei modelli.}
-        \label{tab:GRUModelSelection}
+        \caption{Spazio occupato da ognuno dei modelli. Nel caso del percettrone, le configurazioni sono riportate nella forma (Num. neuroni, Learning rate). Per la rete ricorrente, invece, viene indicata la grandezza dello strato nascosto della GRU.}
+        \label{tab:spazioModelli}
     \end{table}
-
-    La Tabella \ref{tab:FFNNModelSelection} riporta i risultati della model evaluation effettuata sulle tre configurazioni, vengono inoltre riportate le taglie di ognuno dei modelli. La Tabella \ref{tab:GRUModelSelection}, invece, riprende i risultati della Tabella \ref{tab:5a1Undersampling}, aggiungendo però anche in questo caso le informazioni sullo spazio occupato da ogni GRU.
-
-    È facile notare come tutti i modelli di percettrone abbiano performance migliori rispetto alle GRU. Inoltre, come era intuibile, all'aumentare del numero di neuroni le performance del percettrone migliorano. Se il problema fosse solamente quello di risolvere il problema di classificazione, il modello a 64 neuroni sarebbe il migliore tra le tre configurazioni testate. Tuttavia, l'obiettivo è inserire questi classificatori in un filtro appreso, di conseguenza lo spazio occupato è importante tanto quanto le prestazioni. Il modello a 64 neuroni risulta quindi troppo grande rispetto alla prestazioni offerte.
-    
-    L'obiettivo è quindi massimizzare, tramite una selezione del modello, le performance del percettrone, cercando di mantenere una dimensione che non superi quella della GRU a 16 dimensioni. Dalla Tabella \ref{tab:FFNNModelSelection}, infatti, si nota che il miglioramento delle performance passando dalla configurazione a 16 neuroni a quella a 64 non è così significativo da giustificare una dimensione circa quattro volte superiore.
 
     \paragraph{Selezione del modello}
 
-    La selezione del modello viene effettuata tramite una nested cross validation con k=3 sia per ciclo interno che per il ciclo esterno. La griglia di parametri testata è la seguente:
-    \[
-    \begin{matrix*}[l]
-        \text{numero neuroni}: & [8, 16, 20, 25, 30],\\
-        \text{learning rate}: & [0.0001, 0.001, 0.01, 0.1].
-    \end{matrix*}
-    \]
+    La selezione del modello viene effettuata tramite due cicli di CV annidati, con $k = 3$ sia per ciclo interno che per il ciclo esterno. La griglia di parametri testata è la seguente:
+    \begin{itemize}
+        \item numero neuroni: $[8, 16, 20, 25, 30]$,
+        \item learning rate: $[0.0001, 0.001, 0.01, 0.1]$.
+    \end{itemize}
+
     Nel ciclo interno le combinazioni di parametri vengono create grazie all'algoritmo GridSearch.
 
-    L'obiettivo della model selection è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello. La Tabella \ref{tab:modelSelection} presenta i risultati selezione del modello.
-    
-    In definitiva, il percettrone ha, a parità di taglia, delle performance migliori rispetto alle GRU. I risultati del prossimo paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le GRU.
+    L'obiettivo della selezione del modello è massimizzare l'F1-score: essendo il dataset utilizzato lievemente sbilanciato, l'accuratezza potrebbe non risultare una metrica adatta a quantificare la bontà del modello. La Tabella \ref{tab:modelSelection} presenta i risultati ottenuti. In definitiva, il percettrone ha, a parità di spazio occupato, delle performance migliori rispetto alle GRU. I risultati del prossimo Paragrafo mostrano come ciò porti ad avere dei filtri più piccoli rispetto a quelli ottenuti utilizzando le GRU.
     \begin{table}[H]
         \centering                  
         \begin{tabular}{lccc}
@@ -226,7 +161,7 @@
             \textbf{Fold 3} &   (30, 0.01)\\
             \bottomrule
         \end{tabular}
-        \caption{Risultati della nested cross validation. Vengono riportati anche i parametri `vincitori' in per ogni fold.}
+        \caption{Risultati della validazione incrociata annidata. Vengono riportati anche i parametri selezionati per ogni fold.}
         \label{tab:modelSelection}
     \end{table}
 \end{document}

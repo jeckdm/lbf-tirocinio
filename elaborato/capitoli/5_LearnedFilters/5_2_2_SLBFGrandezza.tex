@@ -10,7 +10,7 @@
     \end{equation}
     Questa può essere ricavata come segue: assumiamo di avere a disposizione un totale di $n = bm$ bit da dividere tra filtro iniziale $n_{b_0} = b_1 m$ e il filtro di backup $n_{b} = b_2 m$, e che i due filtri rispettino la condizione di ottimalità per $k$. Sotto queste condizioni possiamo riscrivere \eqref{eqn:SLBFFalsiPositivi} come: 
     \[f = \alpha^{b_1}\left(F_p + (1 - F_p)\alpha^{b_2/F_n}\right), \]
-    essendo $\alpha$, $F_p$, $F_n$ e $b$ delle costanti è possibile trovare il valore ottimo per $n_b$ calcolando la derivata e ponendola uguale a 0.
+    essendo $\alpha$, $F_p$, $F_n$ e $b$ delle costanti, è possibile trovare il valore ottimo per $n_b$ calcolando la derivata e ponendola uguale a 0.
     
     Partendo dalla seguente equazione: 
     \[f = \alpha^{b_1}F_p + (1 - F_p)\alpha^{b_1(1 - 1/F_n)} \alpha^{b/F_n}, \]
@@ -27,9 +27,7 @@
         f_b = \frac{F_p}{(1 - F_p)(\frac{m}{m_b} - 1)}.
         \label{eqn:SLBFfBOttimo}
     \end{equation}
-    Assumendo di avere un filtro di backup con dimensione ottima $n_b^*$, il cui tasso di falsi positivi può essere di conseguenza calcolato tramite \eqref{eqn:SLBFfBOttimo}, possiamo ricavare delle equazioni per il tasso di falsi positivi del filtro iniziale e la sua grandezza.
-
-    È necessario prima di tutto sostituire il valore di $f_b$ in \eqref{eqn:SLBFFalsiPositivi}, per poi risolvere in funzione di $f_{b_0}$: 
+    Assumendo di avere un filtro di backup con dimensione ottima $n_b^*$, il cui tasso di falsi positivi può essere di conseguenza calcolato tramite \eqref{eqn:SLBFfBOttimo}, possiamo ricavare delle equazioni per il tasso di falsi positivi del filtro iniziale e la sua grandezza. È necessario prima di tutto sostituire il valore di $f_b$ in \eqref{eqn:SLBFFalsiPositivi}, per poi risolvere in funzione di $f_{b_0}$: 
 
     \begin{flalign*}
         &f = f_{b_0}\left(F_p + (1 - F_p) \cdot \left(\frac{F_p}{(1 - F_p)(\frac{1}{F_n} - 1)}\right)\right),\\

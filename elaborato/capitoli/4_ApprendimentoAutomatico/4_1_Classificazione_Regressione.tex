@@ -5,11 +5,11 @@
 \begin{document}
     Nell'ambito dell'apprendimento supervisionato, come brevemente introdotto nel paragrafo precedente, l'obiettivo è, una volta identificata la classe del problema su cui vogliamo lavorare, progettare un agente in grado di risolvere tale problema. Nello specifico, l'agente incaricato avrà a disposizione un dataset, che prende il nome di insieme d'addestramento, o training set, ossia un insieme di elementi etichettati su cui fare apprendimento.
 
-    Formalmente, dato un insieme $X$ contenente gli oggetti su cui effettuare le predizioni, e $Y$ contenente le relative etichette, un training set è composto da $N$ elementi nella forma:
+    Formalmente, dati due un insiemi $X$ e $Y$, contenenti rispettivamente gli oggetti su cui effettuare le predizioni e le relative etichette, un training set è composto da $N$ elementi nella forma:
     \[(\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2), \dots, (\boldsymbol{x}_N, y_N),\]
     con ogni etichetta generata da una funzione ignota $y = f(\boldsymbol{x})$. L'obiettivo è trovare una funzione $h$, detta funzione d'ipotesi, o modello, che approssimi in modo accettabile la funzione $f$. È importante notare come ognuno degli elementi del dataset $\boldsymbol{x}$ sia un vettore di $n$ elementi, e ognuno di questi elementi prende il nome di caratteristica, o feature.
 
-    L'obiettivo è quindi ricercare nello spazio delle possibili funzioni d'ipotesi una che approssimi la funzione $f$ sui dati noti, e che sia anche estendibile a esempi non appartenenti al dataset. Quando questo accade si dice in questo caso che $h$ è in grado di generalizzare.
+    L'obiettivo è quindi ricercare nello spazio delle possibili funzioni d'ipotesi una funzione $h$ che approssimi la funzione $f$ sui dati noti, e che sia anche estendibile a esempi non appartenenti al dataset. Quando questo accade si dice che $h$ è in grado di generalizzare.
 
     Esistono diverse classi di funzione d'ipotesi, tra cui:
     \begin{itemize}
@@ -21,15 +21,15 @@
 
     A prescindere dal tipo di classe utilizzata, la funzione avrà una serie di parametri, o pesi. Prendendo come esempio la classe di funzioni lineari, questa ha una forma del tipo:
     \[ h(\boldsymbol{x}) = w_0 + w_1x_1 + \dots + w_nx_n .\]
-    La funzione $h$ andrà ad approssimare una specifica funzione $f$ trovando il giusto valore del vettore di parametri $\boldsymbol{w}$, l'obiettivo quindi è trovare l'insieme di parametri che meglio descrive i dati presenti nel training set, questa operazione prende il nome di fitting. 
+    La funzione $h$ andrà ad approssimare una specifica funzione $f$ trovando il giusto valore del vettore di parametri $\boldsymbol{w}$; l'obiettivo quindi è trovare l'insieme di parametri che meglio descrive i dati presenti nel training set, questa operazione prende il nome di fitting. 
 
-    A seconda di come la funzione $f$ è definita esistono due principali tipi di apprendimento supervisionato: nel caso in cui $f$ abbia come codominio $\mathbb{R}$ si parla di un problema di \textit{regressione}, se invece $f$ ha un codominio con un numero discreto e finito di elementi (quindi assegna un'etichetta ad ogni elemento dell'insieme di training) allora si parla di problema di \textit{classificazione}.
+    A seconda di come la funzione $f$ è definita, esistono due principali tipi di apprendimento supervisionato: nel caso in cui $f$ abbia come codominio $\mathbb{R}$, si parla di un problema di \textit{regressione}; se, viceversa, $f$ ha un codominio con un numero discreto e finito di elementi (quindi assegna un'etichetta ad ogni elemento dell'insieme di training) allora si parla di problema di \textit{classificazione}.
 
-    Esistono in generale diversi algoritmi per le due tipologie di problemi appena descritte che differiscono principalmente per la loro espressività, ovvero la capacità di rappresentare determinati pattern di dati. Importante notare come molti algoritmi possano essere sfruttati sia nell'ambito della classificazione che in quello della regressione.
+    In generale, esistono diversi algoritmi per le due tipologie di problemi appena descritte, che differiscono principalmente per la loro espressività, ovvero la capacità di rappresentare determinati pattern di dati. Importante notare come molti algoritmi possano essere sfruttati sia nell'ambito della classificazione che in quello della regressione.
 
     Vengono ora introdotti brevemente, a scopo esemplificativo, la \textit{regressione lineare} per problemi di regressione, e la \textit{regressione logistica} per problemi di classificazione. Nel prossimo paragrafo vengono invece introdotte le \textit{reti neurali}, utilizzate poi negli esperimenti sui filtri.
 
-    \paragraph{Regressione} Nel caso della regressione la funzione $f$ da approssimare è una funzione con codominio continuo, e come già accennato in precedenza sono diversi i metodi utilizzabili in problemi di questo tipo, come ad esempio \textit{regressione lineare, random forest, ..., support vector machines}. Questi vari approcci si differenziano principalmente per la complessità della funzione $h$ con conseguenti differenze nelle capacità di approssimazione di $f$.
+    \paragraph{Regressione} Nel caso della regressione la funzione $f$ da approssimare è una funzione con codominio continuo, e, come già accennato in precedenza, sono diversi i metodi utilizzabili in problemi di questo tipo; \textit{random forest e support vector machines} sono alcuni esempi. Questi vari approcci si differenziano principalmente per la complessità della funzione $h$, con conseguenti differenze nelle capacità di approssimazione di $f$.
 
     \begin{figure}[H]
         \centering
@@ -49,8 +49,7 @@
         \label{fig:gradient_descent}
     \end{figure}
 
-    Introduciamo ora uno dei casi più semplici per ragionare su problemi di regressione: la regressione lineare.\\
-    In questo caso la funzione d'ipotesi è definita come:
+    Introduciamo ora uno dei casi più semplici per ragionare su problemi di regressione: la regressione lineare. In questo caso la funzione d'ipotesi è definita come:
     \begin{equation}
         h(\boldsymbol{x}) = w_0 + w_1x_1 + w_2x_2 + \dots + w_nx_n = \boldsymbol{w}^\top \boldsymbol{x}.
         \label{eqn:linearhypotes}   
@@ -68,27 +67,24 @@
     Per minimizzare la funzione è necessario trovare dei parametri tali per cui la derivata di $L$, calcolata rispetto a tali parametri, sia pari a 0:
     \[\frac{\partial}{\partial \boldsymbol{w}} L(\boldsymbol{w}) = 0.\]
 
-    Nel caso della regressione lineare l'approccio più semplice è risolvere analiticamente la derivata al fine di ricavare un metodo generale con cui calcolare direttamente il valore di ognuno dei parametri. Prendendo ad esempio il caso della \textit{regressione univariata}, in cui $h$ è ad una sola variabile:
+    Nel caso della regressione lineare l'approccio più semplice è risolvere analiticamente la derivata al fine di ricavare un metodo generale con cui calcolare direttamente il valore di ognuno dei parametri. Ad esempio, prendendo il caso della \textit{regressione univariata}, $h$  può essere espressa come
     \[h(x) = w_0 + w_1 x ,\]
-    le derivate che si ottengono sono le seguenti, da cui possiamo poi ricavare i valori ottimi per i due pesi:
-    \begin{equation}
+    e le derivate che si ottengono sono le seguenti, da cui possiamo poi ricavare i valori ottimi per i due pesi, presentati di seguito.
+    \begin{flalign}
         \begin{dcases}
             \frac{\partial}{\partial w_0} L(\boldsymbol{w}) = -\frac{1}{N}\sum_{j=1}^N\left(y_j - w_0 - w_1 x_j\right),\\
             \frac{\partial}{\partial w_1} L(\boldsymbol{w}) = -\frac{1}{N}\sum_{j=1}^N\left(y_j - w_0 - w_1 x_j\right) x_j.
         \end{dcases}   
-        \label{eqn:regrLineareDer}      
-    \end{equation}
-    \[
+        \label{eqn:regrLineareDer}\\
     \rightarrow
     \begin{dcases}
         w_0 = & \frac{\sum_{j=1}^N y_j - w_1 \sum_{j=1}^N x_j}{N},\\
         w_1 = & \frac{N(\sum_{j=1}^N y_jx_j) - \sum_{j=1}^N y_j \sum_{j=1}^N x_j}{N(\sum_{j=1}^N y_j^2) - (\sum_{j=1}^N y_j)^2}. 
     \end{dcases}    
-    \]
-    Non sempre però un approccio di questo tipo è possibile: in molti casi infatti non esiste una soluzione in forma chiusa del sistema di equazioni, in casi di questo tipo solitamente si ricorre ad un approccio iterativo più generale con algoritmi che sfruttano il gradiente della funzione $L$, nel nostro caso utilizzeremo un algoritmo di \textit{discesa del gradiente} (Figura \ref{fig:gradient_descent}), in quanto l'obiettivo è di minimizzare il valore della perdita.
+    \end{flalign}
+    Non sempre però un approccio di questo tipo è possibile: in molti casi infatti non esiste una soluzione in forma chiusa del sistema di equazioni, in casi di questo tipo solitamente si ricorre a un approccio iterativo più generale con algoritmi che sfruttano il gradiente della funzione $L$. Nel nostro caso utilizzeremo un algoritmo di \textit{discesa del gradiente} (Figura \ref{fig:gradient_descent}), in quanto l'obiettivo è di minimizzare il valore della perdita.
 
-    Intuitivamente l'algoritmo lavora non più sulla perdita calcolata su tutto il dataset ma analizzando gli elementi di tale insieme uno alla volta ed aggiornando il valore dei pesi di conseguenza.\\
-    Più formalmente, l'algoritmo \ref{alg:gradient_desc} mostra lo pseudocodice della procedura appena descritta, dove $\alpha$, chiamato learning rate, rappresenta la `forza' della modifica dei pesi ad ogni passo.
+    Intuitivamente, l'algoritmo lavora non più sulla perdita calcolata su tutto il dataset ma analizzando gli elementi di tale insieme uno alla volta ed aggiornando il valore dei pesi di conseguenza. L'Algoritmo \ref{alg:gradient_desc} mostra più formalmente lo pseudocodice della procedura appena descritta, dove $\alpha$, chiamato learning rate, rappresenta la `forza' della modifica dei pesi ad ogni passo.
 
     \begin{algorithm}[H]
         \caption{Discesa del gradiente}\label{alg:gradient_desc}
@@ -100,7 +96,7 @@
         \end{algorithmic}
     \end{algorithm}  
 
-    L'aggiornamento prevede quindi di calcolare prima il gradiente della perdita che viene poi utilizzato per modificare il valore dei parametri. Nella regressione univariata, sfruttando le derivate calcolate in \eqref{eqn:regrLineareDer}, l'aggiornamento di $\boldsymbol{w}$ diventa:
+    L'aggiornamento prevede quindi il calcolo del gradiente della perdita, che viene poi utilizzato per modificare il valore dei parametri. Nella regressione univariata, sfruttando le derivate calcolate in \eqref{eqn:regrLineareDer}, l'aggiornamento di $\boldsymbol{w}$ diventa:
     \[
         \begin{dcases}
             w_0 \leftarrow w_0 - \alpha \frac{\partial}{\partial w_0} L(\boldsymbol{w})\\
@@ -116,7 +112,7 @@
     \[w_i \leftarrow w_i + \alpha \sum_{j=1}^N(y_j - h(\boldsymbol{x}_j))x_{j,i},\]
     dove $x_{j,i}$ indica l'$i$-esimo elemento del vettore $\boldsymbol{x}_j$.
 
-    \paragraph{Classificazione} Se la funzione $f$ da approssimare ha un codominio discreto si parla di classificazione. Inoltre, a seconda del numero di elementi nel codominio di $f$ facciamo riferimento a diversi tipi di classificazione: se il dataset contiene esempi solamente di due etichette differenti si parla di classificazione \textit{binaria}, in caso contrario si parla di classificazione \textit{multiclasse}. Anche in questo caso sono diversi i metodi che vengono utilizzati, citandone alcuni: \textit{Regressione logistica, Naive-Bayes, ..., Alberi di Decisione}.
+    \paragraph{Classificazione} Se la funzione $f$ da approssimare ha un codominio discreto si parla di classificazione. Inoltre, a seconda del numero di elementi nel codominio di $f$ facciamo riferimento a diversi tipi di classificazione: se il dataset contiene esempi solamente di due etichette differenti si parla di classificazione \textit{binaria}, in caso contrario si parla di classificazione \textit{multiclasse}. Anche in questo caso sono diversi i metodi che vengono utilizzati, \textit{Naive-Bayes e Alberi di Decisione} sono alcuni esempi.
     
     Introduciamo ora uno dei metodi più semplici: la regressione logistica, ma mostriamo prima come sia possibile adattare la regressione lineare, introdotta nello scorso paragrafo, anche per problemi di classificazione sfruttando il concetto di soglia.
 
@@ -136,13 +132,13 @@
         \caption{Esempi di dataset contenenti elementi appartenenti a due etichette diverse, colorati in blu e verde. In (a) l'insieme di punti del dataset è linearmente separabile, in (b) l'insieme di punti non è linearmente separabile.}
     \end{figure}
 
-    Un modello lineare può essere utilizzato anche nel contesto dei problemi di classificazione: in Figura \ref{fig:linearly_sep_classification}, ad esempio,  è rappresentato un insieme di punti appartenenti a due etichette differenti, rispettivamente colorati in blu e in verde. Fornito un dataset di questo tipo l'obiettivo in un problema di classificazione è apprendere una funzione d'ipotesi $h$ che, dato un nuovo punto $x$, fornisca in output una predizione per l'etichetta $y$, l'obiettivo è ovviamente quello di avere globalmente delle buone predizioni. 
+    Un modello lineare può essere utilizzato anche nel contesto dei problemi di classificazione: in Figura \ref{fig:linearly_sep_classification}, ad esempio,  è rappresentato un insieme di punti appartenenti a due etichette differenti, rispettivamente colorati in blu e in verde. Fornito un dataset di questo tipo, l'obiettivo in un problema di classificazione è apprendere una funzione d'ipotesi $h$ che, dato un nuovo punto $x$, fornisca in output una predizione per l'etichetta $y$, l'obiettivo è ovviamente quello di avere globalmente delle buone predizioni. 
     
-    In generale si definisce superficie di separazione, o decision boundary, il piano che separa i punti appartenenti a etichette differenti, se tale boundary è, come nell'esempio della figura, una linea retta si parla di classi linearmente separabili. 
+    In generale, si definisce superficie di separazione, o decision boundary, la linea che separa i punti appartenenti a etichette differenti, se tale boundary è, come nell'esempio della figura, una linea retta si parla di classi linearmente separabili. 
     
     Per adattare l'approccio già citato per il caso della regressione al contesto della classificazione semplicemente introduciamo il concetto di soglia. Riprendendo la funzione d'ipotesi definita in \eqref{eqn:linearhypotes}, che chiamiamo qui $z$:
     \[z(\boldsymbol{x}) = w_0 + w_1x_1 + \dots + w_nx_n,\]
-    se dato un punto $\boldsymbol{x}$ questo assume un valore $> 0$ nella funzione $z$ allora $h(\boldsymbol{x}) = 1$ altrimenti $h(\boldsymbol{x}) = 0$. Formalmente, possiamo quindi pensare di passare il risultato di $z$ in una funzione soglia (Figura \ref{fig:threshold}) ed utilizzare il risultato di questa funzione come predizione dell'etichetta:
+    se, dato un punto $\boldsymbol{x}$, $z(\boldsymbol{x})$ è un valore $> 0$ allora $h(\boldsymbol{x}) = 1$, altrimenti $h(\boldsymbol{x}) = 0$. Formalmente, possiamo quindi pensare di passare il risultato di $z$ in una funzione soglia (Figura \ref{fig:threshold}) ed utilizzare il risultato di questa funzione come predizione dell'etichetta:
     \[h(\boldsymbol{x}) = \text{Soglia}(z(\boldsymbol{x})) \ \text{con} 
     \begin{dcases}
         \text{Soglia(y)} = 1 & \text{se} \ y \geq 0, \\
@@ -175,13 +171,13 @@
         \caption{(a) Grafico della funzione soglia. (b) Grafico della funzione logistica.}
     \end{figure}
 
-    Come appena mostrato quindi utilizzare l'output di un modello lineare come input di una funzione soglia permette di adattare l'approccio già utilizzato per il problema della regressione al contesto della classificazione. il principale lato negativo di utilizzare una funzione di questo tipo deriva dal fatto che essa non è differenziabile, un classificatore basato su una funzione di questo tipo inoltre fornisce sempre valori binari, anche quando il risultato è molto vicino al valore della soglia. Nella maggior parte delle situazioni una funzione di questo tipo non è ciò di cui abbiamo bisogno.
+    Come appena mostrato, utilizzare l'output di un modello lineare come input di una funzione soglia permette di adattare l'approccio già utilizzato per il problema della regressione al contesto della classificazione. Il principale lato negativo di utilizzare una funzione di questo tipo deriva dal fatto che essa non è differenziabile, un classificatore basato su una funzione di questo tipo inoltre fornisce sempre valori binari, anche quando il risultato è molto vicino al valore della soglia. Nella maggior parte delle situazioni una funzione di questo tipo non è ciò di cui abbiamo bisogno.
 
     Per i motivi appena descritti spesso si preferisce utilizzare una funzione logistica (Figura \ref{fig:logistic}), che intuitivamente corrisponde ad una versione rilassata della funzione soglia. Formalmente è definita come:
     \[ \text{Logistica}(y) = \frac{1}{1 + e^{-y}}, \]
     utilizzando come input il risultato del modello:
     \[h(\boldsymbol{x}) = \text{Logistica}(z(\boldsymbol{x})) = \text{Logistica}(\boldsymbol{w} \cdot \boldsymbol{x}) = \frac{1}{1 + e^{- \boldsymbol{w \cdot x}}} .\]
-    Importante notare come l'output della funzione non sia più, come nella funzione soglia, un numero dell'insieme $\{0,1\}$, bensì un valore reale compreso nell'intervallo $[0, 1]$ che può essere interpretato come la probabilità che l'etichetta predetta per il punto $\boldsymbol{x}$ sia 1.
+    Si noti che l'output della funzione non è più, come nella funzione soglia, un numero dell'insieme $\{0,1\}$, bensì un valore reale compreso nell'intervallo $[0, 1]$, che può essere interpretato come la probabilità che l'etichetta predetta per il punto $\boldsymbol{x}$ sia 1.
 
     La funzione logistica ha proprietà matematiche più vantaggiose rispetto alla funzione precedente, prima fra tutte la derivabilità su tutto il dominio, proprietà sfruttata per il processo di aggiornamento dei pesi, che prende il nome di \textit{regressione logistica}. 
     
@@ -195,7 +191,7 @@
     \end{align*}
     L'ultimo passaggio vale perché la derivata parziale della funzione logistica è:
     \begin{align*}
-        \frac{\partial}{\partial w_i} h(\boldsymbol{x}) &= \frac{\partial}{\partial w_i} \left(\frac{1}{1 + e^{-\boldsymbol{w}\cdot\boldsymbol{x}}}\right) = \frac{e^{-\boldsymbol{w}\cdot \boldsymbol{x}}}{\left(1 + e^{-\boldsymbol{w}\cdot \boldsymbol{x}}\right)^2}\\
+        h'(\boldsymbol{x}) &= -(1 + e^{-\boldsymbol{w \cdot x}})^{-2} \cdot (- e^{-\boldsymbol{w \cdot x}})= \frac{e^{-\boldsymbol{w}\cdot \boldsymbol{x}}}{\left(1 + e^{-\boldsymbol{w}\cdot \boldsymbol{x}}\right)^2}\\
         &= \frac{1}{1 + e^{-\boldsymbol{w}\cdot\boldsymbol{x}}} - \frac{1}{\left(1 + e^{-\boldsymbol{w}\cdot\boldsymbol{x}}\right)^2} = \frac{1}{1 + e^{-\boldsymbol{w}\cdot\boldsymbol{x}}}\left(1 - \frac{1}{1 + e^{-\boldsymbol{w}\cdot\boldsymbol{x}}}\right).
     \end{align*}
 

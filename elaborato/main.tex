@@ -32,27 +32,29 @@
 \usepackage{bm}
 \usepackage{mathtools}
 \usepackage{nccmath}
-\newtheorem{dfn}{Definizione}[chapter]
 
 % Spacing paragrafi
 \usepackage{parskip}
+\usepackage[noabbrev, italian, capitalize]{cleveref}
 
 % Pseudocodice
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\floatname{algorithm}{Algoritmo}
 \algnewcommand\algorithmicforeach{\textbf{for each}}
 \algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
 
 % Tabelle
 \usepackage{arydshln}
+
+\newcommand{\crefrangeconjunction}{--}
+\newcommand{\crefrangepreconjunction}{}
 \begin{document}
 
 \tableofcontents
 
-\chapter{Introduzione}
+\chapter*{Introduzione}
 \subfile{capitoli/1_Introduzione/Introduzione.tex}
-\chapter{Aspetti Teorici}
-\section{Definizioni di Base}
 
 \chapter{Filtri di Bloom}
 \label{chap:FiltriBloom}
@@ -72,6 +74,7 @@
 \subsection{Overfitting e Underfitting}
 \label{sec:overfitting}
 \subfile{capitoli/4_ApprendimentoAutomatico/4_2_3_SceltaIperparametri.tex}
+
 
 \chapter{Filtri di Bloom appresi}
 \label{chap:filtriAppresi}
@@ -99,7 +102,7 @@
 % Spiego scopo degli esperimenti: rapporto tra classificatori e filtri, capire se è veramente necessario una rete complessa come la RNN o se una rete FFNN è sufficiente per migliorare le prestazioni
 
 % Illustro i dataset utilizzati, eventualmente confrontando con quelli utilizzati nell'articolo ed eventualmente spiego la suddivisione del dataset usata per il testing dei filtri spiegandone la motivazione
-\section{Dati}
+\section{Dataset utilizzato}
 \label{sec:dataset}
 \subfile{capitoli/6_Esperimenti/6_2_Dati.tex}
 
@@ -147,7 +150,7 @@
 \label{sec:confrontoFiltri}
 \subfile{capitoli/7_Risultati/7_2_ConfrontoFiltri.tex}
 
-\chapter{Conclusioni}
+\chapter*{Conclusioni}
 \subfile{capitoli/8_Conclusioni/Conclusioni.tex}
 
 \printbibliography
