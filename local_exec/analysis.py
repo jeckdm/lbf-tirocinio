@@ -48,7 +48,7 @@ def create_SLBF_filters(fprs, fpr_ratios, false_negs, phishing):
 def LBF_empirical_analysis(prediction, testing_list, fprs, fpr_ratios, taus, LBFs, verbose = True):
     true_fpr_LBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
     sizes_LBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
-    times_LBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
+    times_LBF = pd.DataFrame(index = fpr_ratios, columns = fprs, dtype = float)
 
     for fpr in fprs:
         for fpr_ratio in fpr_ratios:
@@ -73,7 +73,7 @@ def SLBF_empirical_analysis(predicition, testing_list, fprs, fpr_ratios, taus, S
     BF_initial_sizes_SLBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
     BF_backup_sizes_SLBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
     sizes_SLBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
-    times_SLBF = pd.DataFrame(index = fpr_ratios, columns = fprs)
+    times_SLBF = pd.DataFrame(index = fpr_ratios, columns = fprs, dtype = float)
 
     # Unpacking filtri SLBF
     SLBFs_initial, SLBFs_backup = SLBFs

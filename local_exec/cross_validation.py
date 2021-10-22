@@ -59,7 +59,7 @@ def model_selection(X, y, params, undersample = False, epochs = 30, ratio = 0.2,
 
         print(f"f1-score test {scores['1']['f1-score']}, f1-score inner cv {grid.cv_results_['mean_test_score'][best_result_idx]} ({grid.cv_results_['std_test_score'][best_result_idx]}) con {best_params}")
 
-    return best_models, model_results, param_results, 
+    return best_models, model_results, param_results 
 
 def rnn_cross_validation(X, y, folds = 5, ratio = 0.2, h_size = 16, emb_size = 5, layers = 1):
     # Cross validation
@@ -83,14 +83,14 @@ def rnn_cross_validation(X, y, folds = 5, ratio = 0.2, h_size = 16, emb_size = 5
         y_train, y_test = y[train_index], y[test_index]
 
         # Bilancio solamente il dataset di train (Modifico anche quello originale?)
-        X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
+        # X_train, y_train = init.undersample(X_train, y_train, ratio = ratio)
 
         # Training
         trainRNN.train(model, torch.tensor(X_train), torch.tensor(y_train), device = device, optimizer = optimizer)
 
         # Salvo pesi del modello
         # torch.save(model.state_dict(), f"rnn_pesi_modelli/{count}_RNN_emb{str(emb_size)}_hid{str(h_size)}")
-        size = R.model_size(model, location = f"local_exec/classifier_testing/esperimenti_ffnn/risultati/pesi_modelli_addestrati/RNN_{count}.p")
+        size = R.model_size(model, location = f"risultati/modelli/RNN_{count}.p")
 
         # Score del classificatore sul testing
         scores = R.score_report(model, X_test, y_test)

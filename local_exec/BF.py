@@ -110,4 +110,4 @@ def run_BF(FPR, key_set, testing_list):
     # print(f"avg fp : {fps/total} , fps :{fps}, total: {total}, {BF.check(testing_list[2])}")
 
     # returns empirical FPR, BF size in bytes, and access time per element
-    return avg_fp, BF.size/8, (total_time)/len(testing_list)
+    return avg_fp, BF.size/8, total_time / len(testing_list)

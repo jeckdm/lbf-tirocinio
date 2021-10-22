@@ -3,6 +3,7 @@ import pandas as pd
 import torch
 import numpy as np
 import os
+import pickle
 import matplotlib.pyplot as plt
 import init, helpers, FFNN, analysis, helpers, RNN as R, trainRNN, BF
 from keras.callbacks import EarlyStopping
@@ -154,6 +155,10 @@ def main(args):
 
         # Analisi tau e generazione grafici
         true_fpr_LBF, true_fpr_SLBF, sizes_LBF, sizes_SLBF, df_result_LBF, df_result_SLBF = tau_graph(probs0, probs1, BF_sizes, fprs, LBF_fpr_ratio, SLBF_fpr_ratio, prediction, legit_testing_list, model_size, phishing_list, f"FFNN_{par}", save_loc)
+        with open(f'risultati/dizionari/LBF_FFNN_{par}.p', 'wb') as fp:
+            pickle.dump(sizes_LBF, fp, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(f'risultati/dizionari/SLBF_FFNN_{par}.p', 'wb') as fp:
+            pickle.dump(sizes_SLBF, fp, protocol=pickle.HIGHEST_PROTOCOL)
 
         # Salvo risultati migliori
         for fpr in fprs:
@@ -170,6 +175,11 @@ def main(args):
         # Analisi tau e generazione grafici
         true_fpr_LBF, true_fpr_SLBF, sizes_LBF, sizes_SLBF, df_result_LBF, df_result_SLBF = tau_graph(probs0, probs1, BF_sizes, fprs, LBF_fpr_ratio, SLBF_fpr_ratio, prediction, legit_testing_list, model_size, phishing_list, f"FFNN_Bin_{par}", save_loc)
 
+        with open(f'risultati/dizionari/LBF_FFNNBin_{par}.p', 'wb') as fp:
+            pickle.dump(sizes_LBF, fp, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(f'risultati/dizionari/SLBF_FFNNBin_{par}.p', 'wb') as fp:
+            pickle.dump(sizes_SLBF, fp, protocol=pickle.HIGHEST_PROTOCOL)
+
         # Salvo risultati migliori
         for fpr in fprs:
             dataframe_result, scatter_result = update_dfs(dataframe_result, df_result_LBF, df_result_SLBF, scatter_result, true_fpr_SLBF, sizes_SLBF, true_fpr_LBF, sizes_LBF, par, fpr, f"FFNN_Bin{par}")
@@ -182,6 +192,7 @@ def main(args):
         trainRNN.train(rnn, torch.tensor(LBF_X_train), torch.tensor(LBF_y_train), optimizer = torch.optim.Adamax(rnn.parameters()), device = device)
         model_size = R.model_size(rnn, f"{save_loc}/modelli/RNN_{par}.p", use_pickle = True)
         rnn = R.load_pickle_model(f"{save_loc}/modelli/RNN_{par}.p", h_size = par)
+        rnn.eval() # TEST, nel caso provo a toglierlo
 
         # Predizioni su test RNN
         probs1, probs0 = trainRNN.get_classifier_probs(rnn, torch.tensor(LBF_X_train), torch.tensor(LBF_y_train))
@@ -190,7 +201,10 @@ def main(args):
 
         # Analisi tau e generazione grafici
         true_fpr_LBF, true_fpr_SLBF, sizes_LBF, sizes_SLBF, df_result_LBF, df_result_SLBF = tau_graph(probs0, probs1, BF_sizes, fprs, LBF_fpr_ratio, SLBF_fpr_ratio, prediction, legit_testing_list, model_size, phishing_list, f"RNN_{par}", save_loc)
-
+        with open(f'risultati/dizionari/LBF_RNN_{par}.p', 'wb') as fp:
+            pickle.dump(sizes_LBF, fp, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(f'risultati/dizionari/SLBF_RNN_{par}.p', 'wb') as fp:
+            pickle.dump(sizes_SLBF, fp, protocol=pickle.HIGHEST_PROTOCOL)
         # Salvo risultati migliori
         for fpr in fprs:
             dataframe_result, scatter_result = update_dfs(dataframe_result, df_result_LBF, df_result_SLBF, scatter_result, true_fpr_SLBF, sizes_SLBF, true_fpr_LBF, sizes_LBF, par, fpr, f"RNN{par}")

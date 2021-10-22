@@ -35,7 +35,7 @@ def custom_SLBF_plot(BF_initial_sizes, BF_backup_sizes, ax = None, kwargs_init =
 
 def LBF_analysis(fprs, fpr_ratios, fnrs, false_negs, prediction, taus, legit_testing_list, model_size):
     # Risultati
-    df_result = {fpr : {'size' : 0, 'model-size' : 0, 'time' : 0} for fpr in fprs}
+    df_best_result = {fpr : {'size' : 0, 'model-size' : 0, 'time' : 0} for fpr in fprs}
 
     fnrs_df = pd.DataFrame(index=fpr_ratios, columns=fprs)
     for fpr in fprs:
@@ -54,11 +54,11 @@ def LBF_analysis(fprs, fpr_ratios, fnrs, false_negs, prediction, taus, legit_tes
         best_size = sizes_LBF.loc[best_fpr_ratio, fpr]
         best_time = times_LBF.loc[best_fpr_ratio, fpr]
 
-        df_result[fpr]['size'] = best_size / 1024
-        df_result[fpr]['model-size'] = model_size / 1024
-        df_result[fpr]['time'] = best_time
+        df_best_result[fpr]['size'] = best_size / 1024
+        df_best_result[fpr]['model-size'] = model_size / 1024
+        df_best_result[fpr]['time'] = best_time
 
-    return fnrs_df, true_fpr_LBF, sizes_LBF, times_LBF, df_result
+    return fnrs_df, true_fpr_LBF, sizes_LBF, times_LBF, pd.DataFrame.from_dict(df_best_result)
 
 def SLBF_analysis(fprs, fpr_ratios, fnrs, false_negs, prediction, taus, legit_testing_list, phishing_list, model_size):
     # Risultati
@@ -90,7 +90,7 @@ def SLBF_analysis(fprs, fpr_ratios, fnrs, false_negs, prediction, taus, legit_te
         df_result[fpr]['backup-size'] = best_bsize
         df_result[fpr]['time'] = best_time
 
-    return fnrs_df, true_fpr_SLBF, BF_initial_sizes_SLBF, BF_backup_sizes_SLBF, sizes_SLBF, times_SLBF, df_result
+    return fnrs_df, true_fpr_SLBF, BF_initial_sizes_SLBF, BF_backup_sizes_SLBF, sizes_SLBF, times_SLBF, pd.DataFrame.from_dict(df_result)
 
 
 def generate_LBF_graphs(name, false_negs, true_FPR, base_sizes, sizes, params, save_loc = None):

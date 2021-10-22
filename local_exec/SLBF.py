@@ -28,7 +28,7 @@ def build_SLBF_backup(false_negs, FPR_tau, phishing_URLs):
 
 def test_SLBF(SLBF_initial, SLBF_backup, testing_list, tau, prediction):
     fps = 0
-
+    total_elements = len(testing_list)
     start = time.time()
     for ix, p in enumerate(prediction):
         result = SLBF_initial.check(testing_list[ix])
@@ -44,4 +44,4 @@ def test_SLBF(SLBF_initial, SLBF_backup, testing_list, tau, prediction):
     avg_fp = fps / len(testing_list)
     
     # returns empirical FPR, BF size, and avg access time
-    return avg_fp, SLBF_initial.size / 8,  SLBF_backup.size / 8, total_time
+    return avg_fp, SLBF_initial.size / 8,  SLBF_backup.size / 8, total_time / total_elements

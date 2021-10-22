@@ -12,9 +12,14 @@ def load_data(data_loc, verbose = True):
     
     legitimate_URLs = np.load(f"{data_loc}/dataset1/legitimate_URLs.npy")
     phishing_URLs = np.load(f"{data_loc}/dataset1/phishing_URLs.npy")
+    len_leg_1, len_phis_1 = len(legitimate_URLs), len(phishing_URLs)
+
     phishing_URLs = np.concatenate((phishing_URLs,np.load(f"{data_loc}/dataset2/phishing_URLs2.npy", allow_pickle=True)))
     legitimate_URLs = np.concatenate((legitimate_URLs,np.load(f"{data_loc}/dataset2/legitimate_URLs2.npy", allow_pickle=True)))
+    len_leg_2, len_phis_2 = len(legitimate_URLs) - len_leg_1, len(phishing_URLs) - len_phis_1
+
     legitimate_URLs = np.concatenate((legitimate_URLs,np.load(f"{data_loc}/dataset3/legitimate_URLs3.npy", allow_pickle=True)))
+    len_leg_3, len_phis_3 = len(legitimate_URLs) - len_leg_2 - len_leg_1, len(phishing_URLs) - len_phis_2 - len_phis_1
     # clean URLs
     legitimate_URLs = [l.split('http://')[-1].split('www.')[-1].split('https://')[-1] for l in legitimate_URLs]
     phishing_URLs = [p.split('http://')[-1].split('www.')[-1].split('https://')[-1] for p in phishing_URLs]
@@ -32,6 +37,7 @@ def load_data(data_loc, verbose = True):
     phishing_URLs = list(phishing_URLs[np.random.permutation(len(phishing_URLs))])   
 
     if verbose:
+        print(f"Legitimate1 : {len_leg_1}, Phishing1: {len_phis_1}\nLegitimate2 : {len_leg_2}, Phishing2: {len_phis_2}\nLegitimate3 : {len_leg_3}, Phishing3: {len_phis_3}")
         print(len(legitimate_URLs),len(phishing_URLs), len(legitimate_URLs) + len(phishing_URLs))
 
     X = np.asarray(phishing_URLs + legitimate_URLs)

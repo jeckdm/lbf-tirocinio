@@ -117,7 +117,7 @@ def save_losses_plot(history, name, colors):
     plt.grid(True)
     plt.legend(loc='best')
 
-    plt.savefig(f"local_exec/classifier_testing/esperimenti_ffnn/risultati/{name}.png")
+    plt.savefig(f"testing/risultati/4/{name}.png")
 
 def get_classifier_probs(model, X, y):
     """ Restituisce liste contenenti rispettivamente le predizioni del classificatore per la classe 0 e la classe 1 """

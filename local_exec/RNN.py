@@ -107,8 +107,8 @@ def make_batch_test(X_t, y_t, B, device):
     return batch_X, batch_y
 
 
-def score_report(model, X_test, y_test):
-    predictions, targets = get_predictions(model, torch.tensor(X_test), torch.tensor(y_test))
+def score_report(model, X_test, y_test, device):
+    predictions, targets = get_predictions(model, torch.tensor(X_test), torch.tensor(y_test), device)
     print(confusion_matrix(targets, predictions))
     RNN_score = classification_report(targets, predictions, output_dict=True)
 

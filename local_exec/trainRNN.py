@@ -8,7 +8,7 @@ def train(model, X_train, y_train, optimizer, criterion = nn.CrossEntropyLoss(),
   '''Effettua l'addestramento di model sul dataset (X_train, y_train) utilizzando criterion come funzione di loss.'''
   # Train and validate
   for epoch in range(30):
-      _ = R.train(model, X_train, y_train, optimizer, criterion, batch_size)
+      _ = R.train(model, X_train, y_train, optimizer, criterion, batch_size, device)
       val_acc, val_loss = R.val(model, X_train, y_train, criterion, batch_size, device)
       if(epoch % 10 == 0):
         print('[E{:4d}] Loss: {:.4f} | Acc: {:.4f}'.format(epoch, val_loss, val_acc))
